@@ -1,0 +1,51 @@
+<div class="registro-container">
+    <h2>Registro</h2>
+    <form [formGroup]="form" (ngSubmit)="registrar()">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" formControlName="nombre" type="text" />
+      </div>
+  
+      <div class="form-group">
+        <label for="apellido">Apellido</label>
+        <input id="apellido" formControlName="apellido" type="text" />
+      </div>
+  
+      <div class="form-group">
+        <label for="dni">DNI</label>
+        <input id="dni" formControlName="dni" type="text" />
+      </div>
+  
+      <div class="form-group">
+        <label for="edad">Edad</label>
+        <input id="edad" formControlName="edad" type="number" />
+      </div>
+  
+      <div class="form-group">
+        <label for="obraSocial">Obra Social</label>
+        <input id="obraSocial" formControlName="obraSocial" type="text" />
+      </div>
+  
+      <div class="form-group">
+        <label for="mail">Correo Electrónico</label>
+        <input id="mail" formControlName="mail" type="email" />
+      </div>
+  
+      <div class="form-group">
+        <label for="clave">Contraseña</label>
+        <input id="clave" formControlName="clave" type="password" />
+      </div>
+  
+      <div class="form-group">
+        <label for="imagenes">Imágenes de Perfil</label>
+        <input id="imagenes" type="file" (change)="onFileChange($event)" multiple />
+      </div>
+  
+      <button type="submit">Registrar</button>
+    </form>
+  
+    <div *ngIf="mensajeError" class="error-message">
+      {{ mensajeError }}
+    </div>
+  </div>
+  

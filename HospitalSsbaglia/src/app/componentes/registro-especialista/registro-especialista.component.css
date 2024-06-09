@@ -1,0 +1,115 @@
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  form div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  input[type="file"] {
+    padding: 3px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
+  .buttonSeleccionarArchivo {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    }
+
+ 
+    .error {
+        color: red;
+    }
+
+    .exito {
+        color: green;
+    }
+
+    .form-floating label {
+        color: #495057;
+        font-size: 18px;
+    }
+
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    .estado-registro {
+        margin-top: 1rem;
+    }
+
+    .checkbox {
+        margin-top: 1rem;
+    }
+
+
+    .form-signin img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+        width: 100px;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .exito {
+        color: green;
+    }
+
+   

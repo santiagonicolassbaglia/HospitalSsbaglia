@@ -1,0 +1,65 @@
+.home-container {
+    background-image: url("../../../assets/imagenes/padreehijo.jpg");
+    background-size: cover;
+    background-position: center;
+    color: #070ae7;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .home-content {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-logout {
+    position: absolute;
+    top: 40px; 
+    right: 40px; 
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #dc3545;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-logout:hover {
+    background-color: #c82333;
+  }

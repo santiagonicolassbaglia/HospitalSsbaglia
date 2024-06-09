@@ -1,0 +1,46 @@
+<form [formGroup]="form" (ngSubmit)="registrar()">
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" formControlName="nombre" type="text">
+    </div>
+    <div>
+      <label for="apellido">Apellido:</label>
+      <input id="apellido" formControlName="apellido" type="text">
+    </div>
+    <div>
+      <label for="dni">DNI:</label>
+      <input id="dni" formControlName="dni" type="text">
+    </div>
+    <div>
+      <label for="edad">Edad:</label>
+      <input id="edad" formControlName="edad" type="number">
+    </div>
+    <div>
+      <label for="especialidad">Especialidad:</label>
+      <select id="especialidad" formControlName="especialidad" (change)="onEspecialidadChange($event)">
+        <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+        <option value="Otra">Otra</option>
+      </select>
+      <div *ngIf="form.get('especialidad')?.value === 'Otra'">
+        <label for="otraEspecialidad">Otra Especialidad:</label>
+        <input id="otraEspecialidad" formControlName="otraEspecialidad" type="text">
+      </div>
+    </div>
+    <div>
+      <label for="mail">Mail:</label>
+      <input id="mail" formControlName="mail" type="email">
+    </div>
+    <div>
+      <label for="clave">Contraseña:</label>
+      <input id="clave" formControlName="clave" type="password">
+    </div>
+    <div>
+      <label for="imagen">Imagen de Perfil:</label>
+      <input id="imagen" type="file" (change)="onFileChange($event)" multiple>
+    </div>
+    <button type="submit">Registrar</button>
+    <div *ngIf="mensajeError">
+      {{ mensajeError }}
+    </div>
+  </form>
+  
