@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-login',
@@ -17,13 +18,14 @@ export class LoginComponent implements OnInit {
   clave: string = '';
   mensajeError: string = '';
   recordarme: boolean = false;
-  private fb = inject(FormBuilder);
+  private fb=inject(FormBuilder);
   protected form: FormGroup;
   @Output() nombreUsuarioEmitido = new EventEmitter<string>();
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService,private loadingService: SpinnerService) {}
 
   ngOnInit(): void {
+
     this.authService.esAdmin = false;
     
     const usuarioGuardado = localStorage.getItem('usuarioGuardado');
@@ -36,13 +38,18 @@ export class LoginComponent implements OnInit {
   }
 
   async login() {
+    this.loadingService.show();
+ 
+    setTimeout(() => { 
+      this.loadingService.hide();
+    }, 3000);
     try {
       await this.authService.login(this.mail, this.clave);
-      const nombreUsuario = await this.authService.getCurrentUserName().toPromise();
-      this.nombreUsuarioEmitido.emit(nombreUsuario || '');
+    
+       
       this.router.navigateByUrl('home');
     } catch (error) {
-      console.error('Error de inicio de sesión:', error);
+      console.log('Error de inicio de sesión:', error);
       this.mensajeError = 'El correo electrónico o la contraseña son incorrectos';
     }
   }
@@ -56,9 +63,11 @@ export class LoginComponent implements OnInit {
   async loginWithGoogle() {
     try {
       await this.authService.loginWithGoogle();
+ 
       this.router.navigateByUrl('/home');
     } catch (error) {
-      console.error('Error de inicio de sesión con Google:', error);
+      console.log('Error de inicio de sesión con Google:', error);
     }
   }
 }
+

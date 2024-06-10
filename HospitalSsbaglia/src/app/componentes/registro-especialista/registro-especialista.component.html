@@ -36,7 +36,7 @@
     </div>
     <div>
       <label for="imagen">Imagen de Perfil:</label>
-      <input id="imagen" type="file" (change)="onFileChange($event)" multiple>
+      <input class="buttonSeleccionarArchivo" id="imagen" type="file" (change)="onFileChange($event)" multiple>
     </div>
     <button type="submit">Registrar</button>
     <div *ngIf="mensajeError">

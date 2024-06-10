@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './registro-especialista.component.css'
 })
 export class RegistroEspecialistaComponent implements OnInit {
+
   form: FormGroup;
   mensajeError: string = '';
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
@@ -61,11 +62,7 @@ export class RegistroEspecialistaComponent implements OnInit {
     this.authService.registrar(nuevoUsuario).then(() => {
       this.router.navigateByUrl('/login');
     }).catch((error) => {
-      if (error.code === 'auth/email-already-in-use') {
-        this.mensajeError = 'El correo electrónico ya está en uso. Por favor, use otro correo.';
-      } else {
-        this.mensajeError = 'Hubo un problema al registrar el usuario. Inténtalo de nuevo.';
-      }
+      this.mensajeError = 'Hubo un problema al registrar el usuario. Inténtalo de nuevo.';
       console.error('Error al registrar usuario:', error);
     });
   }

@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../assets/environments/environment.prod';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideAuth } from '@angular/fire/auth';
@@ -17,6 +17,7 @@ import { getDatabase } from 'firebase/database';
 import { getFirestore } from 'firebase/firestore';
 import { provideFirestore } from '@angular/fire/firestore';
 import { getAuth } from 'firebase/auth';
+import { SpinnerInterceptor } from './shared/spinner.interceptor';
 
 
 
@@ -29,9 +30,11 @@ export const appConfig: ApplicationConfig = {
        AngularFirestoreModule, 
       
     provideAuth(() => getAuth()),
+
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()), provideFirebaseApp(() => initializeApp( environment.firebaseConfig)),
+
   ]
  
 };

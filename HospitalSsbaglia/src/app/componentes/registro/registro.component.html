@@ -38,10 +38,15 @@
   
       <div class="form-group">
         <label for="imagenes">Imágenes de Perfil</label>
-        <input id="imagenes" type="file" (change)="onFileChange($event)" multiple />
+        <input class="buttonSeleccionarArchivo" id="imagenes" type="file" (change)="onFileChange($event)" multiple />
       </div>
   
       <button type="submit">Registrar</button>
+
+      <br><br> 
+      <div>
+        <button  routerLink="/registro-especialista" class="btn botonRegistroEspecialista">Registrarse como especialista</button>
+      </div>
     </form>
   
     <div *ngIf="mensajeError" class="error-message">
