@@ -15,11 +15,11 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 })
 export class AuthService {
 
-   private PATH = 'Usuarios';
+
+  private PATH = 'Usuarios';
   private items$: Observable<Usuario[]>;
   public loguado: boolean = false;
   public esAdmin: boolean = false;
-
   constructor(
     public auth: AngularFireAuth,
     public firestore: AngularFirestore,
@@ -33,13 +33,14 @@ export class AuthService {
     return this.items$;
   }
 
+ 
   async registrar(usuario: Usuario): Promise<void> {
     const { mail, contraseña, imagenes } = usuario;
     const userCredential = await this.auth.createUserWithEmailAndPassword(mail, contraseña);
     const userId = userCredential.user?.uid;
   
     if (userId) {
-      const imagenesArray = Array.isArray(imagenes) ? imagenes.map(imagen => new File([imagen], imagen)) : [new File([imagenes], imagenes)];
+      const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
       const imagenesURLs = await this.uploadImages(imagenesArray, userId);
   
       await this.firestore.collection(this.PATH).doc(userId).set({
@@ -49,7 +50,9 @@ export class AuthService {
       });
     }
   }
-  
+
+
+
   private async uploadImages(imagenes: File[], userId: string): Promise<string[]> {
     const uploadPromises = imagenes.map((imagen, index) => {
       const filePath = `users/${userId}/profile_${index}`;
@@ -59,6 +62,7 @@ export class AuthService {
     });
     return Promise.all(uploadPromises);
   }
+  
 
   async login(mail: string, pass: string) {
     try {
@@ -70,11 +74,12 @@ export class AuthService {
     }
   }
 
+
   async loginWithGoogle() {
     try {
-      const provider = new GoogleAuthProvider();
+      const provider = new firebase.auth.GoogleAuthProvider();
       const userCredential = await this.auth.signInWithPopup(provider);
-      await this.updateLastLogin(userCredential.user.uid);
+      await this.updateLastLogin(userCredential.user?.uid!);
     } catch (error) {
       console.error('Error de inicio de sesión con Google:', error);
       throw error;
@@ -88,13 +93,28 @@ export class AuthService {
     });
   }
 
-  public async guardarUsuarioFirestore(uid: string, nombre: string, email: string) {
-    await this.firestore.collection(this.PATH).doc(uid).set({
+  public async guardarUsuarioFirestore(uid: string, nombre: string, mail: string, apellido:string, dni:string, obraSocial: string | null , especialidad: string | null, contraseña:string , imagenes:File[], aprobado: boolean | null): Promise<void> {
+    await this.firestore.collection('Usuarios').doc(uid).set({
       nombre,
-      email,
+      apellido,
+      dni,
+      obraSocial,
+      especialidad,
+      mail,
+      imagenes,
+      aprobado,
       lastLogin: firebase.firestore.FieldValue.serverTimestamp()
     });
+    
   }
+  
+  // public async guardarUsuarioFirestore(uid: string, nombre: string, email: string) {
+  //   await this.firestore.collection(this.PATH).doc(uid).set({
+  //     nombre,
+  //     email,
+  //     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+  //   });
+  // }
 
   async logout() {
     try {

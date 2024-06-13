@@ -1,20 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
-import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
+import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf,RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink],
   templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+ styleUrl: './registro.component.css'
 })
 export class RegistroComponent implements OnInit {
-  form: FormGroup;
+    form: FormGroup;
   mensajeError: string = '';
 
   private fb = inject(FormBuilder);
@@ -28,18 +28,19 @@ export class RegistroComponent implements OnInit {
       dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
       edad: ['', [Validators.required, Validators.min(1)]],
       obraSocial: [''],
+      especialidad: [''], // Agrega especialidad si corresponde
       mail: ['', [Validators.required, Validators.email]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
-      imagenes: [[], Validators.required]
+      imagenes: [null, Validators.required]
     });
   }
 
   registrar() {
-    if (this.hasError()) {
+    if (this.form.invalid) {
       return;
     }
 
-    const { nombre, apellido, dni, edad, obraSocial, mail, clave, imagenes } = this.form.value;
+    const { nombre, apellido, dni, edad, obraSocial, especialidad, mail, clave, imagenes } = this.form.value;
 
     const nuevoUsuario = new Usuario(
       nombre,
@@ -47,12 +48,13 @@ export class RegistroComponent implements OnInit {
       dni,
       edad,
       obraSocial || null,
-      null, // No se necesita especialidad
+      especialidad || null,
       clave,
       mail,
-      Array.isArray(imagenes) ? imagenes : [imagenes],
+      imagenes,
       this.generateUserCode(),
-      null
+      null,
+      null // Si es un especialista, inicialmente no estará aprobado
     );
 
     this.authService.registrar(nuevoUsuario).then(() => {
@@ -66,23 +68,21 @@ export class RegistroComponent implements OnInit {
       console.error('Error al registrar usuario:', error);
     });
   }
-
   private hasError(): boolean {
     this.form.markAllAsTouched();
     return this.form.invalid;
   }
-
   private generateUserCode(): string {
+    // Implementa tu lógica para generar un código de usuario
     return 'some-unique-code';
-  }
-
-  onFileChange(event: any) {
-    const files = event.target.files;
-    if (files.length > 0) {
-      const fileArray = Array.from(files).map((file: File) => file);
-      this.form.patchValue({
-        imagenes: fileArray
-      });
-    }
+}
+    onFileChange(event: any) {
+      const files = event.target.files;
+      if (files.length > 0) {
+        const fileArray = Array.from(files).map((file: File) => file);
+        this.form.patchValue({
+          imagenes: fileArray
+        });
+      }
   }
 }

@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegistroEspecialistaComponent implements OnInit {
 
+  
   form: FormGroup;
   mensajeError: string = '';
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
@@ -33,7 +34,7 @@ export class RegistroEspecialistaComponent implements OnInit {
       otraEspecialidad: [''],
       mail: ['', [Validators.required, Validators.email]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
-      imagen: [null, Validators.required]
+      imagenes: [null, Validators.required]
     });
   }
 
@@ -42,8 +43,9 @@ export class RegistroEspecialistaComponent implements OnInit {
       return;
     }
 
-    const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagen } = this.form.value;
+    const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagenes } = this.form.value;
     const finalEspecialidad = especialidad === 'Otra' ? otraEspecialidad : especialidad;
+    const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
 
     const nuevoUsuario = new Usuario(
       nombre,
@@ -54,7 +56,7 @@ export class RegistroEspecialistaComponent implements OnInit {
       finalEspecialidad || null,
       clave,
       mail,
-      [imagen], 
+      imagenesArray,
       this.generateUserCode(),
       null
     );
@@ -76,6 +78,16 @@ export class RegistroEspecialistaComponent implements OnInit {
     return 'some-unique-code';
   }
 
+  onFileChange(event: any) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      const fileArray = Array.from(files).map((file: File) => file);
+      this.form.patchValue({
+        imagenes: fileArray
+      });
+    }
+  }
+
   onEspecialidadChange(event: any) {
     const selectedValue = event.target.value;
     if (selectedValue === 'Otra') {
@@ -84,15 +96,5 @@ export class RegistroEspecialistaComponent implements OnInit {
       this.form.get('otraEspecialidad')?.clearValidators();
     }
     this.form.get('otraEspecialidad')?.updateValueAndValidity();
-  }
-
-  onFileChange(event: any) {
-    const files = event.target.files;
-    if (files.length > 0) {
-      const fileArray = Array.from(files).map((file: File) => URL.createObjectURL(file));
-      this.form.patchValue({
-        imagen: fileArray
-      });
-    }
   }
 }
