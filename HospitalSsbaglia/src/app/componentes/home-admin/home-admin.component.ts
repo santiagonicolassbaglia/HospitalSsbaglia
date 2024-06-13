@@ -7,11 +7,13 @@ import { LoginComponent } from '../login/login.component';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
 import { ListaUsuariosIngresadosComponent } from '../lista-usuarios-ingresados/lista-usuarios-ingresados.component';
+import { RegistroComponent } from '../registro/registro.component';
+import { RegistroEspecialistaComponent } from '../registro-especialista/registro-especialista.component';
 
 @Component({
   selector: 'app-home-admin',
   standalone: true,
-  imports: [NgIf,FormsModule,RouterLink,LoginComponent,ListaUsuariosIngresadosComponent],
+  imports: [NgIf,FormsModule,RouterLink,LoginComponent,ListaUsuariosIngresadosComponent,RegistroComponent,RegistroEspecialistaComponent],
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 
