@@ -48,7 +48,7 @@ export class RegistroEspecialistaComponent implements OnInit {
 
     setTimeout(() => {
       this.loadingService.hide();
-    }, 5000);
+    }, 6000);
 
     const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagenes } = this.form.value;
     const finalEspecialidad = especialidad === 'Otra' ? otraEspecialidad : especialidad;

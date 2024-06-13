@@ -18,6 +18,7 @@ import { getFirestore } from 'firebase/firestore';
 import { provideFirestore } from '@angular/fire/firestore';
 import { getAuth } from 'firebase/auth';
 import { SpinnerInterceptor } from './shared/spinner.interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
 
     provideHttpClient(),
+    provideAnimations(),
     importProvidersFrom(
       AngularFireModule.initializeApp(environment.firebaseConfig)), 
        AngularFirestoreModule, 

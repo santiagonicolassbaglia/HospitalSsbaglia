@@ -46,7 +46,7 @@ export class RegistroComponent implements OnInit {
 
     setTimeout(() => {
       this.loadingService.hide();
-    }, 5000);
+    }, 6000);
 
     const { nombre, apellido, dni, edad, obraSocial, especialidad, mail, clave, imagenes } = this.form.value;
 
