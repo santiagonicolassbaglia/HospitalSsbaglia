@@ -1,7 +1,7 @@
 // app.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { LoginComponent } from './componentes/login/login.component';
 import { PaginaErrorComponent } from './componentes/pagina-error/pagina-error.component';
@@ -11,6 +11,12 @@ import { RegistroEspecialistaComponent } from './componentes/registro-especialis
 import { SpinnerComponent } from './componentes/spinner/spinner.component';
 import { SpinnerService } from './services/spinner.service';
 import { Subscription } from 'rxjs';
+import { CaptchaComponent } from './componentes/captcha/captcha.component';
+import { ListaUsuariosIngresadosComponent } from './componentes/lista-usuarios-ingresados/lista-usuarios-ingresados.component';
+import { Usuario } from './clases/usuario';
+import { HomeAdminComponent } from './componentes/home-admin/home-admin.component';
+ 
+ 
 
 @Component({
   selector: 'app-root',
@@ -27,6 +33,11 @@ import { Subscription } from 'rxjs';
     RegistroComponent,
     RegistroEspecialistaComponent,
     SpinnerComponent,
+    CaptchaComponent,
+    HomeAdminComponent,
+    ListaUsuariosIngresadosComponent,
+
+
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'] // <- Correction here

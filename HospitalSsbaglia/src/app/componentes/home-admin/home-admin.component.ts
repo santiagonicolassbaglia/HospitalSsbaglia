@@ -6,24 +6,30 @@ import { Router, RouterLink } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
-import { HomeAdminComponent } from '../home-admin/home-admin.component';
+import { ListaUsuariosIngresadosComponent } from '../lista-usuarios-ingresados/lista-usuarios-ingresados.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-home-admin',
   standalone: true,
-  imports: [NgIf,FormsModule,RouterLink,LoginComponent,HomeAdminComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  imports: [NgIf,FormsModule,RouterLink,LoginComponent,ListaUsuariosIngresadosComponent],
+  templateUrl: './home-admin.component.html',
+  styleUrls: ['./home-admin.component.css']
+
 })
-export class HomeComponent implements OnInit {
+export class HomeAdminComponent implements OnInit  {
   user: any;
   username: string = '';
   nombreUsuario: string = '';
 
-  constructor(private router: Router, private authService: AuthService) { } // Inject Router service
- 
-  ngOnInit(): void {
+  constructor( private router: Router, private authService: AuthService) {}
 
+  ngOnInit(): void {
+    this.getUserProfile();
+  }
+
+ 
+  getUserProfile(): void {
+     
     this.authService.usuarioActual().then((usuario: Usuario) => {
       if (usuario) {
         this.nombreUsuario = usuario.nombre;
@@ -32,6 +38,7 @@ export class HomeComponent implements OnInit {
       console.error('Error al obtener el usuario actual:', error);
     });
   }
+
 
   cerrarSesion() {
     this.authService.logout()

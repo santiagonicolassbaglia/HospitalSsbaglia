@@ -1,0 +1,21 @@
+<h1>Home</h1>
+
+<div class="home-container"> 
+    <div>
+        <h1>Home</h1>
+        <p>Esta es la página de inicio</p>
+        <div class="container">
+            <div class="header">
+                <h1>Bienvenido {{nombreUsuario}} ADMIN</h1>
+                <button (click)="cerrarSesion()" class="btn btn-logout" style="margin-top: -1rem;">Cerrar sesión</button>
+            </div>
+            
+            <div>
+                <button routerLink="/listaUsuariosIngresados" class="btn btn-primary">Home Container</button>
+            </div>
+            <div>
+                <button routerLink="/solicitudesEspecialistas" class="btn btn-primary">Solicitudes de Especialistas</button>
+            </div>
+        </div>
+    </div>
+</div>

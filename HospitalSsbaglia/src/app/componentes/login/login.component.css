@@ -66,9 +66,7 @@
     text-decoration: underline;
   }
   
-  .error {
-    color: red;
-  }
+  
   
   .exito {
     color: green;
@@ -76,5 +74,10 @@
   
   .advertencia {
     color: orange;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
   }
   

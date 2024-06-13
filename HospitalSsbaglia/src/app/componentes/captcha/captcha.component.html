@@ -1,0 +1,10 @@
+<div class="captcha-container" style="background-color: rgba(10, 1, 49, 0.542);">
+  <div class="label-container">
+<div [formGroup]="captchaForm" class="captcha-container">
+  <label for="captcha">{{ captchaQuestion }} = ?</label>
+  <input type="text" id="captcha" formControlName="captchaResponse" placeholder="Captcha">
+  <span *ngIf="captchaValid === true" class="valid-feedback">✔️ Correcto</span>
+  <span *ngIf="captchaValid === false" class="invalid-feedback">❌ Incorrecto</span>
+</div>
+</div>
+</div>

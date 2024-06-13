@@ -1,0 +1,50 @@
+h1 {
+    text-align: center;
+    color: #4CAF50;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .solicitudes-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .solicitudes-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .solicitudes-list p {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .solicitudes-list button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .solicitudes-list button:hover {
+    background-color: #45a049;
+  }
+  

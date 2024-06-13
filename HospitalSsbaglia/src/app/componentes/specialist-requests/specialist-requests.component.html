@@ -1,0 +1,16 @@
+<h1>Solicitudes de Especialistas</h1>
+
+<div *ngIf="mensajeError" class="error">
+  {{ mensajeError }}
+</div>
+
+<div *ngIf="solicitudes.length === 0">
+  No hay solicitudes pendientes.
+</div>
+
+<ul *ngIf="solicitudes.length > 0">
+  <li *ngFor="let solicitud of solicitudes">
+    <p>{{ solicitud.nombre }} {{ solicitud.apellido }} - {{ solicitud.especialidad }}</p>
+    <button (click)="aceptarEspecialista(solicitud.code)">Aceptar</button>
+  </li>
+</ul>

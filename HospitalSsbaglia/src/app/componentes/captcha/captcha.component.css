@@ -1,0 +1,50 @@
+.captcha-container {
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid #aaa; /* Añadimos un borde alrededor del captcha */
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.label-container {
+  margin-right: 10px;
+}
+
+.label-container span {
+  color: rgb(255, 255, 255); 
+  font-weight: bold;  
+}
+
+label {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input[type="text"] {
+  width: 60px; 
+  padding: 5px; 
+  font-size: 1rem; 
+  border: none;  
+  outline: none;
+}
+
+.valid-feedback, .invalid-feedback {
+  font-size: 1rem; /* Tamaño de fuente más pequeño */
+  margin-top: 5px;
+  display: block;
+}
+
+.valid-feedback {
+  color: #28a745; /* Verde */
+}
+
+.invalid-feedback {
+  color: #dc3545; /* Rojo */
+}
+
+/* Estilo para el placeholder */
+input[type="text"]::placeholder {
+  color: #aaa;
+  font-style: italic;
+}

@@ -179,4 +179,20 @@ export class AuthService {
       }))
     );
   }
+
+  public obtenerSolicitudesEspecialistas(): Observable<Usuario[]> {
+    return this.firestore.collection(this.PATH, ref => ref.where('especialidad', '!=', null).where('aprobado', '==', false)).snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as any;
+        return new Usuario(
+          data.nombre, data.apellido, data.dni, data.edad,
+          data.obraSocial, data.especialidad, '', data.mail, data.imagenes, data.code, data.lastLogin ? data.lastLogin.toDate() : null
+        );
+      }))
+    );
+  }
+
+  public async aceptarEspecialista(uid: string): Promise<void> {
+    await this.firestore.collection(this.PATH).doc(uid).update({ aprobado: true });
+  }
 }
