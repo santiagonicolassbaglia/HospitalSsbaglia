@@ -1,0 +1,1 @@
+import{Wa as o,Xa as a,cb as i,fa as r,kb as p}from"./chunk-ILZYBNDK.js";var d=(()=>{let e=class e{};e.\u0275fac=function(n){return new(n||e)},e.\u0275cmp=r({type:e,selectors:[["app-pagina-error"]],standalone:!0,features:[p],decls:2,vars:0,template:function(n,c){n&1&&(o(0,"p"),i(1,"pagina-error works ERROR!"),a())}});let t=e;return t})();export{d as a};
