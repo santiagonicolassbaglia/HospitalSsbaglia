@@ -5,6 +5,8 @@ import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
 import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
 import { NgIf } from '@angular/common';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-registro',
@@ -19,7 +21,7 @@ export class RegistroComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private loadingService: SpinnerService) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -40,6 +42,12 @@ export class RegistroComponent implements OnInit {
       return;
     }
 
+    this.loadingService.show();
+
+    setTimeout(() => {
+      this.loadingService.hide();
+    }, 5000);
+
     const { nombre, apellido, dni, edad, obraSocial, especialidad, mail, clave, imagenes } = this.form.value;
 
     const nuevoUsuario = new Usuario(
@@ -54,7 +62,7 @@ export class RegistroComponent implements OnInit {
       imagenes,
       this.generateUserCode(),
       null,
-      null // Si es un especialista, inicialmente no estará aprobado
+      null  
     );
 
     this.authService.registrar(nuevoUsuario).then(() => {
@@ -73,7 +81,7 @@ export class RegistroComponent implements OnInit {
     return this.form.invalid;
   }
   private generateUserCode(): string {
-    // Implementa tu lógica para generar un código de usuario
+    
     return 'some-unique-code';
 }
     onFileChange(event: any) {

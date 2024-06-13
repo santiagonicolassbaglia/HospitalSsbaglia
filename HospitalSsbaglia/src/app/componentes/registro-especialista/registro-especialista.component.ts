@@ -5,6 +5,8 @@ import { NgFor, NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
+import { SpinnerComponent } from '../spinner/spinner.component';
+import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
   selector: 'app-registro-especialista',
@@ -22,7 +24,7 @@ export class RegistroEspecialistaComponent implements OnInit {
 
   private fb = inject(FormBuilder);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private loadingService: SpinnerService) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -42,6 +44,11 @@ export class RegistroEspecialistaComponent implements OnInit {
     if (this.hasError()) {
       return;
     }
+    this.loadingService.show();
+
+    setTimeout(() => {
+      this.loadingService.hide();
+    }, 5000);
 
     const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagenes } = this.form.value;
     const finalEspecialidad = especialidad === 'Otra' ? otraEspecialidad : especialidad;
