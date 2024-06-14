@@ -148,7 +148,21 @@ export class AuthService {
           this.firestore.collection(this.PATH).doc(user.uid).valueChanges().subscribe((usuario: any) => {
             if (usuario) {
               usuario.lastLogin = usuario.lastLogin ? usuario.lastLogin.toDate() : null;
-              resolve(new Usuario(usuario.nombre, usuario.apellido, usuario.dni, usuario.edad, usuario.obraSocial, usuario.especialidad, '', usuario.mail, usuario.imagenes, usuario.code, usuario.lastLogin));
+              resolve(new Usuario(
+                user.uid, // Pasar el uid del usuario
+                usuario.nombre,
+                usuario.apellido,
+                usuario.dni,
+                usuario.edad,
+                usuario.obraSocial,
+                usuario.especialidad,
+                '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
+                usuario.mail,
+                usuario.imagenes,
+                usuario.code,
+                usuario.lastLogin,
+                usuario.esAdmin // Asegúrate de pasar esta propiedad también
+              ));
             } else {
               reject('No se encontró el usuario en la base de datos');
             }
@@ -159,6 +173,7 @@ export class AuthService {
       });
     });
   }
+  
 
   getCurrentUser(): Observable<firebase.User | null> {
     return this.auth.authState;
@@ -207,28 +222,54 @@ export class AuthService {
     return this.firestore.collection(this.PATH).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data() as any;
-        return new Usuario(data.nombre, data.apellido, data.dni, data.edad, data.obraSocial, data.especialidad, '', data.mail, data.imagenes, data.code, data.lastLogin ? data.lastLogin.toDate() : null);
-      }))
-    );
-  }
-
-  public obtenerSolicitudesEspecialistas(): Observable<Usuario[]> {
-    return this.firestore.collection(this.PATH, ref => ref.where('especialidad', '!=', null).where('aprobado', '==', false)).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as any;
+        const id = a.payload.doc.id; // Obtener el ID del documento
         return new Usuario(
-          data.nombre, data.apellido, data.dni, data.edad,
-          data.obraSocial, data.especialidad, '', data.mail, data.imagenes, data.code, data.lastLogin ? data.lastLogin.toDate() : null
+          id, // Pasar el ID como uid
+          data.nombre,
+          data.apellido,
+          data.dni,
+          data.edad,
+          data.obraSocial,
+          data.especialidad,
+          '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
+          data.mail,
+          data.imagenes,
+          data.code,
+          data.lastLogin ? data.lastLogin.toDate() : null,
+          data.esAdmin
         );
       }))
     );
   }
-
+  
+  public obtenerSolicitudesEspecialistas(): Observable<Usuario[]> {
+    return this.firestore.collection(this.PATH, ref => ref.where('especialidad', '!=', null).where('aprobado', '==', false)).snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as any;
+        const id = a.payload.doc.id; // Obtener el ID del documento
+        return new Usuario(
+          id, // Pasar el ID como uid
+          data.nombre,
+          data.apellido,
+          data.dni,
+          data.edad,
+          data.obraSocial,
+          data.especialidad,
+          '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
+          data.mail,
+          data.imagenes,
+          data.code,
+          data.lastLogin ? data.lastLogin.toDate() : null,
+          data.esAdmin
+        );
+      }))
+    );
+  }
+  
   public async aceptarEspecialista(uid: string): Promise<void> {
     await this.firestore.collection(this.PATH).doc(uid).update({ aprobado: true });
   }
 
-  
   async cambiarEstadoAdmin(mail: string, esAdmin: boolean): Promise<void> {
     try {
       const snapshot = await this.firestore.collection(this.PATH).ref.where('mail', '==', mail).get();
@@ -243,6 +284,18 @@ export class AuthService {
     }
   }
 
- 
-
+  async eliminarUsuario(uid: string): Promise<void> {
+    try {
+      // Elimina el usuario de Firestore
+      await this.firestore.collection(this.PATH).doc(uid).delete();
+      // Elimina el usuario de Firebase Auth
+      const user = await this.auth.currentUser;
+      if (user && user.uid === uid) {
+        await user.delete();
+      }
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+      throw error;
+    }
+  }
 }

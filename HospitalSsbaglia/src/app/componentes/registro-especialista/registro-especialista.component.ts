@@ -11,13 +11,11 @@ import { SpinnerService } from '../../services/spinner.service';
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf,RouterLink,NgFor],
+  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink, NgFor],
   templateUrl: './registro-especialista.component.html',
   styleUrl: './registro-especialista.component.css'
 })
 export class RegistroEspecialistaComponent implements OnInit {
-
-  
   form: FormGroup;
   mensajeError: string = '';
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
@@ -55,17 +53,19 @@ export class RegistroEspecialistaComponent implements OnInit {
     const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
 
     const nuevoUsuario = new Usuario(
+      '',
       nombre,
       apellido,
       dni,
       edad,
       null,
-      finalEspecialidad || null,
+      [finalEspecialidad] || [],
       clave,
       mail,
       imagenesArray,
       this.generateUserCode(),
-      null
+      null,
+      false
     );
 
     this.authService.registrar(nuevoUsuario).then(() => {

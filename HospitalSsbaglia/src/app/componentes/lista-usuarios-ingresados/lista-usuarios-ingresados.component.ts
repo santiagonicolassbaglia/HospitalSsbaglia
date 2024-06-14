@@ -44,4 +44,25 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
         console.error('Error al cerrar sesión:', error);
       });
   }
+
+
+  async eliminarUsuario(usuario: Usuario) {
+    try {
+      await this.authService.eliminarUsuario(usuario.uid);
+      console.log(`Usuario con UID ${usuario.uid} eliminado`);
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+    }
+  }
+  async cambiarAdmin(usuario: Usuario) {
+    try {
+      usuario.esAdmin = !usuario.esAdmin;
+      await this.authService.cambiarEstadoAdmin(usuario.mail, usuario.esAdmin);
+      console.log(`Estado de admin cambiado para usuario con email ${usuario.mail}`);
+    } catch (error) {
+      console.error('Error al cambiar estado de admin:', error);
+    }
+  }
+
+  
 }

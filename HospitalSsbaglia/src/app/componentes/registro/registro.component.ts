@@ -13,10 +13,10 @@ import { SpinnerService } from '../../services/spinner.service';
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink],
   templateUrl: './registro.component.html',
- styleUrl: './registro.component.css'
+  styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent implements OnInit {
-    form: FormGroup;
+  form: FormGroup;
   mensajeError: string = '';
 
   private fb = inject(FormBuilder);
@@ -51,18 +51,19 @@ export class RegistroComponent implements OnInit {
     const { nombre, apellido, dni, edad, obraSocial, especialidad, mail, clave, imagenes } = this.form.value;
 
     const nuevoUsuario = new Usuario(
+      '', // Se genera el uid después de la creación
       nombre,
       apellido,
       dni,
       edad,
       obraSocial || null,
-      especialidad || null,
+      especialidad ? [especialidad] : [], // Asegura que especialidad sea un array
       clave,
       mail,
       imagenes,
       this.generateUserCode(),
       null,
-      null  
+      false // esAdmin es false por defecto
     );
 
     this.authService.registrar(nuevoUsuario).then(() => {
@@ -76,21 +77,23 @@ export class RegistroComponent implements OnInit {
       console.error('Error al registrar usuario:', error);
     });
   }
+
   private hasError(): boolean {
     this.form.markAllAsTouched();
     return this.form.invalid;
   }
+
   private generateUserCode(): string {
-    
     return 'some-unique-code';
-}
-    onFileChange(event: any) {
-      const files = event.target.files;
-      if (files.length > 0) {
-        const fileArray = Array.from(files).map((file: File) => file);
-        this.form.patchValue({
-          imagenes: fileArray
-        });
-      }
+  }
+
+  onFileChange(event: any) {
+    const files = event.target.files;
+    if (files.length > 0) {
+      const fileArray = Array.from(files).map((file: File) => file);
+      this.form.patchValue({
+        imagenes: fileArray
+      });
+    }
   }
 }

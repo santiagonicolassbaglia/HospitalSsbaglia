@@ -20,11 +20,11 @@
           <td>{{ usuario.nombre }}</td>
           <td>{{ usuario.mail }}</td>
           <td>{{ usuario.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ usuario.esAdmin ? 'Sí' : 'No' }}</td>
           <td>
-            <button (click)="cambiarEstadoAdmin(usuario.mail, !usuario.esAdmin)">
-              {{ usuario.esAdmin ? 'Quitar Admin' : 'Hacer Admin' }}
-            </button>
+            <input type="checkbox" [checked]="usuario.esAdmin" (change)="cambiarAdmin(usuario)" />
+          </td>
+          <td>
+            <button (click)="eliminarUsuario(usuario)">Eliminar</button>
           </td>
         </tr>
       </tbody>
