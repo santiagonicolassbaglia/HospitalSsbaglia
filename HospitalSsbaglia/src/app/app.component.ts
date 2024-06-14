@@ -15,6 +15,7 @@ import { CaptchaComponent } from './componentes/captcha/captcha.component';
 import { ListaUsuariosIngresadosComponent } from './componentes/lista-usuarios-ingresados/lista-usuarios-ingresados.component';
 import { Usuario } from './clases/usuario';
 import { HomeAdminComponent } from './componentes/home-admin/home-admin.component';
+import { HomeRegistroComponent } from './componentes/home-registro/home-registro.component';
  
  
 
@@ -36,6 +37,7 @@ import { HomeAdminComponent } from './componentes/home-admin/home-admin.componen
     CaptchaComponent,
     HomeAdminComponent,
     ListaUsuariosIngresadosComponent,
+    HomeRegistroComponent,
 
 
   ],

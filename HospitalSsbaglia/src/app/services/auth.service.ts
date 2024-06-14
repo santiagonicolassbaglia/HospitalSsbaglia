@@ -49,7 +49,7 @@ export class AuthService {
         imagenes: imagenesURLs
       });
     }
-  }
+}
 
 
 
@@ -93,21 +93,33 @@ export class AuthService {
     });
   }
 
-  public async guardarUsuarioFirestore(uid: string, nombre: string, mail: string, apellido:string, dni:string, obraSocial: string | null , especialidad: string | null, contraseña:string , imagenes:File[], aprobado: boolean | null): Promise<void> {
-    await this.firestore.collection('Usuarios').doc(uid).set({
-      nombre,
-      apellido,
-      dni,
-      obraSocial,
-      especialidad,
-      mail,
-      imagenes,
-      aprobado,
-      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+  public async guardarUsuarioFirestore(
+    uid: string, 
+    nombre: string, 
+    mail: string, 
+    apellido: string, 
+    dni: string, 
+    obraSocial: string | null, 
+    especialidad: string[], 
+    contraseña: string, 
+    imagenes: File[], 
+    aprobado: boolean | null,
+    esAdmin: boolean = false  
+): Promise<void> {
+    await this.firestore.collection(this.PATH).doc(uid).set({
+        nombre,
+        apellido,
+        dni,
+        obraSocial,
+        especialidad,  
+        mail,
+        imagenes,
+        aprobado,
+        esAdmin,  
+        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
     });
-    
-  }
-  
+}
+
   // public async guardarUsuarioFirestore(uid: string, nombre: string, email: string) {
   //   await this.firestore.collection(this.PATH).doc(uid).set({
   //     nombre,
@@ -215,4 +227,22 @@ export class AuthService {
   public async aceptarEspecialista(uid: string): Promise<void> {
     await this.firestore.collection(this.PATH).doc(uid).update({ aprobado: true });
   }
+
+  
+  async cambiarEstadoAdmin(mail: string, esAdmin: boolean): Promise<void> {
+    try {
+      const snapshot = await this.firestore.collection(this.PATH).ref.where('mail', '==', mail).get();
+      if (snapshot.empty) {
+        throw new Error('No se encontró el usuario con el email proporcionado');
+      }
+      const doc = snapshot.docs[0];
+      await doc.ref.update({ esAdmin });
+    } catch (error) {
+      console.error('Error al cambiar estado de admin:', error);
+      throw error;
+    }
+  }
+
+ 
+
 }

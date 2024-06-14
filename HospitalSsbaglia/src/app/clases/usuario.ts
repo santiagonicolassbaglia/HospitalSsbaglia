@@ -4,16 +4,30 @@ export class Usuario {
     public dni: string;
     public edad: number;
     public obraSocial: string | null = null;
-    public especialidad: string | null = null; // null si es paciente
+    public especialidad: string[] = [];  
     public contraseña: string;
     public mail: string;
     public imagenes: File[] = [];
-    public aprobado: boolean| null = null;
+    public aprobado: boolean | null = null;
     public code: string;
     public lastLogin: Date | null = null;
- 
+    public esAdmin: boolean = false;  
 
-    constructor(nombre: string, apellido: string, dni: string, edad: number, obraSocial: string | null, especialidad: string | null, contraseña: string, mail: string, imagenes: File[], code: string, lastLogin: Date | null, aprobado: boolean | null = null ) {
+    constructor(
+        nombre: string, 
+        apellido: string, 
+        dni: string, 
+        edad: number, 
+        obraSocial: string | null, 
+        especialidad: string[], 
+        contraseña: string, 
+        mail: string, 
+        imagenes: File[], 
+        code: string, 
+        lastLogin: Date | null, 
+        aprobado: boolean | null = null, 
+        esAdmin: boolean = false  
+    ) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -25,7 +39,7 @@ export class Usuario {
         this.imagenes = imagenes;
         this.code = code;
         this.lastLogin = lastLogin;
-         this.aprobado = aprobado;
-            
+        this.aprobado = aprobado;
+        this.esAdmin = esAdmin;
     }
 }

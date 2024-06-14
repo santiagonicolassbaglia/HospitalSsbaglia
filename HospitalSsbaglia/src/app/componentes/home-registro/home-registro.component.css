@@ -1,0 +1,100 @@
+.home-container {
+  background-image: url("../../../assets/imagenes/medicoCruzRoja.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #09ff00;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.home-content {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 100px;
+  border-radius: 50px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-logout {
+  position: absolute;
+  top: 40px; 
+  right: 40px; 
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #dc3545;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c82333;
+}
+
+.image-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 100px; /* Añade espacio entre los botones */
+}
+
+.image-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-button img {
+  width:500px; /* Ajusta el tamaño según tus necesidades */
+  height: 300px; /* Ajusta el tamaño según tus necesidades */
+  object-fit: cover;
+  transition: transform 0.3s;
+  border-radius: 40px; /* Añadimos un borde redondeado */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añadimos una sombra */
+}
+
+.image-button img:hover {
+  transform: scale(1.05);
+}
+
+.image-button span {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #fff;
+}
