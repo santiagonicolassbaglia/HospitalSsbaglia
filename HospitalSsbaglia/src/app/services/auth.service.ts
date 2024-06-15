@@ -41,7 +41,7 @@ export class AuthService {
   
     if (userId) {
       const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
-      const imagenesURLs = await this.uploadImages(imagenesArray, userId);
+      const imagenesURLs = await this.uploadImages(imagenesArray as File[], userId);
   
       await this.firestore.collection(this.PATH).doc(userId).set({
         ...usuario,
@@ -49,30 +49,34 @@ export class AuthService {
         imagenes: imagenesURLs
       });
     }
+  }
+
+
+
+private async uploadImages(imagenes: File[], userId: string): Promise<string[]> {
+  const uploadPromises = imagenes.map((imagen, index) => {
+    const filePath = `users/${userId}/profile_${index}`;
+    return this.storage.upload(filePath, imagen).then(() => {
+      return this.storage.ref(filePath).getDownloadURL().toPromise();
+    });
+  });
+  return Promise.all(uploadPromises);
 }
 
+async login(email: string, password: string): Promise<void> {
+  const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
+  const userId = userCredential.user?.uid;
 
+  if (userId) {
+    const userDoc = await this.firestore.collection(this.PATH).doc(userId).get().toPromise();
+    const userData = userDoc?.data() as Usuario | undefined;
 
-  private async uploadImages(imagenes: File[], userId: string): Promise<string[]> {
-    const uploadPromises = imagenes.map((imagen, index) => {
-      const filePath = `users/${userId}/profile_${index}`;
-      return this.storage.upload(filePath, imagen).then(() => {
-        return this.storage.ref(filePath).getDownloadURL().toPromise();
-      });
-    });
-    return Promise.all(uploadPromises);
-  }
-  
-
-  async login(mail: string, pass: string) {
-    try {
-      const userCredential = await this.auth.signInWithEmailAndPassword(mail, pass);
-      await this.updateLastLogin(userCredential.user.uid);
-    } catch (error) {
-      console.error('Error de inicio de sesión:', error);
-      throw error;
+    if (userData?.especialidad && !userData.aprobado) {
+      await this.auth.signOut();
+      throw new Error('El especialista no ha sido aprobado.');
     }
   }
+}
 
 
   async loginWithGoogle() {
@@ -117,6 +121,7 @@ export class AuthService {
         aprobado,
         esAdmin,  
         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        
     });
 }
 
@@ -161,7 +166,8 @@ export class AuthService {
                 usuario.imagenes,
                 usuario.code,
                 usuario.lastLogin,
-                usuario.esAdmin // Asegúrate de pasar esta propiedad también
+                usuario.esAdmin,
+                usuario.aprobado
               ));
             } else {
               reject('No se encontró el usuario en la base de datos');
@@ -236,39 +242,15 @@ export class AuthService {
           data.imagenes,
           data.code,
           data.lastLogin ? data.lastLogin.toDate() : null,
-          data.esAdmin
+          data.esAdmin,
+          data.aprobado
         );
       }))
     );
   }
   
-  public obtenerSolicitudesEspecialistas(): Observable<Usuario[]> {
-    return this.firestore.collection(this.PATH, ref => ref.where('especialidad', '!=', null).where('aprobado', '==', false)).snapshotChanges().pipe(
-      map(actions => actions.map(a => {
-        const data = a.payload.doc.data() as any;
-        const id = a.payload.doc.id; // Obtener el ID del documento
-        return new Usuario(
-          id, // Pasar el ID como uid
-          data.nombre,
-          data.apellido,
-          data.dni,
-          data.edad,
-          data.obraSocial,
-          data.especialidad,
-          '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
-          data.mail,
-          data.imagenes,
-          data.code,
-          data.lastLogin ? data.lastLogin.toDate() : null,
-          data.esAdmin
-        );
-      }))
-    );
-  }
   
-  public async aceptarEspecialista(uid: string): Promise<void> {
-    await this.firestore.collection(this.PATH).doc(uid).update({ aprobado: true });
-  }
+ 
 
   async cambiarEstadoAdmin(mail: string, esAdmin: boolean): Promise<void> {
     try {
@@ -298,4 +280,65 @@ export class AuthService {
       throw error;
     }
   }
-}
+
+
+ 
+  public async registrarEspecialista(usuario: Usuario): Promise<void> {
+    const { mail, contraseña, imagenes } = usuario;
+    const userCredential = await this.auth.createUserWithEmailAndPassword(mail, contraseña);
+    const userId = userCredential.user?.uid;
+  
+    if (userId) {
+      let imagenesURLs: string[] = [];
+      if (imagenes && imagenes.length > 0 && imagenes[0] instanceof File) {
+        imagenesURLs = await this.uploadImages(imagenes as File[], userId);
+      }
+  
+      usuario.uid = userId;
+      usuario.imagenes = imagenesURLs; // Aquí las URLs de las imágenes
+      usuario.aprobado = false; // Set approved to false initially
+  
+      await this.firestore.collection(this.PATH).doc(userId).set({ ...usuario });
+  
+      // Add to specialist requests collection
+      await this.firestore.collection('specialistRequests').doc(userId).set({ ...usuario });
+    }
+  }
+
+
+
+  // Method to accept specialist request
+  public async aceptarEspecialista(uid: string): Promise<void> {
+    await this.firestore.collection(this.PATH).doc(uid).update({ aprobado: true });
+    await this.firestore.collection('specialistRequests').doc(uid).delete();
+  }
+
+  // Method to get all specialist requests
+  public obtenerSolicitudesEspecialistas(): Observable<Usuario[]> {
+    return this.firestore.collection('specialistRequests').snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as any;
+        return new Usuario(
+          data.uid,
+          data.nombre,
+          data.apellido,
+          data.dni,
+          data.edad,
+          data.obraSocial,
+          data.especialidad,
+          '',
+          data.mail,
+          data.imagenes,
+          data.code,
+          data.lastLogin ? data.lastLogin.toDate() : null,
+          data.aprobado
+        );
+      }))
+    );
+  }
+
+  rechazarEspecialista(uid: string): Promise<void> {
+    return this.firestore.collection('specialistRequests').doc(uid).delete();
+  }
+
+}  

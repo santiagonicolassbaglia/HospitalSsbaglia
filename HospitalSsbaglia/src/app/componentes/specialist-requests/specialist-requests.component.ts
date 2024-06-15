@@ -1,45 +1,39 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../clases/usuario';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-specialist-requests',
   standalone: true,
-  imports:  [NgIf, NgFor, RouterLink],
+  imports:  [NgIf, NgFor, RouterLink, AsyncPipe],
   templateUrl: './specialist-requests.component.html',
   styleUrl: './specialist-requests.component.css'
 })
 export class SpecialistRequestsComponent implements OnInit {
-  solicitudes: Usuario[] = [];
-  mensajeError: string = '';
+  especialistas$: Observable<Usuario[]>;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.obtenerSolicitudes();
+    this.especialistas$ = this.authService.obtenerSolicitudesEspecialistas();
   }
 
-  obtenerSolicitudes(): void {
-    this.authService.obtenerSolicitudesEspecialistas().subscribe(
-      (solicitudes: Usuario[]) => {
-        this.solicitudes = solicitudes;
-      },
-      error => {
-        this.mensajeError = 'Error al obtener las solicitudes de especialistas';
-        console.error('Error al obtener las solicitudes:', error);
-      }
-    );
-  }
-
-  aceptarEspecialista(uid: string): void {
-    this.authService.aceptarEspecialista(uid).then(() => {
-      this.obtenerSolicitudes();
+  aceptarEspecialista(especialista: Usuario): void {
+    this.authService.aceptarEspecialista(especialista.uid).then(() => {
+      alert('Especialista aceptado');
     }).catch(error => {
-      this.mensajeError = 'Error al aceptar al especialista';
-      console.error('Error al aceptar al especialista:', error);
+      console.error('Error al aceptar especialista:', error);
     });
   }
-}{
 
+  rechazarEspecialista(especialista: Usuario): void {
+    this.authService.rechazarEspecialista(especialista.uid).then(() => {
+      alert('Especialista rechazado');
+    }).catch(error => {
+      console.error('Error al rechazar especialista:', error);
+    });
+    
+  }
 }

@@ -43,15 +43,15 @@ export class RegistroEspecialistaComponent implements OnInit {
       return;
     }
     this.loadingService.show();
-
+  
     setTimeout(() => {
       this.loadingService.hide();
     }, 6000);
-
+  
     const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagenes } = this.form.value;
     const finalEspecialidad = especialidad === 'Otra' ? otraEspecialidad : especialidad;
     const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
-
+  
     const nuevoUsuario = new Usuario(
       '',
       nombre,
@@ -59,7 +59,7 @@ export class RegistroEspecialistaComponent implements OnInit {
       dni,
       edad,
       null,
-      [finalEspecialidad] || [],
+      [finalEspecialidad],
       clave,
       mail,
       imagenesArray,
@@ -67,8 +67,8 @@ export class RegistroEspecialistaComponent implements OnInit {
       null,
       false
     );
-
-    this.authService.registrar(nuevoUsuario).then(() => {
+  
+    this.authService.registrarEspecialista(nuevoUsuario).then(() => {
       this.router.navigateByUrl('/login');
     }).catch((error) => {
       this.mensajeError = 'Hubo un problema al registrar el usuario. Inténtalo de nuevo.';

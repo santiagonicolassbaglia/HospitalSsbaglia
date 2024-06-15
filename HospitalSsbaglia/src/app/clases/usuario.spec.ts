@@ -15,6 +15,7 @@ describe('Usuario', () => {
     const code = "code";
     const lastLogin = new Date();
     const esAdmin = false;
+    const aprobado = false;
 
     const usuario = new Usuario(
       uid,
@@ -29,7 +30,8 @@ describe('Usuario', () => {
       imagenes,
       code,
       lastLogin,
-      esAdmin
+      esAdmin,
+      aprobado
     );
 
     expect(usuario).toBeTruthy();

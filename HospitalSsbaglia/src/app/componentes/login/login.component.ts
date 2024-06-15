@@ -14,7 +14,7 @@ import { CaptchaComponent } from '../captcha/captcha.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent  implements OnInit {
   mail: string = '';
   clave: string = '';
   mensajeError: string = '';
@@ -55,7 +55,11 @@ export class LoginComponent implements OnInit {
       this.router.navigateByUrl('home');
     } catch (error) {
       console.log('Error de inicio de sesión:', error);
-      this.mensajeError = 'El correo electrónico o la contraseña son incorrectos';
+      if (error.message === 'El especialista no ha sido aprobado.') {
+        this.mensajeError = 'Su cuenta aún no ha sido aprobada por el administrador.';
+      } else {
+        this.mensajeError = 'El correo electrónico o la contraseña son incorrectos';
+      }
     }
   }
 
