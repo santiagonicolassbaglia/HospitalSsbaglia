@@ -1,56 +1,80 @@
 <div class="registro-container">
     <h2>Registro</h2>
     <form [formGroup]="form" (ngSubmit)="registrar()">
-      <div class="form-group">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" formControlName="nombre" type="text" />
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" formControlName="nombre" type="text">
+      <div *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+        <small *ngIf="form.get('nombre')?.errors?.['required']">El nombre es requerido.</small>
+        <small *ngIf="form.get('nombre')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres.</small>
       </div>
-  
-      <div class="form-group">
-        <label for="apellido">Apellido</label>
-        <input id="apellido" formControlName="apellido" type="text" />
+     
+    <div class="form-group">
+      <label for="apellido">Apellido:</label>
+      <input id="apellido" formControlName="apellido" type="text">
+      <div *ngIf="form.get('apellido')?.invalid && form.get('apellido')?.touched">
+        <small *ngIf="form.get('apellido')?.errors?.['required']">El apellido es requerido.</small>
+        <small *ngIf="form.get('apellido')?.errors?.['minlength']">El apellido debe tener al menos 3 caracteres.</small>
       </div>
+    </div>
   
-      <div class="form-group">
-        <label for="dni">DNI</label>
-        <input id="dni" formControlName="dni" type="text" />
+    <div class="form-group">
+      <label for="dni">DNI:</label>
+      <input id="dni" formControlName="dni" type="text">
+      <div *ngIf="form.get('dni')?.invalid && form.get('dni')?.touched">
+        <small *ngIf="form.get('dni')?.errors?.['required']">El DNI es requerido.</small>
+        <small *ngIf="form.get('dni')?.errors?.['pattern']">El DNI debe tener 7 u 8 dígitos.</small>
       </div>
+    </div>
   
-      <div class="form-group">
-        <label for="edad">Edad</label>
-        <input id="edad" formControlName="edad" type="number" />
+    <div class="form-group">
+      <label for="edad">Edad:</label>
+      <input id="edad" formControlName="edad" type="number">
+      <div *ngIf="form.get('edad')?.invalid && form.get('edad')?.touched">
+        <small *ngIf="form.get('edad')?.errors?.['required']">La edad es requerida.</small>
+        <small *ngIf="form.get('edad')?.errors?.['min']">La edad debe ser mayor a 0.</small>
       </div>
-  
-      <div class="form-group">
+    </div>
+    
+      <div class="form-group" >
         <label for="obraSocial">Obra Social</label>
         <input id="obraSocial" formControlName="obraSocial" type="text" />
+        <div *ngIf="form.get('obraSocial')?.invalid && form.get('obraSocial')?.touched">
+          <small *ngIf="form.get('obraSocial')?.errors?.['required']">La obra social es requerida.</small>
       </div>
   
-      <div class="form-group">
+      <div class="form-group" >
         <label for="mail">Correo Electrónico</label>
         <input id="mail" formControlName="mail" type="email" />
+        <div *ngIf="form.get('mail')?.invalid && form.get('mail')?.touched">
+          <small *ngIf="form.get('mail')?.errors?.['required']">El correo electrónico es requerido.</small>
+          <small *ngIf="form.get('mail')?.errors?.['email']">El correo electrónico no es válido.</small>
       </div>
   
       <div class="form-group">
         <label for="clave">Contraseña</label>
         <input id="clave" formControlName="clave" type="password" />
+        <div *ngIf="form.get('clave')?.invalid && form.get('clave')?.touched">
+          <small *ngIf="form.get('clave')?.errors?.['required']">La contraseña es requerida.</small>
+          <small *ngIf="form.get('clave')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</small>
+
       </div>
   
       <div class="form-group">
         <label for="imagenes">Imágenes de Perfil</label>
         <input class="buttonSeleccionarArchivo" id="imagenes" type="file" (change)="onFileChange($event)" multiple />
+        <div *ngIf="form.get('imagenes')?.invalid && form.get('imagenes')?.touched">
+          <small *ngIf="form.get('imagenes')?.errors?.['required']">Por favor, selecciona al menos una imagen.</small>
       </div>
   
       <button type="submit">Registrar</button>
-
+      
       <br><br> 
       <div>
         <button  routerLink="/registro-especialista" class="btn botonRegistroEspecialista">Registrarse como especialista</button>
       </div>
-    </form>
-  
-    <div *ngIf="mensajeError" class="error-message">
-      {{ mensajeError }}
-    </div>
+      
+      <div *ngIf="mensajeError" class="error-message">
+        {{ mensajeError }}
+      </div>
   </div>
   

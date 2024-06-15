@@ -285,25 +285,38 @@ async login(email: string, password: string): Promise<void> {
  
   public async registrarEspecialista(usuario: Usuario): Promise<void> {
     const { mail, contraseña, imagenes } = usuario;
-    const userCredential = await this.auth.createUserWithEmailAndPassword(mail, contraseña);
-    const userId = userCredential.user?.uid;
   
-    if (userId) {
-      let imagenesURLs: string[] = [];
-      if (imagenes && imagenes.length > 0 && imagenes[0] instanceof File) {
-        imagenesURLs = await this.uploadImages(imagenes as File[], userId);
+    try {
+      const userCredential = await this.auth.createUserWithEmailAndPassword(mail, contraseña);
+      
+      if (userCredential && userCredential.user) {
+        const userId = userCredential.user.uid;
+        let imagenesURLs: string[] = [];
+  
+        if (imagenes && imagenes.length > 0 && imagenes[0] instanceof File) {
+          imagenesURLs = await this.uploadImages(imagenes as File[], userId);
+        }
+  
+        usuario.uid = userId;
+        usuario.imagenes = imagenesURLs; // URLs de las imágenes
+        usuario.aprobado = false; // Set approved to false initially
+  
+        // Guardar usuario en Firestore y en la colección de solicitudes de especialistas
+        await Promise.all([
+          this.firestore.collection(this.PATH).doc(userId).set({ ...usuario }),
+          this.firestore.collection('specialistRequests').doc(userId).set({ ...usuario })
+        ]);
+  
+        console.log('Especialista registrado correctamente:', usuario);
+      } else {
+        throw new Error('No se pudo crear el usuario correctamente.');
       }
-  
-      usuario.uid = userId;
-      usuario.imagenes = imagenesURLs; // Aquí las URLs de las imágenes
-      usuario.aprobado = false; // Set approved to false initially
-  
-      await this.firestore.collection(this.PATH).doc(userId).set({ ...usuario });
-  
-      // Add to specialist requests collection
-      await this.firestore.collection('specialistRequests').doc(userId).set({ ...usuario });
+    } catch (error) {
+      console.error('Error al registrar especialista:', error);
+      throw error; // Re-lanza el error para manejarlo en el componente que llama a este método
     }
   }
+  
 
 
 

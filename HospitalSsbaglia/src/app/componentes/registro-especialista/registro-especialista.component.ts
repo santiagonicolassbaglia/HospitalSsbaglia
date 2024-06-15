@@ -9,49 +9,57 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { SpinnerService } from '../../services/spinner.service';
 
 @Component({
-  selector: 'app-registro-especialista',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink, NgFor],
-  templateUrl: './registro-especialista.component.html',
-  styleUrl: './registro-especialista.component.css'
+selector: 'app-registro-especialista',
+standalone: true,
+imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink, NgFor],
+templateUrl: './registro-especialista.component.html',
+styleUrl: './registro-especialista.component.css'
 })
 export class RegistroEspecialistaComponent implements OnInit {
-  form: FormGroup;
-  mensajeError: string = '';
-  especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
+form: FormGroup;
+mensajeError: string = '';
+especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
+selectedEspecialidades: string[] = [];
+showOtraEspecialidad: boolean = false;
 
-  private fb = inject(FormBuilder);
+private fb = inject(FormBuilder);
 
-  constructor(private authService: AuthService, private router: Router, private loadingService: SpinnerService) {}
+constructor(private authService: AuthService, private router: Router, private loadingService: SpinnerService) {}
 
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      apellido: ['', [Validators.required, Validators.minLength(3)]],
-      dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
-      edad: ['', [Validators.required, Validators.min(1)]],
-      especialidad: ['', Validators.required],
-      otraEspecialidad: [''],
-      mail: ['', [Validators.required, Validators.email]],
-      clave: ['', [Validators.required, Validators.minLength(6)]],
-      imagenes: [null, Validators.required]
-    });
-  }
-
+ngOnInit(): void {
+this.form = this.fb.group({
+nombre: ['', [Validators.required, Validators.minLength(3)]],
+apellido: ['', [Validators.required, Validators.minLength(3)]],
+dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
+edad: ['', [Validators.required, Validators.min(1)]],
+especialidad: ['', Validators.required],
+otraEspecialidad: [''],
+mail: ['', [Validators.required, Validators.email]],
+clave: ['', [Validators.required, Validators.minLength(6)]],
+imagenes: [null, Validators.required]
+});
+}
   registrar() {
     if (this.hasError()) {
       return;
     }
     this.loadingService.show();
-  
+    
     setTimeout(() => {
       this.loadingService.hide();
     }, 6000);
-  
+    
     const { nombre, apellido, dni, edad, especialidad, otraEspecialidad, mail, clave, imagenes } = this.form.value;
+    if (this.selectedEspecialidades.includes('Otra')) {
+      const index = this.selectedEspecialidades.indexOf('Otra');
+      if (index !== -1 && otraEspecialidad) {
+        this.selectedEspecialidades[index] = otraEspecialidad;
+      }
+    }
+    
     const finalEspecialidad = especialidad === 'Otra' ? otraEspecialidad : especialidad;
     const imagenesArray = Array.isArray(imagenes) ? imagenes : [imagenes];
-  
+    
     const nuevoUsuario = new Usuario(
       '',
       nombre,
@@ -67,41 +75,52 @@ export class RegistroEspecialistaComponent implements OnInit {
       null,
       false
     );
-  
+    
     this.authService.registrarEspecialista(nuevoUsuario).then(() => {
       this.router.navigateByUrl('/login');
     }).catch((error) => {
       this.mensajeError = 'Hubo un problema al registrar el usuario. Inténtalo de nuevo.';
       console.error('Error al registrar usuario:', error);
     });
-  }
-
-  private hasError(): boolean {
+    }
+    
+    private hasError(): boolean {
     this.form.markAllAsTouched();
     return this.form.invalid;
-  }
-
-  private generateUserCode(): string {
+    }
+    
+    private generateUserCode(): string {
     return 'some-unique-code';
-  }
-
-  onFileChange(event: any) {
+    }
+    
+    onFileChange(event: any) {
     const files = event.target.files;
     if (files.length > 0) {
-      const fileArray = Array.from(files).map((file: File) => file);
-      this.form.patchValue({
-        imagenes: fileArray
-      });
+    const fileArray = Array.from(files).map((file: File) => file);
+    this.form.patchValue({
+    imagenes: fileArray
+    });
     }
-  }
-
-  onEspecialidadChange(event: any) {
+    }
+    
+    onEspecialidadChange(event: any) {
     const selectedValue = event.target.value;
+    if (event.target.checked) {
+    this.selectedEspecialidades.push(selectedValue);
     if (selectedValue === 'Otra') {
-      this.form.get('otraEspecialidad')?.setValidators([Validators.required]);
+    this.showOtraEspecialidad = true;
+    this.form.get('otraEspecialidad')?.setValidators([Validators.required]);
+    }
     } else {
-      this.form.get('otraEspecialidad')?.clearValidators();
+    const index = this.selectedEspecialidades.indexOf(selectedValue);
+    if (index !== -1) {
+    this.selectedEspecialidades.splice(index, 1);
+    }
+    if (selectedValue === 'Otra') {
+    this.showOtraEspecialidad = false;
+    this.form.get('otraEspecialidad')?.clearValidators();
+    }
     }
     this.form.get('otraEspecialidad')?.updateValueAndValidity();
-  }
-}
+    }
+    }
