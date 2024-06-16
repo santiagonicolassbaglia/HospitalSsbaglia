@@ -2,27 +2,27 @@ import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { SpinnerService } from '../../services/spinner.service';
 import { CaptchaComponent } from '../captcha/captcha.component';
+import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink, PaginaErrorComponent, NgIf, CaptchaComponent],
+  imports: [FormsModule, RouterLink, PaginaErrorComponent, NgIf, CaptchaComponent,NgFor],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent  implements OnInit {
+export class LoginComponent implements OnInit {
   mail: string = '';
   clave: string = '';
   mensajeError: string = '';
   recordarme: boolean = false;
   captchaVerified: boolean = false;
-  private fb = inject(FormBuilder);
-  protected form: FormGroup;
-  @Output() nombreUsuarioEmitido = new EventEmitter<string>();
+
+  usuariosPredeterminados: Usuario[] = [];
 
   constructor(private router: Router, private authService: AuthService, private loadingService: SpinnerService) {}
 
@@ -36,6 +36,19 @@ export class LoginComponent  implements OnInit {
       this.clave = usuario.clave;
       this.recordarme = true;
     }
+
+    // Obtén los usuarios desde Firestore
+    this.authService.getAllUsers().subscribe(users => {
+      this.usuariosPredeterminados = users.filter(user => 
+        user.mail === 'usuario1@gmail.com' || 
+        user.mail === 'usuario2@gmail.com' || 
+        user.mail === 'usuario3@gmail.com'||
+        user.mail === 'admin@gmail.com' ||
+        user.mail === 'especialista1@gmail.com' ||
+        user.mail === 'especialista2@gmail.com' 
+
+      );
+    });
   }
 
   async login() {
@@ -43,13 +56,13 @@ export class LoginComponent  implements OnInit {
       this.mensajeError = 'Por favor, resuelve el captcha primero.';
       return;
     }
-
+  
     this.loadingService.show();
-
+  
     setTimeout(() => {
       this.loadingService.hide();
     }, 3000);
-
+  
     try {
       await this.authService.login(this.mail, this.clave);
       this.router.navigateByUrl('home');
@@ -63,9 +76,9 @@ export class LoginComponent  implements OnInit {
     }
   }
 
-  usuarioPorDefecto() {
-    this.mail = 'santiii@gmail.com';
-    this.clave = '123456';
+  usuarioPorDefecto(email: string, clave: string) {
+    this.mail = email;
+    this.clave = clave;  
     this.authService.esAdmin = true;
   }
 
@@ -81,5 +94,16 @@ export class LoginComponent  implements OnInit {
   onCaptchaResolved(resolved: boolean) {
     this.captchaVerified = resolved;
     this.mensajeError = resolved ? '' : 'Captcha incorrecto. Por favor, inténtalo de nuevo.';
+  }
+
+  autoComplete(usuario: Usuario) {
+    this.mail = usuario.mail;
+    this.clave = '123456';  
+  }
+ 
+  usuarioPorDefectoOriginal() {
+    this.mail = 'santiii@gmail.com';
+    this.clave = '123456';
+    this.authService.esAdmin = true;
   }
 }

@@ -11,7 +11,7 @@
       <label for="claveLogin">Contraseña</label>
     </div>
     <div>
-      <button class="w-100 btn btn-lg btn-primary" type="button" (click)="usuarioPorDefecto()">Usuario por defecto</button>
+      <button class="w-100 btn btn-lg btn-primary" type="button" (click)="usuarioPorDefectoOriginal()">Usuario por defecto</button>
     </div>
 
     <app-captcha (captchaResolved)="onCaptchaResolved($event)"></app-captcha>
@@ -39,5 +39,14 @@
     <div class="text-center mt-3">
       <button routerLink="/homeRegistro" class="btn btn-lg btn-primary">Registrarme</button>
     </div>
+
+    <div class="usuarios-predeterminados">
+      <div class="usuario-predeterminado" *ngFor="let usuario of usuariosPredeterminados" (click)="autoComplete(usuario)">
+        <img [src]="usuario.imagenes[0]" alt="Imagen de {{ usuario.mail }}">
+        <span>{{ usuario.mail }}</span>
+        
+      </div>
+    </div>
+     
   </form>
 </main>

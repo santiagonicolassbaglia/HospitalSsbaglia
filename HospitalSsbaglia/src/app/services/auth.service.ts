@@ -63,22 +63,44 @@ private async uploadImages(imagenes: File[], userId: string): Promise<string[]> 
   return Promise.all(uploadPromises);
 }
 
-async login(email: string, password: string): Promise<void> {
-  const userCredential = await this.auth.signInWithEmailAndPassword(email, password);
-  const userId = userCredential.user?.uid;
+ 
+async login(mail: string, pass: string) {
+  try {
+    const userCredential = await this.auth.signInWithEmailAndPassword(mail, pass);
+    const userDoc = await this.firestore.collection(this.PATH).doc(userCredential.user.uid).get().toPromise();
+    const userData = userDoc.data() as Usuario;
 
-  if (userId) {
-    const userDoc = await this.firestore.collection(this.PATH).doc(userId).get().toPromise();
-    const userData = userDoc?.data() as Usuario | undefined;
+    if (userData) {
+      // Verificar si el usuario es un especialista y si está aprobado
+      if (userData.especialidad.length > 0 && !userData.aprobado) {
+        throw new Error('El especialista no ha sido aprobado.');
+      }
 
-    if (userData?.especialidad && !userData.aprobado) {
-      await this.auth.signOut();
-      throw new Error('El especialista no ha sido aprobado.');
+      this.loguado = true;
+      this.esAdmin = userData.esAdmin;
+      await this.updateLastLogin(userCredential.user.uid);
     }
+  } catch (error) {
+    let errorMessage: string;
+    switch (error.code) {
+      case 'auth/user-not-found':
+        errorMessage = 'No se encontró un usuario con ese correo.';
+        break;
+      case 'auth/wrong-password':
+        errorMessage = 'Contraseña incorrecta.';
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Demasiados intentos fallidos. Intenta más tarde.';
+        break;
+      default:
+        errorMessage = error.message || 'Error desconocido al iniciar sesión.';
+    }
+    console.error('Error de inicio de sesión:', error);
+    throw new Error(errorMessage);
   }
 }
 
-
+ 
   async loginWithGoogle() {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -237,7 +259,7 @@ async login(email: string, password: string): Promise<void> {
           data.edad,
           data.obraSocial,
           data.especialidad,
-          '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
+          data.contraseña,
           data.mail,
           data.imagenes,
           data.code,

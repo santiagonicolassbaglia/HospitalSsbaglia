@@ -80,4 +80,25 @@
     color: red;
     margin-top: 10px;
   }
+  .usuarios-predeterminados {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .usuario-predeterminado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    width: 70px;
+    margin: 0 10px;
+  }
+  
+  .usuario-predeterminado img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+  }
   
