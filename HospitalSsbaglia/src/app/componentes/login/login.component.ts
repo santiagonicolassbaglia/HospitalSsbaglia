@@ -37,16 +37,16 @@ export class LoginComponent implements OnInit {
       this.recordarme = true;
     }
 
-    // Obtén los usuarios desde Firestore
-    this.authService.getAllUsers().subscribe(users => {
+  this.authService.getAllUsers().subscribe(users => {
+      console.log(users); // Añade esta línea para verificar los usuarios recibidos
       this.usuariosPredeterminados = users.filter(user => 
         user.mail === 'usuario1@gmail.com' || 
+        user.mail === 'especialista1@gmail.com' || 
         user.mail === 'usuario2@gmail.com' || 
-        user.mail === 'usuario3@gmail.com'||
-        user.mail === 'admin@gmail.com' ||
-        user.mail === 'especialista1@gmail.com' ||
-        user.mail === 'especialista2@gmail.com' 
-
+        user.mail === 'usuario3@gmail.com' ||
+        user.mail === 'Admin@gmail.com' ||
+         
+        user.mail === 'especialista2@gmail.com'
       );
     });
   }

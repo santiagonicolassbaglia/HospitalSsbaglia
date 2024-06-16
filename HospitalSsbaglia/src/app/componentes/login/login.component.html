@@ -1,52 +1,48 @@
 <main class="form-signin">
   <form (ngSubmit)="login()">
-    <h1 class="h3 mb-3 fw-normal">Ingresar</h1>
+    <h1 class="h3 mb-3 fw-normal text-center">Ingresar</h1>
 
-    <div class="form-floating">
-      <input type="email" class="form-control" id="email" placeholder="Email" [(ngModel)]="mail" name="email">
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="email" placeholder="Email" [(ngModel)]="mail" name="email" required>
       <label for="email">Email</label>
     </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="claveLogin" placeholder="Contraseña" [(ngModel)]="clave" name="clave">
+    <div class="form-floating mb-3">
+      <input type="password" class="form-control" id="claveLogin" placeholder="Contraseña" [(ngModel)]="clave" name="clave" required>
       <label for="claveLogin">Contraseña</label>
     </div>
-    <div>
-      <button class="w-100 btn btn-lg btn-primary" type="button" (click)="usuarioPorDefectoOriginal()">Usuario por defecto</button>
+    <div class="d-grid mb-3">
+      <button class="btn btn-secondary" type="button" (click)="usuarioPorDefectoOriginal()">Usuario por defecto</button>
     </div>
 
     <app-captcha (captchaResolved)="onCaptchaResolved($event)"></app-captcha>
 
-    <div *ngIf="mensajeError" class="error">{{ mensajeError }}</div>
+    <div *ngIf="mensajeError" class="alert alert-danger mt-3">{{ mensajeError }}</div>
 
-    <div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Iniciar sesión</button>
+    <div class="d-grid mb-3">
+      <button class="btn btn-primary" type="submit">Iniciar sesión</button>
     </div>
 
-    <div class="form-check mb-3">
+    <div class="form-check mb-3 text-center">
       <input class="form-check-input" type="checkbox" value="" id="recordarme" [(ngModel)]="recordarme" name="recordarme">
-      <label class="form-check-label" for="recordarme">
-        Recordarme
-      </label>
+      <label class="form-check-label" for="recordarme">Recordarme</label>
     </div>
 
     <hr>
     <div class="text-center mt-3">
-      <button class="btn btn-lg btn-primary" type="button" (click)="loginWithGoogle()">
+      <button class="btn btn-lg btn-outline-primary" type="button" (click)="loginWithGoogle()">
         <i class="fab fa-google me-2"></i> Iniciar sesión con Google
       </button>
     </div>
     <hr>
     <div class="text-center mt-3">
-      <button routerLink="/homeRegistro" class="btn btn-lg btn-primary">Registrarme</button>
+      <button routerLink="/homeRegistro" class="btn btn-lg btn-outline-primary">Registrarme</button>
     </div>
 
-    <div class="usuarios-predeterminados">
+    <div class="usuarios-predeterminados mt-4">
       <div class="usuario-predeterminado" *ngFor="let usuario of usuariosPredeterminados" (click)="autoComplete(usuario)">
         <img [src]="usuario.imagenes[0]" alt="Imagen de {{ usuario.mail }}">
-        <span>{{ usuario.mail }}</span>
-        
+        <span>{{ usuario.apellido }}</span>
       </div>
     </div>
-     
   </form>
 </main>
