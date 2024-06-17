@@ -17,10 +17,27 @@
       <p>Fecha: {{ turno.fecha | date }}</p>
       <p>Estado: {{ turno.estado }}</p>
 
-      <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar Turno</button>
+      <div *ngIf="turno.estado !== 'cancelado'">
+        <button (click)="mostrarModalCancelar(turno)">Cancelar Turno</button>
+      </div>
+      <div *ngIf="turno.estado === 'cancelado'">
+        <p>Motivo de cancelación: {{ turno.comentario }}</p>
+      </div>
+
       <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
       <button *ngIf="puedeCompletarEncuesta(turno)" (click)="completarEncuesta(turno)">Completar Encuesta</button>
       <button *ngIf="puedeCalificarAtencion(turno)" (click)="calificarAtencion(turno)">Calificar Atención</button>
+    </div>
+  </div>
+
+  <!-- Modal de cancelar turno -->
+  <div id="modalCancelar" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="cerrarModalCancelar()">&times;</span>
+      <h3>Cancelar Turno</h3>
+      <p>¿Por qué desea cancelar el turno?</p>
+      <textarea [(ngModel)]="comentarioCancelacion" placeholder="Ingrese el motivo de cancelación"></textarea>
+      <button (click)="cancelarTurno(turnoSeleccionado)">Confirmar Cancelación</button>
     </div>
   </div>
 </div>

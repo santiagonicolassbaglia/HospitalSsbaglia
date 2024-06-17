@@ -10,6 +10,7 @@ export class Turno {
   resenia?: string;
   encuestaCompletada?: boolean;
   calificacionCompletada?: boolean;
+  comentario?: string;
   
   constructor(
     id: string,
@@ -20,7 +21,8 @@ export class Turno {
     paciente: string,
     resenia: string = '',
     encuestaCompletada: boolean = false,
-    calificacionCompletada: boolean = false
+    calificacionCompletada: boolean = false,
+    comentario: string = '',
   ) {
     this.id = id;
     this.especialidad = especialidad;
@@ -31,5 +33,7 @@ export class Turno {
     this.resenia = resenia;
     this.encuestaCompletada = encuestaCompletada;
     this.calificacionCompletada = calificacionCompletada;
+    this.comentario = comentario;
+    
   }
 }

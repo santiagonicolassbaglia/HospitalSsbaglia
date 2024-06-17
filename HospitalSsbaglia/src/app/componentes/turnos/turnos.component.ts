@@ -22,9 +22,12 @@ export class TurnosComponent  implements OnInit {
   filtroEspecialista: string = '';
   pacienteId: string = ''; // Variable para almacenar el ID del paciente
 
+  turnoSeleccionado: Turno; // Variable para almacenar el turno seleccionado para cancelar
+  comentarioCancelacion: string = ''; // Variable para almacenar el comentario de cancelación
+
   constructor(
     private turnoService: TurnoService,
-    private authService: AuthService // Inyecta el AuthService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -55,9 +58,35 @@ export class TurnosComponent  implements OnInit {
     );
   }
 
-
   puedeCancelar(turno: Turno): boolean {
     return turno.estado !== 'realizado';
+  }
+
+  // Mostrar modal de cancelar turno
+  mostrarModalCancelar(turno: Turno): void {
+    this.turnoSeleccionado = turno;
+    this.comentarioCancelacion = ''; // Limpiar comentario de cancelación
+    document.getElementById('modalCancelar').style.display = 'block';
+  }
+
+  // Cerrar modal de cancelar turno
+  cerrarModalCancelar(): void {
+    document.getElementById('modalCancelar').style.display = 'none';
+  }
+
+  // Cancelar turno con el comentario ingresado
+  cancelarTurno(turno: Turno): void {
+    if (this.comentarioCancelacion) {
+      this.turnoService.cancelarTurno(turno.id, this.comentarioCancelacion).then(() => {
+        console.log('Turno cancelado exitosamente');
+        turno.estado = 'cancelado';
+        turno.comentario = this.comentarioCancelacion;
+        this.filtrarTurnos(); // Actualizar la lista después de cancelar uno
+        this.cerrarModalCancelar(); // Cerrar modal después de cancelar
+      }).catch(error => {
+        console.error('Error al cancelar turno:', error);
+      });
+    }
   }
 
   completarEncuesta(turno: Turno): void {
@@ -92,18 +121,6 @@ export class TurnosComponent  implements OnInit {
 
   puedeCalificarAtencion(turno: Turno): boolean {
     return turno.estado === 'realizado' && !turno.calificacionCompletada;
-  }
-
-  cancelarTurno(turno: Turno): void {
-    const comentario = prompt('¿Por qué desea cancelar el turno?');
-    if (comentario) {
-      this.turnoService.cancelarTurno(turno.id, comentario).then(() => {
-        console.log('Turno cancelado exitosamente');
-        this.obtenerTurnos(); // Actualizar la lista después de cancelar uno
-      }).catch(error => {
-        console.error('Error al cancelar turno:', error);
-      });
-    }
   }
 
   verResenia(turno: Turno): void {

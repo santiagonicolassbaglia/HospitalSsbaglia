@@ -4,6 +4,8 @@ import { TurnoService } from '../../services/turno.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLinkActive } from '@angular/router';
+import { Usuario } from '../../clases/usuario';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-turnos-especialista',
@@ -17,13 +19,38 @@ export class TurnosEspecialistaComponent implements OnInit {
   turnosFiltrados: Turno[] = [];
   filtroEspecialidad: string = '';
   filtroPaciente: string = '';
+  especialistaId: string = ''; // Variable para almacenar el ID del especialista
 
-  constructor(private turnoService: TurnoService) {}
+  turnoSeleccionado: Turno;
+  comentarioResenia: string = '';
+
+  constructor(
+    private turnoService: TurnoService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.turnoService.getTurnosByEspecialista('especialista-id').subscribe(turnos => {
+    this.obtenerEspecialistaId();
+  }
+
+  obtenerEspecialistaId(): void {
+    this.authService.usuarioActual().then((usuario: Usuario) => {
+      this.especialistaId = usuario.uid; // Asignar el ID del especialista
+      this.obtenerTurnos();
+    }).catch(error => {
+      console.error('Error al obtener el usuario actual:', error);
+      // Manejar el error apropiadamente
+    });
+  }
+
+  obtenerTurnos(): void {
+    // Llamar al servicio de turnos usando el ID del especialista
+    this.turnoService.getTurnosByEspecialista(this.especialistaId).subscribe(turnos => {
       this.turnos = turnos;
-      this.turnosFiltrados = turnos;
+      this.filtrarTurnos();
+    }, error => {
+      console.error('Error al obtener los turnos del especialista:', error);
+      // Manejar el error apropiadamente
     });
   }
 
@@ -56,6 +83,8 @@ export class TurnosEspecialistaComponent implements OnInit {
       this.turnoService.cancelarTurno(turno.id, comentario).then(() => {
         turno.estado = 'cancelado';
         this.filtrarTurnos();
+      }).catch(error => {
+        console.error('Error al cancelar el turno:', error);
       });
     }
   }
@@ -66,6 +95,8 @@ export class TurnosEspecialistaComponent implements OnInit {
       this.turnoService.rechazarTurno(turno.id, comentario).then(() => {
         turno.estado = 'rechazado';
         this.filtrarTurnos();
+      }).catch(error => {
+        console.error('Error al rechazar el turno:', error);
       });
     }
   }
@@ -74,23 +105,39 @@ export class TurnosEspecialistaComponent implements OnInit {
     this.turnoService.aceptarTurno(turno.id).then(() => {
       turno.estado = 'aceptado';
       this.filtrarTurnos();
+    }).catch(error => {
+      console.error('Error al aceptar el turno:', error);
     });
   }
 
   finalizarTurno(turno: Turno): void {
-    const comentario = prompt('Ingrese la reseña o comentario del turno:');
-    if (comentario) {
-      this.turnoService.finalizarTurno(turno.id ,comentario).then(() => {
-        turno.estado = 'realizado';
-        turno.resenia = comentario;
+    this.turnoSeleccionado = turno;
+    this.comentarioResenia = ''; // Limpiar comentario de reseña
+    document.getElementById('modalResenia').style.display = 'block';
+  }
+
+  confirmarFinalizarTurno(): void {
+    if (this.comentarioResenia) {
+      this.turnoService.finalizarTurno(this.turnoSeleccionado.id, this.comentarioResenia).then(() => {
+        this.turnoSeleccionado.estado = 'realizado';
+        this.turnoSeleccionado.resenia = this.comentarioResenia;
         this.filtrarTurnos();
+        this.cerrarModalResenia();
+      }).catch(error => {
+        console.error('Error al finalizar el turno:', error);
       });
     }
+  }
+
+  cancelarFinalizarTurno(): void {
+    this.cerrarModalResenia();
+  }
+
+  cerrarModalResenia(): void {
+    document.getElementById('modalResenia').style.display = 'none';
   }
 
   verResenia(turno: Turno): void {
     alert(`Reseña: ${turno.resenia}`);
   }
-
-  
 }
