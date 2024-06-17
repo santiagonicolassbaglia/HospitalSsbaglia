@@ -96,7 +96,7 @@
 .usuario-predeterminado img {
   width: 70px;
   height: 70px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   margin-bottom: 5px;
   border: 2px solid #007bff;
 }

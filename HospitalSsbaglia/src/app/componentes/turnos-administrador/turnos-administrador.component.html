@@ -1,0 +1,23 @@
+<div>
+    <h2>Turnos de la Clínica</h2>
+  
+    <div>
+      <label>Filtrar por especialidad:</label>
+      <input [(ngModel)]="filtroEspecialidad" (input)="filtrarTurnos()" type="text">
+      <label>Filtrar por especialista:</label>
+      <input [(ngModel)]="filtroEspecialista" (input)="filtrarTurnos()" type="text">
+    </div>
+  
+    <div *ngFor="let turno of turnosFiltrados">
+      <div class="turno">
+        <p>Especialidad: {{ turno.especialidad }}</p>
+        <p>Especialista: {{ turno.especialista }}</p>
+        <p>Paciente: {{ turno.paciente }}</p>
+        <p>Fecha: {{ turno.fecha | date }}</p>
+        <p>Estado: {{ turno.estado }}</p>
+  
+        <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar Turno</button>
+      </div>
+    </div>
+  </div>
+  

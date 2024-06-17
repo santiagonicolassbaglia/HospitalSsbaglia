@@ -29,10 +29,19 @@ export class AuthService {
     this.items$ = this.db.list(this.PATH).valueChanges() as Observable<Usuario[]>;
   }
 
-  public getAll() {
-    return this.items$;
+  public getAll(): Observable<Usuario[]> {
+    return this.firestore.collection(this.PATH).snapshotChanges().pipe(
+      map(actions => {
+        console.log('Acciones Firestore:', actions); // Depuración
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Usuario;
+          const id = a.payload.doc.id;
+          return { id, ...data } as Usuario;
+        });
+      })
+    );
   }
-
+  
  
   async registrar(usuario: Usuario): Promise<void> {
     const { mail, contraseña, imagenes } = usuario;

@@ -1,5 +1,5 @@
 export class Usuario {
-  public uid: string; // Agregar esta línea
+  public uid: string; 
   public nombre: string;
   public apellido: string;
   public dni: string;

@@ -14,7 +14,15 @@ export const routes: Routes = [
      { path: 'listaUsuariosIngresados', loadComponent: () => import('./componentes/lista-usuarios-ingresados/lista-usuarios-ingresados.component').then(m => m.ListaUsuariosIngresadosComponent)  },
      { path: 'solicitudesEspecialistas', loadComponent: () => import('./componentes/specialist-requests/specialist-requests.component').then(m => m.SpecialistRequestsComponent) },
      {path: 'homeRegistro', loadComponent: () => import('./componentes/home-registro/home-registro.component').then(m => m.HomeRegistroComponent) },
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+     {path: 'turnos', loadComponent: () => import('./componentes/turnos/turnos.component').then(m => m.TurnosComponent) },
+     {path: 'turnosEspecialista', loadComponent: () => import('./componentes/turnos-especialista/turnos-especialista.component').then(m => m.TurnosEspecialistaComponent) },
+   {path: 'turnosAdministrador', loadComponent: () => import('./componentes/turnos-administrador/turnos-administrador.component').then(m => m.TurnosAdministradorComponent) },
+   {path: 'solicitarTurno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
+   
+   
+   
+   
+     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'pagina-error' }
 
 ];
