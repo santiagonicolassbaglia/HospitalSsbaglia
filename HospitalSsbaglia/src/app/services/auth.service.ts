@@ -211,7 +211,32 @@ async login(mail: string, pass: string) {
     });
   }
   
-
+  getUserById(uid: string): Observable<Usuario> {
+    return this.firestore.collection(this.PATH).doc(uid).valueChanges().pipe(
+      map((user: any) => {
+        if (user) {
+          return new Usuario(
+            uid,
+            user.nombre,
+            user.apellido,
+            user.dni,
+            user.edad,
+            user.obraSocial,
+            user.especialidad,
+            '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
+            user.mail,
+            user.imagenes,
+            user.code,
+            user.lastLogin ? user.lastLogin.toDate() : null,
+            user.esAdmin,
+            user.aprobado
+          );
+        } else {
+          throw new Error('No se encontró el usuario con el ID proporcionado');
+        }
+      })
+    );
+  }
   getCurrentUser(): Observable<firebase.User | null> {
     return this.auth.authState;
   }

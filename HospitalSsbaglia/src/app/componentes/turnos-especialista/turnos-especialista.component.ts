@@ -47,10 +47,24 @@ export class TurnosEspecialistaComponent implements OnInit {
     // Llamar al servicio de turnos usando el ID del especialista
     this.turnoService.getTurnosByEspecialista(this.especialistaId).subscribe(turnos => {
       this.turnos = turnos;
-      this.filtrarTurnos();
+      this.obtenerNombresPacientes(); // Llamar función para obtener nombres de pacientes
+      this.filtrarTurnos(); // Llamar a filtrarTurnos después de obtener los turnos
     }, error => {
       console.error('Error al obtener los turnos del especialista:', error);
       // Manejar el error apropiadamente
+    });
+  }
+
+  obtenerNombresPacientes(): void {
+    // Iterar sobre los turnos para obtener los nombres de los pacientes
+    this.turnos.forEach(turno => {
+      this.authService.getUserById(turno.paciente).subscribe((usuario: Usuario) => {
+        turno.paciente = usuario.nombre + ' ' + usuario.apellido; // Asignar nombre y apellido al turno
+        this.filtrarTurnos(); // Llamar a filtrarTurnos después de asignar el nombre
+      }, error => {
+        console.error('Error al obtener el nombre del paciente:', error);
+        // Manejar el error apropiadamente
+      });
     });
   }
 

@@ -23,15 +23,15 @@
     </div>
   </div>
 
-  <!-- Modal de reseña -->
+  <!-- Modal para ingresar reseña -->
   <div id="modalResenia" class="modal">
     <div class="modal-content">
       <span class="close" (click)="cerrarModalResenia()">&times;</span>
-      <h3>Finalizar Turno</h3>
       <p>Ingrese la reseña o comentario del turno:</p>
-      <textarea [(ngModel)]="comentarioResenia" placeholder="Ingrese la reseña o comentario"></textarea>
-      <button (click)="confirmarFinalizarTurno()">Finalizar Turno</button>
-      <button class="cancel" (click)="cancelarFinalizarTurno()">Cancelar</button>
+      <textarea [(ngModel)]="comentarioResenia"></textarea>
+      <button (click)="confirmarFinalizarTurno()">Confirmar</button>
+      <button (click)="cancelarFinalizarTurno()">Cancelar</button>
     </div>
   </div>
+
 </div>
