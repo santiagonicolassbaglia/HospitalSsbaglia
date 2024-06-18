@@ -235,8 +235,7 @@ async login(mail: string, pass: string) {
           throw new Error('No se encontró el usuario con el ID proporcionado');
         }
       })
-    );
-  }
+    );  }
   getCurrentUser(): Observable<firebase.User | null> {
     return this.auth.authState;
   }

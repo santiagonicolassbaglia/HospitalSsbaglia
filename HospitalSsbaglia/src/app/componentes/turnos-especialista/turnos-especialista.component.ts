@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLinkActive } from '@angular/router';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-turnos-especialista',
@@ -18,11 +19,12 @@ export class TurnosEspecialistaComponent implements OnInit {
   turnos: Turno[] = [];
   turnosFiltrados: Turno[] = [];
   filtroEspecialidad: string = '';
-  filtroPaciente: string = '';
-  especialistaId: string = ''; // Variable para almacenar el ID del especialista
+  filtroEspecialista: string = '';
+  pacienteId: string = '';
+  especialistas: { [key: string]: Usuario } = {}; // Mapa de especialistas por ID
 
-  turnoSeleccionado: Turno;
-  comentarioResenia: string = '';
+  turnoSeleccionado: Turno; // Variable para almacenar el turno seleccionado para cancelar
+  comentarioCancelacion: string = ''; // Variable para almacenar el comentario de cancelación
 
   constructor(
     private turnoService: TurnoService,
@@ -30,12 +32,12 @@ export class TurnosEspecialistaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.obtenerEspecialistaId();
+    this.obtenerPacienteId();
   }
 
-  obtenerEspecialistaId(): void {
+  obtenerPacienteId(): void {
     this.authService.usuarioActual().then((usuario: Usuario) => {
-      this.especialistaId = usuario.uid; // Asignar el ID del especialista
+      this.pacienteId = usuario.uid;
       this.obtenerTurnos();
     }).catch(error => {
       console.error('Error al obtener el usuario actual:', error);
@@ -44,26 +46,22 @@ export class TurnosEspecialistaComponent implements OnInit {
   }
 
   obtenerTurnos(): void {
-    // Llamar al servicio de turnos usando el ID del especialista
-    this.turnoService.getTurnosByEspecialista(this.especialistaId).subscribe(turnos => {
+    this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
       this.turnos = turnos;
-      this.obtenerNombresPacientes(); // Llamar función para obtener nombres de pacientes
-      this.filtrarTurnos(); // Llamar a filtrarTurnos después de obtener los turnos
-    }, error => {
-      console.error('Error al obtener los turnos del especialista:', error);
-      // Manejar el error apropiadamente
+      this.obtenerNombresEspecialistas(turnos); // Obtener los nombres de los especialistas
     });
   }
 
-  obtenerNombresPacientes(): void {
-    // Iterar sobre los turnos para obtener los nombres de los pacientes
-    this.turnos.forEach(turno => {
-      this.authService.getUserById(turno.paciente).subscribe((usuario: Usuario) => {
-        turno.paciente = usuario.nombre + ' ' + usuario.apellido; // Asignar nombre y apellido al turno
-        this.filtrarTurnos(); // Llamar a filtrarTurnos después de asignar el nombre
+  obtenerNombresEspecialistas(turnos: Turno[]): void {
+    const especialistaIds = [...new Set(turnos.map(turno => turno.especialista))];
+    especialistaIds.forEach(id => {
+      this.authService.getUserById(id).subscribe((usuario: Usuario) => {
+        this.especialistas[id] = usuario;
+        if (Object.keys(this.especialistas).length === especialistaIds.length) {
+          this.filtrarTurnos(); // Filtrar los turnos después de obtener todos los especialistas
+        }
       }, error => {
-        console.error('Error al obtener el nombre del paciente:', error);
-        // Manejar el error apropiadamente
+        console.error('Error al obtener el especialista:', error);
       });
     });
   }
@@ -71,84 +69,58 @@ export class TurnosEspecialistaComponent implements OnInit {
   filtrarTurnos(): void {
     this.turnosFiltrados = this.turnos.filter(turno =>
       turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-      turno.paciente.toLowerCase().includes(this.filtroPaciente.toLowerCase())
+      (`${this.especialistas[turno.especialista]?.nombre.toLowerCase()} ${this.especialistas[turno.especialista]?.apellido.toLowerCase()}`).includes(this.filtroEspecialista.toLowerCase())
     );
   }
 
   puedeCancelar(turno: Turno): boolean {
-    return turno.estado !== 'realizado' && turno.estado !== 'rechazado';
+    return turno.estado !== 'realizado';
   }
 
-  puedeRechazar(turno: Turno): boolean {
-    return turno.estado !== 'aceptado' && turno.estado !== 'realizado' && turno.estado !== 'cancelado';
-  }
-
-  puedeAceptar(turno: Turno): boolean {
-    return turno.estado === 'pendiente';
-  }
-
-  puedeFinalizar(turno: Turno): boolean {
-    return turno.estado === 'aceptado';
-  }
-
-  cancelarTurno(turno: Turno): void {
-    const comentario = prompt('¿Por qué desea cancelar el turno?');
-    if (comentario) {
-      this.turnoService.cancelarTurno(turno.id, comentario).then(() => {
-        turno.estado = 'cancelado';
-        this.filtrarTurnos();
-      }).catch(error => {
-        console.error('Error al cancelar el turno:', error);
-      });
-    }
-  }
-
-  rechazarTurno(turno: Turno): void {
-    const comentario = prompt('¿Por qué desea rechazar el turno?');
-    if (comentario) {
-      this.turnoService.rechazarTurno(turno.id, comentario).then(() => {
-        turno.estado = 'rechazado';
-        this.filtrarTurnos();
-      }).catch(error => {
-        console.error('Error al rechazar el turno:', error);
-      });
-    }
-  }
-
-  aceptarTurno(turno: Turno): void {
-    this.turnoService.aceptarTurno(turno.id).then(() => {
-      turno.estado = 'aceptado';
-      this.filtrarTurnos();
-    }).catch(error => {
-      console.error('Error al aceptar el turno:', error);
-    });
-  }
-
-  finalizarTurno(turno: Turno): void {
+  mostrarModalCancelar(turno: Turno): void {
     this.turnoSeleccionado = turno;
-    this.comentarioResenia = ''; // Limpiar comentario de reseña
-    document.getElementById('modalResenia').style.display = 'block';
+    this.comentarioCancelacion = '';
+    document.getElementById('modalCancelar').style.display = 'block';
   }
 
-  confirmarFinalizarTurno(): void {
-    if (this.comentarioResenia) {
-      this.turnoService.finalizarTurno(this.turnoSeleccionado.id, this.comentarioResenia).then(() => {
-        this.turnoSeleccionado.estado = 'realizado';
-        this.turnoSeleccionado.resenia = this.comentarioResenia;
-        this.filtrarTurnos();
-        this.cerrarModalResenia();
+  cerrarModalCancelar(): void {
+    document.getElementById('modalCancelar').style.display = 'none';
+  }
+
+  
+
+  completarEncuesta(turno: Turno): void {
+    const encuesta = prompt('Por favor, complete la encuesta:');
+    if (encuesta) {
+      this.turnoService.completarEncuesta(turno.id, encuesta).then(() => {
+        turno.encuestaCompletada = true;
+        console.log('Encuesta completada exitosamente');
+        this.filtrarTurnos(); // Actualizar la lista después de completar la encuesta
       }).catch(error => {
-        console.error('Error al finalizar el turno:', error);
+        console.error('Error al completar encuesta:', error);
       });
     }
   }
 
-  cancelarFinalizarTurno(): void {
-    this.cerrarModalResenia();
+  puedeCompletarEncuesta(turno: Turno): boolean {
+    return turno.estado === 'realizado' && !turno.encuestaCompletada;
   }
 
-  cerrarModalResenia(): void {
-    document.getElementById('modalResenia').style.display = 'none';
+  calificarAtencion(turno: Turno): void {
+    const calificacion = prompt('Califique la atención del especialista:');
+    if (calificacion) {
+      this.turnoService.calificarAtencion(turno.id, calificacion).then(() => {
+        turno.calificacionCompletada = true;
+        console.log('Calificación completada exitosamente');
+        this.filtrarTurnos(); // Actualizar la lista después de calificar la atención
+      }).catch(error => {
+        console.error('Error al calificar atención:', error);
+      });
+    }
+  }
+
+  puedeCalificarAtencion(turno: Turno): boolean {
+    return turno.estado === 'realizado' && !turno.calificacionCompletada;
   }
 
   verResenia(turno: Turno): void {

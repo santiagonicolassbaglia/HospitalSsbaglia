@@ -20,15 +20,18 @@ export class TurnosComponent  implements OnInit {
   turnosFiltrados: Turno[] = [];
   filtroEspecialidad: string = '';
   filtroEspecialista: string = '';
-  pacienteId: string = ''; // Variable para almacenar el ID del paciente
+  pacienteId: string = '';
+  especialistas: { [key: string]: Usuario } = {};
 
-  turnoSeleccionado: Turno; // Variable para almacenar el turno seleccionado para cancelar
-  comentarioCancelacion: string = ''; // Variable para almacenar el comentario de cancelación
+  turnoSeleccionado: Turno;
+  comentarioCancelacion: string = '';
 
   constructor(
     private turnoService: TurnoService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.comentarioCancelacion = '';
+  }
 
   ngOnInit(): void {
     this.obtenerPacienteId();
@@ -40,54 +43,61 @@ export class TurnosComponent  implements OnInit {
       this.obtenerTurnos();
     }).catch(error => {
       console.error('Error al obtener el usuario actual:', error);
-      // Manejar el error apropiadamente
     });
   }
 
-  obtenerTurnos(): void {
-    this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
-      this.turnos = turnos;
-      this.filtrarTurnos();
+ 
+obtenerTurnos(): void {
+  this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
+    console.log('Turnos obtenidos:', turnos);  
+    this.turnos = turnos;
+    this.obtenerNombresEspecialistas(turnos);
+  });
+}
+
+  obtenerNombresEspecialistas(turnos: Turno[]): void {
+    const especialistaIds = [...new Set(turnos.map(turno => turno.especialista))];
+    especialistaIds.forEach(id => {
+      this.authService.getUserById(id).subscribe(usuario => {
+        this.especialistas[id] = usuario;
+        if (Object.keys(this.especialistas).length === especialistaIds.length) {
+          this.filtrarTurnos();
+        }
+      }, error => {
+        console.error('Error al obtener el especialista:', error);
+      });
     });
   }
 
   filtrarTurnos(): void {
     this.turnosFiltrados = this.turnos.filter(turno =>
       turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-      turno.especialista.toLowerCase().includes(this.filtroEspecialista.toLowerCase())
+      (`${this.especialistas[turno.especialista]?.nombre?.toLowerCase()} ${this.especialistas[turno.especialista]?.apellido?.toLowerCase()}`).includes(this.filtroEspecialista.toLowerCase())
     );
   }
 
-  puedeCancelar(turno: Turno): boolean {
-    return turno.estado !== 'realizado';
-  }
-
-  // Mostrar modal de cancelar turno
-  mostrarModalCancelar(turno: Turno): void {
-    this.turnoSeleccionado = turno;
-    this.comentarioCancelacion = ''; // Limpiar comentario de cancelación
-    document.getElementById('modalCancelar').style.display = 'block';
-  }
-
-  // Cerrar modal de cancelar turno
-  cerrarModalCancelar(): void {
-    document.getElementById('modalCancelar').style.display = 'none';
-  }
-
-  // Cancelar turno con el comentario ingresado
   cancelarTurno(turno: Turno): void {
-    if (this.comentarioCancelacion) {
-      this.turnoService.cancelarTurno(turno.id, this.comentarioCancelacion).then(() => {
-        console.log('Turno cancelado exitosamente');
+    console.log('Intentando cancelar el turno con ID:', turno.id); // Agrega este log
+    const comentario = prompt('Por favor, ingrese el motivo de la cancelación:');
+    if (comentario) {
+      this.turnoService.rechazarTurno(turno.id, comentario).then(() => {
         turno.estado = 'cancelado';
-        turno.comentario = this.comentarioCancelacion;
-        this.filtrarTurnos(); // Actualizar la lista después de cancelar uno
-        this.cerrarModalCancelar(); // Cerrar modal después de cancelar
+        turno.comentario = comentario;
+        console.log('Turno cancelado exitosamente');
+        this.filtrarTurnos();
       }).catch(error => {
-        console.error('Error al cancelar turno:', error);
+        console.error('Error al cancelar el turno:', error.message);
+        alert(`Error al cancelar el turno: ${error.message}`);
       });
     }
   }
+  
+  
+  puedeCancelar(turno: Turno): boolean {
+    return turno.estado !== 'realizado' && turno.estado !== 'cancelado';
+  }
+  
+  
 
   completarEncuesta(turno: Turno): void {
     const encuesta = prompt('Por favor, complete la encuesta:');
@@ -95,7 +105,7 @@ export class TurnosComponent  implements OnInit {
       this.turnoService.completarEncuesta(turno.id, encuesta).then(() => {
         turno.encuestaCompletada = true;
         console.log('Encuesta completada exitosamente');
-        this.filtrarTurnos(); // Actualizar la lista después de completar la encuesta
+        this.filtrarTurnos();
       }).catch(error => {
         console.error('Error al completar encuesta:', error);
       });
@@ -105,14 +115,14 @@ export class TurnosComponent  implements OnInit {
   puedeCompletarEncuesta(turno: Turno): boolean {
     return turno.estado === 'realizado' && !turno.encuestaCompletada;
   }
-
+  
   calificarAtencion(turno: Turno): void {
     const calificacion = prompt('Califique la atención del especialista:');
     if (calificacion) {
       this.turnoService.calificarAtencion(turno.id, calificacion).then(() => {
         turno.calificacionCompletada = true;
         console.log('Calificación completada exitosamente');
-        this.filtrarTurnos(); // Actualizar la lista después de calificar la atención
+        this.filtrarTurnos();
       }).catch(error => {
         console.error('Error al calificar atención:', error);
       });

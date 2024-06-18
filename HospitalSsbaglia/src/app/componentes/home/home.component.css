@@ -1,65 +1,54 @@
 .home-container {
-    background-image: url("../../../assets/imagenes/padreehijo.jpg");
-    background-size: cover;
-    background-position: center;
-    color: #070ae7;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .home-content {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
-  
-  .btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn:hover {
-    background-color: #0056b3;
-  }
+  background-image: url("../../../assets/imagenes/padreehijo.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #fff; /* Cambiado a blanco para mejor contraste */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
-  .btn-logout {
+.container {
+  background-color: rgba(0, 0, 0, 0.7); /* Más opacidad para resaltar el texto */
+  padding: 40px;
+  border-radius: 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; /* Alinea el título y el botón de cierre de sesión */
+  align-items: center;
+}
+
+h1 {
+  font-size: 3rem; /* Tamaño más grande para el título */
+}
+
+.btn {
+  display: inline-block;
+  padding: 15px 30px; /* Más padding para botones más grandes */
+  font-size: 1.5rem; /* Tamaño de fuente más grande */
+  margin-bottom: 20px; /* Espacio entre botones */
+}
+
+.btn-primary {
+  background-color: #007bff; /* Color primario más vibrante */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Color al pasar el mouse más oscuro */
+}
+
+.btn-logout {
     position: absolute;
-    top: 40px; 
-    right: 40px; 
+    top: 20px; 
+    right: 20px; 
     padding: 10px 20px;
     font-size: 1.2rem;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #dc3545;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-logout:hover {
+}
+
+.btn-logout:hover {
     background-color: #c82333;
-  }
+}

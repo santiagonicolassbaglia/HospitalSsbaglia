@@ -32,17 +32,11 @@ export class TurnosAdministradorComponent implements OnInit {
       turno.especialista.toLowerCase().includes(this.filtroEspecialista.toLowerCase())
     );
   }
-
-  cancelarTurno(turno: Turno): void {
-    const comentario = prompt('¿Por qué desea cancelar el turno?');
-    if (comentario) {
-      this.turnoService.cancelarTurno(turno.id, comentario).then(() => {
-        turno.estado = 'cancelado';
-      });
-    }
-  }
+ 
 
   puedeCancelar(turno: Turno): boolean {
     return turno.estado !== 'realizado';
   }
+
+  
 }

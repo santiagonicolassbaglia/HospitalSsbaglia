@@ -14,6 +14,7 @@ export class TurnoService {
   constructor(private firestore: AngularFirestore) {
     this.turnosCollection = this.firestore.collection<Turno>('turnos');
   }
+
   getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
     return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges();
   }
@@ -22,13 +23,27 @@ export class TurnoService {
     return this.firestore.collection<Turno>('turnos', ref => ref.where('especialista', '==', especialistaId)).valueChanges();
   }
 
-  cancelarTurno(id: string, comentario: string): Promise<void> {
-    return this.firestore.collection('turnos').doc(id).update({
-      estado: 'cancelado',
-      comentarioCancelacion: comentario
-    });
+  async cancelarTurno(turnoId: string, comentario: string): Promise<void> {
+    const turnoRef = this.firestore.collection('turnos').doc(turnoId);
+  
+    try {
+      const turnoDoc = await turnoRef.get().toPromise();
+      if (turnoDoc.exists) {
+        console.log('Turno encontrado con ID:', turnoId);
+        await turnoRef.update({ 
+          estado: 'cancelado', 
+          comentario: comentario 
+        });
+        console.log('Turno cancelado exitosamente');
+      } else {
+        console.error('Turno no encontrado con ID:', turnoId);
+        throw new Error('Turno no encontrado');
+      }
+    } catch (error) {
+      console.error('Error al intentar cancelar el turno:', error);
+      throw error;
+    }
   }
-
 
   completarEncuesta(id: string, encuesta: string): Promise<void> {
     return this.firestore.collection('turnos').doc(id).update({
@@ -45,12 +60,20 @@ export class TurnoService {
   }
 
   rechazarTurno(id: string, comentario: string): Promise<void> {
-    return this.firestore.collection('turnos').doc(id).update({
-      estado: 'rechazado',
-      comentarioRechazo: comentario
+    const docRef = this.firestore.collection('turnos').doc(id);
+    return docRef.get().toPromise().then(docSnapshot => {
+      if (docSnapshot.exists) {
+        return docRef.update({
+          estado: 'cancelado',
+          comentarioCancelacion: comentario
+        });
+      } else {
+        return Promise.reject(new Error('El documento no existe'));
+      }
     });
   }
-
+  
+  
   aceptarTurno(id: string): Promise<void> {
     return this.firestore.collection('turnos').doc(id).update({
       estado: 'aceptado'
@@ -63,6 +86,7 @@ export class TurnoService {
       resenia: resenia
     });
   }
+
   getTurnos(): Observable<Turno[]> {
     return this.firestore.collection<Turno>('turnos').valueChanges();
   }
@@ -84,13 +108,9 @@ export class TurnoService {
     return this.turnosCollection.add(turnoObj as Turno) as unknown as Promise<DocumentReference<Turno>>;
   }
 
-
   agregarResenia(id: string, resenia: string): Promise<void> {
     return this.firestore.collection('turnos').doc(id).update({
       resenia: resenia
     });
   }
-
 }
-  
- 

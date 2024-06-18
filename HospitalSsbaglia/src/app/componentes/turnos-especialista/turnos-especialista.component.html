@@ -3,35 +3,31 @@
 
   <div>
     <label>Filtrar por especialidad:</label>
-    <input [(ngModel)]="filtroEspecialidad" (input)="filtrarTurnos()" type="text">
-    <label>Filtrar por paciente:</label>
-    <input [(ngModel)]="filtroPaciente" (input)="filtrarTurnos()" type="text">
+    <input [(ngModel)]="filtroEspecialidad" name="filtroEspecialidad" (input)="filtrarTurnos()" type="text">
+    <label>Filtrar por especialista:</label>
+    <input [(ngModel)]="filtroEspecialista" name="filtroEspecialista" (input)="filtrarTurnos()" type="text">
   </div>
 
   <div *ngFor="let turno of turnosFiltrados">
     <div class="turno">
       <p>Especialidad: {{ turno.especialidad }}</p>
-      <p>Paciente: {{ turno.paciente }}</p>
+      <p>Especialista: {{ especialistas[turno.especialista]?.nombre }} {{ especialistas[turno.especialista]?.apellido }}</p>
       <p>Fecha: {{ turno.fecha | date }}</p>
       <p>Estado: {{ turno.estado }}</p>
 
-      <button *ngIf="puedeAceptar(turno)" (click)="aceptarTurno(turno)">Aceptar Turno</button>
-      <button *ngIf="puedeRechazar(turno)" (click)="rechazarTurno(turno)">Rechazar Turno</button>
-      <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar Turno</button>
-      <button *ngIf="puedeFinalizar(turno)" (click)="finalizarTurno(turno)">Finalizar Turno</button>
+      <div *ngIf="turno.estado !== 'cancelado'">
+        <button (click)="mostrarModalCancelar(turno)">Cancelar Turno</button>
+      </div>
+      <div *ngIf="turno.estado === 'cancelado'">
+        <p>Motivo de cancelación: {{ turno.comentario }}</p>
+      </div>
+
       <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
+      <button *ngIf="puedeCompletarEncuesta(turno)" (click)="completarEncuesta(turno)">Completar Encuesta</button>
+      <button *ngIf="puedeCalificarAtencion(turno)" (click)="calificarAtencion(turno)">Calificar Atención</button>
     </div>
   </div>
 
-  <!-- Modal para ingresar reseña -->
-  <div id="modalResenia" class="modal">
-    <div class="modal-content">
-      <span class="close" (click)="cerrarModalResenia()">&times;</span>
-      <p>Ingrese la reseña o comentario del turno:</p>
-      <textarea [(ngModel)]="comentarioResenia"></textarea>
-      <button (click)="confirmarFinalizarTurno()">Confirmar</button>
-      <button (click)="cancelarFinalizarTurno()">Cancelar</button>
-    </div>
-  </div>
-
+  <!-- Modal de cancelar turno -->
+  
 </div>
