@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { Turno } from '../clases/turno';
 import { DocumentReference } from 'firebase/firestore';
 
@@ -10,38 +10,85 @@ import { DocumentReference } from 'firebase/firestore';
 })
 export class TurnoService {
   private turnosCollection: AngularFirestoreCollection<Turno>;
+  private PATH = 'turnos';
 
   constructor(private firestore: AngularFirestore) {
     this.turnosCollection = this.firestore.collection<Turno>('turnos');
   }
+  async eliminarTurno(id: string): Promise<void> {
+    const docRef = this.firestore.collection(this.PATH).doc(id);
 
-  getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
-    return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges();
+    try {
+      const docSnapshot = await docRef.get().toPromise();
+      if (!docSnapshot.exists) {
+        throw new Error(`No se encontró el turno con el ID proporcionado: ${id}`);
+      }
+
+      await docRef.delete();
+      console.log('Turno eliminado exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar el turno:', error);
+      throw error; // Propaga el error para manejarlo en el componente
+    }
   }
+  getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
+    console.log('Buscando turnos para paciente ID:', pacienteId);  // Log del ID del paciente
+    return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges().pipe(
+      tap(turnos => console.log('Turnos encontrados:', turnos))  // Log de los turnos encontrados
+    );
+  }
+  
 
   getTurnosByEspecialista(especialistaId: string): Observable<Turno[]> {
     return this.firestore.collection<Turno>('turnos', ref => ref.where('especialista', '==', especialistaId)).valueChanges();
   }
 
-  async cancelarTurno(turnoId: string, comentario: string): Promise<void> {
-    const turnoRef = this.firestore.collection('turnos').doc(turnoId);
-  
+
+  getTurnoById(id: string): Observable<Turno> {
+    return this.firestore.collection(this.PATH).doc(id).valueChanges().pipe(
+      map((turno: any) => {
+        if (turno) {
+          return new Turno(
+            id,
+            turno.especialidad,
+            turno.especialista,
+            turno.fecha.toDate(), // convertir Firestore Timestamp a Date
+            turno.estado,
+            turno.paciente,
+            turno.resenia,
+            turno.encuestaCompletada,
+            turno.calificacionCompletada,
+            turno.comentario
+          );
+        } else {
+          throw new Error('No se encontró el turno con el ID proporcionado');
+        }
+      })
+    );
+  }
+
+  async rechazarTurno(id: string, comentario: string): Promise<void> {
+    const docRef = this.firestore.collection(this.PATH).doc(id);
+
     try {
-      const turnoDoc = await turnoRef.get().toPromise();
-      if (turnoDoc.exists) {
-        console.log('Turno encontrado con ID:', turnoId);
-        await turnoRef.update({ 
-          estado: 'cancelado', 
-          comentario: comentario 
+      const docSnapshot = await docRef.get().toPromise();
+      if (!docSnapshot.exists) {
+        throw new Error(`No se encontró el turno con el ID proporcionado: ${id}`);
+      }
+
+      if (comentario.toLowerCase() === 'cancelar') {
+        await docRef.delete();
+        console.log('Turno eliminado exitosamente');
+      } else {
+        await docRef.update({
+          estado: 'cancelado',
+          comentarioCancelacion: comentario
         });
         console.log('Turno cancelado exitosamente');
-      } else {
-        console.error('Turno no encontrado con ID:', turnoId);
-        throw new Error('Turno no encontrado');
       }
     } catch (error) {
-      console.error('Error al intentar cancelar el turno:', error);
-      throw error;
+      console.error('Error al procesar el turno:', error);
+      throw error; // Propaga el error para manejarlo en el componente
     }
   }
 
@@ -59,19 +106,6 @@ export class TurnoService {
     });
   }
 
-  rechazarTurno(id: string, comentario: string): Promise<void> {
-    const docRef = this.firestore.collection('turnos').doc(id);
-    return docRef.get().toPromise().then(docSnapshot => {
-      if (docSnapshot.exists) {
-        return docRef.update({
-          estado: 'cancelado',
-          comentarioCancelacion: comentario
-        });
-      } else {
-        return Promise.reject(new Error('El documento no existe'));
-      }
-    });
-  }
   
   
   aceptarTurno(id: string): Promise<void> {
@@ -113,4 +147,27 @@ export class TurnoService {
       resenia: resenia
     });
   }
+
+
+  async eliminarTurnoPorEspecialistaYFecha(especialista: string, fecha: Date): Promise<void> {
+    const collectionRef = this.firestore.collection(this.PATH, ref =>
+      ref.where('especialista', '==', especialista).where('fecha', '==', fecha)
+    );
+
+    try {
+      const querySnapshot = await collectionRef.get().toPromise();
+      if (querySnapshot.empty) {
+        throw new Error(`No se encontró el turno con el especialista proporcionado: ${especialista} y fecha: ${fecha}`);
+      }
+
+      querySnapshot.forEach(doc => {
+        doc.ref.delete();
+      });
+      console.log('Turno eliminado exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar el turno:', error);
+      throw error; // Propaga el error para manejarlo en el componente
+    }
+  }
+
 }

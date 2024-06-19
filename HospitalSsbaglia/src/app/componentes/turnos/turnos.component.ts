@@ -37,8 +37,10 @@ export class TurnosComponent  implements OnInit {
     this.obtenerPacienteId();
   }
 
+  
   obtenerPacienteId(): void {
     this.authService.usuarioActual().then((usuario: Usuario) => {
+      console.log('Usuario obtenido:', usuario);  // Log del usuario
       this.pacienteId = usuario.uid;
       this.obtenerTurnos();
     }).catch(error => {
@@ -47,13 +49,16 @@ export class TurnosComponent  implements OnInit {
   }
 
  
-obtenerTurnos(): void {
-  this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
-    console.log('Turnos obtenidos:', turnos);  
-    this.turnos = turnos;
-    this.obtenerNombresEspecialistas(turnos);
-  });
-}
+  obtenerTurnos(): void {
+    this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
+      console.log('Turnos obtenidos:', turnos);  // Log de los turnos
+      this.turnos = turnos;
+      this.obtenerNombresEspecialistas(turnos);
+    }, error => {
+      console.error('Error al obtener los turnos:', error);
+    });
+  }
+  
 
   obtenerNombresEspecialistas(turnos: Turno[]): void {
     const especialistaIds = [...new Set(turnos.map(turno => turno.especialista))];
@@ -76,29 +81,25 @@ obtenerTurnos(): void {
     );
   }
 
+   
+
   cancelarTurno(turno: Turno): void {
-    console.log('Intentando cancelar el turno con ID:', turno.id); // Agrega este log
-    const comentario = prompt('Por favor, ingrese el motivo de la cancelación:');
-    if (comentario) {
-      this.turnoService.rechazarTurno(turno.id, comentario).then(() => {
-        turno.estado = 'cancelado';
-        turno.comentario = comentario;
-        console.log('Turno cancelado exitosamente');
-        this.filtrarTurnos();
-      }).catch(error => {
-        console.error('Error al cancelar el turno:', error.message);
-        alert(`Error al cancelar el turno: ${error.message}`);
-      });
-    }
+    console.log('Intentando eliminar el turno con especialista:', turno.especialista, 'y fecha:', turno.fecha);
+    this.turnoService.eliminarTurnoPorEspecialistaYFecha(turno.especialista, turno.fecha).then(() => {
+      // Eliminamos el turno localmente
+      this.turnos = this.turnos.filter(t => t.especialista !== turno.especialista || t.fecha !== turno.fecha);
+      console.log('Turno eliminado exitosamente');
+      this.filtrarTurnos();
+    }).catch(error => {
+      console.error('Error al eliminar el turno:', error);
+      alert(`Error al eliminar el turno: ${error.message}`);
+    });
   }
-  
-  
+
   puedeCancelar(turno: Turno): boolean {
     return turno.estado !== 'realizado' && turno.estado !== 'cancelado';
   }
-  
-  
-
+ 
   completarEncuesta(turno: Turno): void {
     const encuesta = prompt('Por favor, complete la encuesta:');
     if (encuesta) {
