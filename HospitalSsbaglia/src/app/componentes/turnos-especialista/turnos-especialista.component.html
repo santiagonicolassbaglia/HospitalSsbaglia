@@ -15,13 +15,7 @@
       <p>Fecha: {{ turno.fecha | date }}</p>
       <p>Estado: {{ turno.estado }}</p>
 
-      <div *ngIf="turno.estado !== 'cancelado'">
-        <button (click)="mostrarModalCancelar(turno)">Cancelar Turno</button>
-      </div>
-      <div *ngIf="turno.estado === 'cancelado'">
-        <p>Motivo de cancelación: {{ turno.comentario }}</p>
-      </div>
-
+      
       <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
       <button *ngIf="puedeCompletarEncuesta(turno)" (click)="completarEncuesta(turno)">Completar Encuesta</button>
       <button *ngIf="puedeCalificarAtencion(turno)" (click)="calificarAtencion(turno)">Calificar Atención</button>

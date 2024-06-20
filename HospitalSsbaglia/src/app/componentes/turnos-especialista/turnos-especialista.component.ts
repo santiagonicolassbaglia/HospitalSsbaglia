@@ -58,7 +58,7 @@ export class TurnosEspecialistaComponent implements OnInit {
       this.authService.getUserById(id).subscribe((usuario: Usuario) => {
         this.especialistas[id] = usuario;
         if (Object.keys(this.especialistas).length === especialistaIds.length) {
-          this.filtrarTurnos(); // Filtrar los turnos después de obtener todos los especialistas
+          this.filtrarTurnos();  
         }
       }, error => {
         console.error('Error al obtener el especialista:', error);
@@ -77,11 +77,7 @@ export class TurnosEspecialistaComponent implements OnInit {
     return turno.estado !== 'realizado';
   }
 
-  mostrarModalCancelar(turno: Turno): void {
-    this.turnoSeleccionado = turno;
-    this.comentarioCancelacion = '';
-    document.getElementById('modalCancelar').style.display = 'block';
-  }
+ 
 
   cerrarModalCancelar(): void {
     document.getElementById('modalCancelar').style.display = 'none';

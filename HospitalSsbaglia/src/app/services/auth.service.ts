@@ -155,14 +155,7 @@ async login(mail: string, pass: string) {
         
     });
 }
-
-  // public async guardarUsuarioFirestore(uid: string, nombre: string, email: string) {
-  //   await this.firestore.collection(this.PATH).doc(uid).set({
-  //     nombre,
-  //     email,
-  //     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-  //   });
-  // }
+ 
 
   async logout() {
     try {
@@ -212,33 +205,21 @@ async login(mail: string, pass: string) {
   }
   
   getUserById(uid: string): Observable<Usuario> {
-    return this.firestore.collection(this.PATH).doc(uid).valueChanges().pipe(
-      map((user: any) => {
-        if (user) {
-          return new Usuario(
-            uid,
-            user.nombre,
-            user.apellido,
-            user.dni,
-            user.edad,
-            user.obraSocial,
-            user.especialidad,
-            '', // Contraseña vacía, ya que no debería obtenerse desde Firestore
-            user.mail,
-            user.imagenes,
-            user.code,
-            user.lastLogin ? user.lastLogin.toDate() : null,
-            user.esAdmin,
-            user.aprobado
-          );
-        } else {
-          throw new Error('No se encontró el usuario con el ID proporcionado');
-        }
-      })
-    );  }
-  getCurrentUser(): Observable<firebase.User | null> {
-    return this.auth.authState;
+    return this.firestore.collection('usuarios').doc<Usuario>(uid).valueChanges();
   }
+    getCurrentUser(): Observable<Usuario | null> {
+      return new Observable(observer => {
+        this.auth.authState.subscribe(user => {
+          if (user) {
+            this.firestore.collection('usuarios').doc(user.uid).valueChanges().subscribe((usuario: any) => {
+              observer.next({ ...usuario, uid: user.uid });
+            });
+          } else {
+            observer.next(null);
+          }
+        });
+      });
+    }
 
   getCurrentUserName(): Observable<string | null> {
     return this.auth.authState.pipe(
@@ -408,5 +389,32 @@ async login(mail: string, pass: string) {
   rechazarEspecialista(uid: string): Promise<void> {
     return this.firestore.collection('specialistRequests').doc(uid).delete();
   }
+
+
+  getUserByDNI(dni: string): Observable<Usuario[]> {
+    return this.firestore.collection(this.PATH, ref => ref.where('dni', '==', dni)).valueChanges().pipe(
+      map((usuarios: any[]) => {
+        return usuarios.map(usuario => {
+          return new Usuario(
+            usuario.uid,
+            usuario.nombre,
+            usuario.apellido,
+            usuario.dni,
+            usuario.edad,
+            usuario.obraSocial,
+            usuario.especialidad,
+            usuario.contraseña,
+            usuario.mail,
+            usuario.imagenes,
+            usuario.code,
+            usuario.lastLogin ? usuario.lastLogin.toDate() : null,
+            usuario.esAdmin,
+            usuario.aprobado
+          );
+        });
+      })
+    );
+  }
+
 
 }  

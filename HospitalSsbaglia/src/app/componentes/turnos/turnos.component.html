@@ -2,24 +2,25 @@
   <h2>Mis Turnos</h2>
 
   <div>
-    <label>Filtrar por especialidad:</label>
-    <input [(ngModel)]="filtroEspecialidad" name="filtroEspecialidad" (input)="filtrarTurnos()" type="text">
-    <label>Filtrar por especialista:</label>
-    <input [(ngModel)]="filtroEspecialista" name="filtroEspecialista" (input)="filtrarTurnos()" type="text">
+    <label for="filtroEspecialidad">Filtrar por Especialidad:</label>
+    <input id="filtroEspecialidad" [(ngModel)]="filtroEspecialidad" (ngModelChange)="filtrarTurnos()">
   </div>
 
-  <div *ngFor="let turno of turnosFiltrados">
-    <div class="turno">
+  <div>
+    <label for="filtroEspecialista">Filtrar por Especialista:</label>
+    <input id="filtroEspecialista" [(ngModel)]="filtroEspecialista" (ngModelChange)="filtrarTurnos()">
+  </div>
+
+  <ul>
+    <li *ngFor="let turno of turnosFiltrados">
       <p>Especialidad: {{ turno.especialidad }}</p>
       <p>Especialista: {{ especialistas[turno.especialista]?.nombre }} {{ especialistas[turno.especialista]?.apellido }}</p>
       <p>Fecha: {{ turno.fecha | date }}</p>
       <p>Estado: {{ turno.estado }}</p>
-
-      <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
+      <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar</button>
       <button *ngIf="puedeCompletarEncuesta(turno)" (click)="completarEncuesta(turno)">Completar Encuesta</button>
       <button *ngIf="puedeCalificarAtencion(turno)" (click)="calificarAtencion(turno)">Calificar Atención</button>
-      <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar Turno</button>
+      <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
+    </li>
+  </ul>
 </div>
-    </div>
-  </div>
- 

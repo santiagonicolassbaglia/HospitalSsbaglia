@@ -22,10 +22,11 @@ export class SolicitarTurnoComponent implements OnInit {
   selectedEspecialidad: string = '';
   selectedEspecialista: string = '';
   selectedFecha: Date = new Date();
+  dniUsuario: string = '';
 
   constructor(
-    private turnoService: TurnoService, 
-    private authService: AuthService, 
+    private turnoService: TurnoService,
+    private authService: AuthService,
     private firestore: AngularFirestore
   ) {}
 
@@ -38,7 +39,7 @@ export class SolicitarTurnoComponent implements OnInit {
       console.log('Especialidades:', this.especialidades); // Depuración
     });
   }
-  
+
   actualizarEspecialistas(): void {
     console.log('Especialidad seleccionada:', this.selectedEspecialidad); // Depuración
     this.especialistasFiltrados = this.especialistas.filter(especialista => 
@@ -56,7 +57,8 @@ export class SolicitarTurnoComponent implements OnInit {
           especialista: this.selectedEspecialista,
           fecha: this.selectedFecha,
           estado: 'solicitado',
-          paciente: currentUser.uid
+          paciente: currentUser.uid,
+          dniUsuario: this.dniUsuario
         };
 
         this.turnoService.crearTurno(turno).then(() => {

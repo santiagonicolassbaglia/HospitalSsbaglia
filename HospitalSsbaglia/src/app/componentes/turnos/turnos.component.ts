@@ -15,7 +15,7 @@ import { Usuario } from '../../clases/usuario';
   templateUrl: './turnos.component.html',
   styleUrl: './turnos.component.css'
 })
-export class TurnosComponent  implements OnInit {
+export class TurnosComponent implements OnInit {
   turnos: Turno[] = [];
   turnosFiltrados: Turno[] = [];
   filtroEspecialidad: string = '';
@@ -23,32 +23,30 @@ export class TurnosComponent  implements OnInit {
   pacienteId: string = '';
   especialistas: { [key: string]: Usuario } = {};
 
-  turnoSeleccionado: Turno;
+  turnoSeleccionado: Turno | null = null;
   comentarioCancelacion: string = '';
 
   constructor(
     private turnoService: TurnoService,
     private authService: AuthService
-  ) {
-    this.comentarioCancelacion = '';
-  }
+  ) {}
 
   ngOnInit(): void {
     this.obtenerPacienteId();
   }
 
-  
   obtenerPacienteId(): void {
     this.authService.usuarioActual().then((usuario: Usuario) => {
-      console.log('Usuario obtenido:', usuario);  // Log del usuario
-      this.pacienteId = usuario.uid;
-      this.obtenerTurnos();
-    }).catch(error => {
+      if (usuario) {
+        console.log('Usuario obtenido:', usuario);  // Log del usuario
+        this.pacienteId = usuario.uid;
+        this.obtenerTurnos();
+      }
+    }, error => {
       console.error('Error al obtener el usuario actual:', error);
     });
   }
 
- 
   obtenerTurnos(): void {
     this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
       console.log('Turnos obtenidos:', turnos);  // Log de los turnos
@@ -58,7 +56,6 @@ export class TurnosComponent  implements OnInit {
       console.error('Error al obtener los turnos:', error);
     });
   }
-  
 
   obtenerNombresEspecialistas(turnos: Turno[]): void {
     const especialistaIds = [...new Set(turnos.map(turno => turno.especialista))];
@@ -81,13 +78,10 @@ export class TurnosComponent  implements OnInit {
     );
   }
 
-   
-
   cancelarTurno(turno: Turno): void {
     console.log('Intentando eliminar el turno con especialista:', turno.especialista, 'y fecha:', turno.fecha);
     this.turnoService.eliminarTurnoPorEspecialistaYFecha(turno.especialista, turno.fecha).then(() => {
-      // Eliminamos el turno localmente
-      this.turnos = this.turnos.filter(t => t.especialista !== turno.especialista || t.fecha !== turno.fecha);
+      this.turnos = this.turnos.filter(t => t.id !== turno.id);
       console.log('Turno eliminado exitosamente');
       this.filtrarTurnos();
     }).catch(error => {
@@ -99,7 +93,7 @@ export class TurnosComponent  implements OnInit {
   puedeCancelar(turno: Turno): boolean {
     return turno.estado !== 'realizado' && turno.estado !== 'cancelado';
   }
- 
+
   completarEncuesta(turno: Turno): void {
     const encuesta = prompt('Por favor, complete la encuesta:');
     if (encuesta) {
@@ -116,7 +110,7 @@ export class TurnosComponent  implements OnInit {
   puedeCompletarEncuesta(turno: Turno): boolean {
     return turno.estado === 'realizado' && !turno.encuestaCompletada;
   }
-  
+
   calificarAtencion(turno: Turno): void {
     const calificacion = prompt('Califique la atención del especialista:');
     if (calificacion) {

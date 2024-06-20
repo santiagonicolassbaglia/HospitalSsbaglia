@@ -31,12 +31,12 @@ export class TurnoService {
       throw error; // Propaga el error para manejarlo en el componente
     }
   }
-  getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
-    console.log('Buscando turnos para paciente ID:', pacienteId);  // Log del ID del paciente
-    return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges().pipe(
-      tap(turnos => console.log('Turnos encontrados:', turnos))  // Log de los turnos encontrados
-    );
-  }
+  // getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
+  //   console.log('Buscando turnos para paciente ID:', pacienteId);  // Log del ID del paciente
+  //   return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges().pipe(
+  //     tap(turnos => console.log('Turnos encontrados:', turnos))  // Log de los turnos encontrados
+  //   );
+  // }
   
 
   getTurnosByEspecialista(especialistaId: string): Observable<Turno[]> {
@@ -52,7 +52,7 @@ export class TurnoService {
             id,
             turno.especialidad,
             turno.especialista,
-            turno.fecha.toDate(), // convertir Firestore Timestamp a Date
+            turno.fecha.toDate(),  
             turno.estado,
             turno.paciente,
             turno.resenia,
@@ -66,7 +66,7 @@ export class TurnoService {
       })
     );
   }
-
+  
   async rechazarTurno(id: string, comentario: string): Promise<void> {
     const docRef = this.firestore.collection(this.PATH).doc(id);
 
@@ -169,5 +169,19 @@ export class TurnoService {
       throw error; // Propaga el error para manejarlo en el componente
     }
   }
+  getTurnosByDocumentoYFecha(documento: string, fecha: Date): Observable<Turno[]> {
+    return this.firestore.collection<Turno>(this.PATH, ref =>
+      ref.where('dniUsuario', '==', documento).where('fecha', '==', fecha)
+    ).valueChanges();
+  }
+  
 
+  getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
+    return this.firestore.collection<Turno>('turnos', ref => ref.where('paciente', '==', pacienteId)).valueChanges();
+  }
+ 
+
+   
+
+  
 }
