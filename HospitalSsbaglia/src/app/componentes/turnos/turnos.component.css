@@ -1,54 +1,56 @@
-/* Estilos globales */
-.turno {
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+.contenedor {
+  margin: 20px;
 }
 
-.turno:hover {
-  background-color: #f0f0f0;
+h2 {
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: center; /* Centramos los títulos */
 }
 
-.turno h3 {
-  margin: 0;
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.turno p {
-  margin: 0;
+.filtro-especialidad, .filtro-especialista {
+  display: flex;
+  gap: 10px;
 }
 
-.turno button {
-  margin-top: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
+.filtro-especialidad button, .filtro-especialista button {
+  padding: 10px 20px;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.turno button:hover {
-  background-color: #45a049;
+.filtro-especialidad button.selected, .filtro-especialista button.selected {
+  background-color: #007bff;
+  color: white;
 }
 
-.turno button:disabled {
-  background-color: #cccccc;
-  color: #666666;
-  cursor: not-allowed;
+.turno {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.turno button:disabled:hover {
-  background-color: #cccccc;
+.turno p {
+  margin-bottom: 5px;
 }
 
-.turno .error {
-  color: red;
-  font-size: 12px;
+.turno button {
+  margin-right: 10px;
 }
 
-/* .turno-info {
+.turno textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.turno .botones {
   display: flex;
   justify-content: space-between;
-} */
-
-
+}

@@ -1,21 +1,16 @@
-import { Usuario } from "./usuario";
-
 export class Turno {
-  id: string;
-  especialidad: string;
-  especialista: string;
-  fecha: Date;
-  estado: string;
-  paciente: string;
-  resenia?: string;
-  encuestaCompletada?: boolean;
-  calificacionCompletada?: boolean;
-  comentario?: string;
-  dniUsuario: string;
-  hora: string;
-  idusuario: string;
-
-  constructor(init?: Partial<Turno>) {
-    Object.assign(this, init);
-  }
+  constructor(
+    public id: string,
+    public pacienteId: string,
+    public pacienteNombre: string,
+    public especialidad: string,
+    public especialistaId: string,
+    public especialistaNombre: string,
+    public fechaHora: Date,    
+    public estado: 'pendiente' | 'confirmado' | 'cancelado' | 'realizado' = 'pendiente',
+    public comentario?: string,
+    public dniUsuario?: string,
+    public mostrarresenia?: boolean,
+    public mostrarcomentario?: boolean,
+  ) {}
 }

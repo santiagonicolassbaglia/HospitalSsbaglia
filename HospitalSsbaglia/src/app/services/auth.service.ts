@@ -411,25 +411,7 @@ async login(mail: string, pass: string) {
     );
   }
 
-  public obtenerEspecialidades(): Observable<string[]> {
-    return this.firestore.collection<Usuario>(this.PATH).valueChanges().pipe(
-      map(usuarios => {
-        const especialidades: string[] = [];
-        usuarios.forEach(usuario => {
-          usuario.especialidad.forEach(especialidad => {
-            if (!especialidades.includes(especialidad)) {
-              especialidades.push(especialidad);
-            }
-          });
-        });
-        return especialidades;
-      })
-    );
-  }
-
-  getUsuariosByEspecialidad(especialidad: string): Observable<Usuario[]> {
-    return this.firestore.collection<Usuario>(this.PATH, ref => ref.where('especialidad', 'array-contains', especialidad)).valueChanges();
-  }
+ 
 
   async getCurrentUserDni(): Promise<string | null> {
     return new Promise((resolve, reject) => {
@@ -447,6 +429,41 @@ async login(mail: string, pass: string) {
         }
       });
     });
-  }5
+  } 
+
+
+ 
+  public obtenerEspecialidades(): Observable<string[]> {
+    return this.firestore.collection<Usuario>(this.PATH).valueChanges().pipe(
+      map(usuarios => {
+        const especialidades: string[] = [];
+        usuarios.forEach(usuario => {
+          usuario.especialidad.forEach(especialidad => {
+            if (!especialidades.includes(especialidad)) {
+              especialidades.push(especialidad);
+            }
+          });
+        });
+        return especialidades;
+      })
+    );
+  }
+
+ 
+  public getUsuariosByEspecialidad(especialidad: string): Observable<Usuario[]> {
+    return this.firestore.collection<Usuario>(this.PATH, ref => ref.where('especialidad', 'array-contains', especialidad)).valueChanges();
+  }
+ 
+  public obtenerTurnosDisponibles(uid: string): Observable<{ fecha: string, hora: string }[]> {
+    return this.firestore.collection(`Turnos/${uid}/Disponibles`).valueChanges() as Observable<{ fecha: string, hora: string }[]>;
+  }
+
+
+
+  public reservarTurno(uid: string, fecha: string, hora: string, paciente: Usuario): Promise<void> {
+    return this.firestore.collection(`Turnos/${uid}/Reservados`).doc(`${fecha} ${hora}`).set(paciente);
+  }
+
+
 }
  

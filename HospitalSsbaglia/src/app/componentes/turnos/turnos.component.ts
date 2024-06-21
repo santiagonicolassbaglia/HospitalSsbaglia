@@ -1,104 +1,95 @@
-
-import { Component, OnInit, Pipe } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Turno } from '../../clases/turno';
 import { TurnoService } from '../../services/turno.service';
 import { AsyncPipe, DatePipe, NgFor, NgIf, NgSwitchCase } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Observable, pipe } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../clases/usuario';
 
 @Component({
   selector: 'app-turnos',
   standalone: true,
-  imports: [NgFor,NgIf,FormsModule,RouterLink,RouterLinkActive,AsyncPipe, DatePipe,NgSwitchCase, AsyncPipe],
+  imports: [NgFor, NgIf, FormsModule, RouterLink, RouterLinkActive, AsyncPipe, DatePipe, NgSwitchCase, AsyncPipe],
   templateUrl: './turnos.component.html',
-  styleUrl: './turnos.component.css'
+  styleUrls: ['./turnos.component.css']
 })
-export class TurnosComponent   {
+export class TurnosComponent implements OnInit {
 
-  turnos$: Observable<Turno[]>;
-  especialidades: string[];
-  especialistas: Usuario[];
+  turnos: Turno[] = [];
+  turnosFiltrados: Turno[] = [];
+  especialidades: string[] = [];
+  especialistas: { id: string, nombre: string }[] = [];
   filtroEspecialidad: string = '';
   filtroEspecialista: string = '';
-  puedeCancelarTurno: boolean = false;
-  especialistas$: Observable<Usuario[]>;
 
+  constructor(private authService: AuthService, private turnoService: TurnoService) {}
 
-  constructor(private turnoService: TurnoService, private authService: AuthService) {
-    this.turnos$ = new Observable<Turno[]>();
-    this.especialidades = [];
-    this.especialistas = [];
-    this.especialistas$ = new Observable<Usuario[]>();
+  async ngOnInit(): Promise<void> {
+    const currentUser = await this.authService.usuarioActual();
+    this.turnoService.getTurnosByPaciente(currentUser.uid).subscribe(turnos => {
+      this.turnos = turnos;
+      this.turnosFiltrados = turnos;
+      this.obtenerEspecialidadesYEspecialistas(turnos);
+    });
   }
 
-  ngOnInit(): void {
+  private obtenerEspecialidadesYEspecialistas(turnos: Turno[]): void {
+    const especialidadesSet = new Set<string>();
+    const especialistasSet = new Set<{ id: string, nombre: string }>();
 
-    this.especialistas$ = this.turnoService.obtenerEspecialistas();
-    this.authService.getCurrentUserDni().then(dniUsuario => {
-      if (dniUsuario) {
-        this.turnos$ = this.turnoService.getTurnosByDniUsuario(dniUsuario);
-        console.log("dni:", dniUsuario);
-      } else {
-        console.error('No se encontró el dni del usuario');
-      }
-    }).catch(error => {
-      console.error('Error al obtener el dni del usuario:', error);
+    turnos.forEach(turno => {
+      especialidadesSet.add(turno.especialidad);
+      especialistasSet.add({ id: turno.especialistaId, nombre: turno.especialistaNombre });
     });
 
-    this.turnoService.obtenerEspecialidades().subscribe(
-      especialidades => {
-        this.especialidades = especialidades;
-      },
-      error => {
-        console.error('Error al obtener las especialidades:', error);
-      }
-    );
+    this.especialidades = Array.from(especialidadesSet);
+    this.especialistas = Array.from(especialistasSet);
+  }
 
-    this.turnoService.obtenerEspecialistas().subscribe(
-      especialistas => {
-        this.especialistas = especialistas;
-      },
-      error => {
-        console.error('Error al obtener los especialistas:', error);
-      }
+  aplicarFiltro(): void {
+    this.turnosFiltrados = this.turnos.filter(turno => 
+      (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
+      (this.filtroEspecialista === '' || turno.especialistaId === this.filtroEspecialista)
     );
   }
 
-
- 
-  cancelarTurno(turno: Turno)  {
-    if (this.puedeCancelarTurno) {
-   
-
-      this.turnoService.deleteTurno(turno.id).then(() => {
-        console.log('Turno cancelado correctamente');
-      }).catch(error => {
-        console.error('Error al cancelar el turno:', error);
-      });
-    } else { 
-      console.error('No se puede cancelar el turno');
+  async cancelarTurno(turno: Turno): Promise<void> {
+    if (turno.estado !== 'realizado') {
+      turno.estado = 'cancelado';
+      turno.comentario = turno.comentario ? turno.comentario : 'Turno cancelado por el paciente';
+      await this.turnoService.actualizarTurno(turno);
     }
-  }
-  verResena(turno: Turno)  {
-    
-    console.log('Reseña:', turno.resenia);
-
-    
   }
 
   completarEncuesta(turno: Turno): void {
-    // Implementa la lógica para completar la encuesta
+    if (turno.estado === 'realizado') {
+      this.turnoService.obtenerEncuesta(turno.id).subscribe(encuesta => {
+        if (encuesta) {
+          console.log('La encuesta ya fue completada');
+        } else {
+          console.log('Redirigir al formulario de encuesta');
+        }
+      });
+    }
   }
 
-  calificarAtencion(turno: Turno): void {
-    // Implementa la lógica para calificar la atención del especialista
+  verResenia(turno: Turno): void {
+    if (turno.estado === 'realizado') {
+      turno.mostrarresenia = !turno.mostrarresenia;
+      if (turno.mostrarresenia) {
+        this.turnoService.obtenerReseña(turno.id).subscribe(reseña => {
+          turno.comentario = reseña ? reseña : 'No hay reseña';
+        });
+      }
+    }
   }
 
-  aplicarFiltros(): void {
-    // Implementa la lógica para aplicar los filtros de especialidad y especialista
-    // this.turnos$ = this.turnoService.filtrarTurnos(this.filtroEspecialidad, this.filtroEspecialista);
+  calificarAtencion(turno: Turno, comentario: string): void {
+    if (turno.estado === 'realizado') {
+      turno.comentario = comentario;
+      // Implementar la lógica para guardar la calificación
+    }
   }
 }

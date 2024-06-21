@@ -1,42 +1,43 @@
-<!-- plantilla HTML para solicitar turno -->
-<div>
-  <form [formGroup]="turnoForm" (ngSubmit)="solicitarTurno()">
-    <div>
-      <label for="especialidad">Selecciona una especialidad:</label>
-      <select id="especialidad" formControlName="especialidad" (change)="buscarEspecialistas()">
-        <option value="">Selecciona una especialidad</option>
-        <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
-      </select>
+<div class="contenedor">
+  <div class="especialidades">
+    <h2>Especialidades</h2>
+    <div class="botones">
+      <div *ngFor="let especialidad of especialidades" (click)="seleccionarEspecialidad(especialidad)">
+        <button [class.selected]="especialidad === especialidadSeleccionada">
+          <img [src]="getEspecialidadImagen(especialidad)" alt="Especialidad">
+          <span>{{ especialidad }}</span>
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div *ngIf="especialistas$ | async as especialistas">
-      <label for="especialista">Selecciona un especialista:</label>
-      <select id="especialista" formControlName="especialista">
-        <option value="">Selecciona un especialista</option>
-        <option *ngFor="let especialista of especialistas" [value]="especialista">{{ especialista.nombre }} {{ especialista.apellido }}</option>
-      </select>
+  <div class="especialistas" *ngIf="especialidadSeleccionada">
+    <h2>Especialistas</h2>
+    <div class="botones">
+      <div *ngFor="let especialista of especialistas" (click)="seleccionarEspecialista(especialista)">
+        <button [class.selected]="especialista === especialistaSeleccionado">
+          <img [src]="especialista.imagenes[0]" alt="Especialista">
+          <span>{{ especialista.nombre }}</span>
+        </button>
+      </div>
     </div>
+  </div>
 
-    <div>
-      <label for="fecha">Fecha:</label>
-      <input type="date" id="fecha" formControlName="fecha">
+  <div class="turnos" *ngIf="especialistaSeleccionado">
+    <h2>Turnos Disponibles</h2>
+    <div class="botones">
+      <div *ngFor="let turno of turnosDisponibles" (click)="seleccionarTurno(turno)">
+        <button [class.selected]="turno === turnoSeleccionado">{{ turno | date: 'dd/MM HH:mm' }}</button>
+      </div>
     </div>
+  </div>
 
-    <div>
-      <label for="hora">Hora:</label>
-      <input type="time" id="hora" formControlName="hora">
+  <div class="confirmar" *ngIf="turnoSeleccionado">
+    <button (click)="confirmarTurno()">Confirmar Turno</button>
+    <div class="mensaje" *ngIf="mensajeConfirmacion">
+      <p>Turno solicitado con éxito</p> 
     </div>
-    
+  </div>
 
-    <button type="submit">Solicitar Turno</button>
-    <div *ngIf="mensaje" >{{ mensaje }}</div>
-  <div *ngIf="mensajeError"  >{{ mensajeError }}</div>
-  </form>
   
 </div>
-
-<!-- 
-<p>{{ mensaje }}</p>
-<div *ngIf="mensaje">{{ mensaje }}</div>
-<pre>{{ turnoForm.value | json }}</pre>
-<pre>{{ usuarioActual | json }}</pre> -->

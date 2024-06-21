@@ -1,19 +1,41 @@
-<div class="turno" *ngFor="let turno of turnos$ | async">
-  <div class="turno-info">
-     
-
-    <p class="especialidad">Especialidad: {{ turno.especialidad }}</p>
-    <p>Estado: {{ turno.estado }}</p>
-    
-
-    <p class="fecha">Fecha: {{ turno.fecha | date: 'shortDate' }}</p>
-    <p class="hora">Hora: {{ turno.hora }}</p>
+<div class="filtros">
+  <div class="filtro-especialidad">
+    <button *ngFor="let especialidad of especialidades" 
+            (click)="filtroEspecialidad = especialidad; aplicarFiltro()"
+            [class.selected]="filtroEspecialidad === especialidad">
+      {{ especialidad }}
+    </button>
+  </div>
+  <div class="filtro-especialista">
+    <button *ngFor="let especialista of especialistas" 
+            (click)="filtroEspecialista = especialista.id; aplicarFiltro()"
+            [class.selected]="filtroEspecialista === especialista.id">
+      {{ especialista.nombre }}
+    </button>
   </div>
 </div>
 
-<ng-template #loading>
-  <p>Loading...</p>
-</ng-template>
-<ng-template #noTurnos>
-  <p>No hay turnos disponibles.</p>
-</ng-template>
+<div class="turnos">
+  <div *ngFor="let turno of turnosFiltrados" class="turno">
+    <p>Especialidad: {{ turno.especialidad }}</p>
+    <p>Especialista: {{ turno.especialistaNombre }}</p>
+    <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p> <!-- Utiliza un formato claro para la fecha y hora -->
+    <p>Estado: {{ turno.estado }}</p>
+  
+    <div *ngIf="turno.estado !== 'realizado'">
+      <button (click)="turno.mostrarcomentario = !turno.mostrarcomentario">Cancelar Turno</button>
+      <div *ngIf="turno.mostrarcomentario">
+        <textarea [(ngModel)]="turno.comentario" placeholder="Razón de cancelación"></textarea>
+        <button (click)="cancelarTurno(turno)">Confirmar Cancelación</button>
+      </div>
+    </div>
+  
+    <button *ngIf="turno.comentario && !turno.mostrarresenia" (click)="verResenia(turno)">Ver Reseña</button>
+    <div *ngIf="turno.mostrarresenia">
+      <p>Reseña: {{ turno.comentario }}</p>
+      <button (click)="turno.mostrarresenia = false">Ocultar Reseña</button>
+    </div>
+    <button *ngIf="turno.estado === 'realizado'" (click)="completarEncuesta(turno)">Completar Encuesta</button>
+    <button *ngIf="turno.estado === 'realizado'" (click)="calificarAtencion(turno, 'Comentario de la atención')">Calificar Atención</button>
+  </div>
+</div>

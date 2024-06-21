@@ -11,68 +11,64 @@ import { Usuario } from '../clases/usuario';
   providedIn: 'root'
 })
 export class TurnoService {
+  
   private PATH = 'Turnos';
-  private turnosCollection: AngularFirestoreCollection<Turno>;
-  constructor(private firestore: AngularFirestore,  private authService: AuthService ) {}
 
-  getAllTurnos(): Observable<Turno[]> {
+  constructor(private firestore: AngularFirestore) {}
+
+  public getTurnos(): Observable<Turno[]> {
     return this.firestore.collection<Turno>(this.PATH).valueChanges();
   }
 
-  getTurnosByEspecialidad(especialidad: string): Observable<any[]> {
-    return this.firestore.collection('Usuarios', ref => ref.where('especialidad', 'array-contains', especialidad)).valueChanges();
+  public getTurnosByEspecialista(especialistaId: string): Observable<Turno[]> {
+    return this.firestore.collection<Turno>(this.PATH, ref => ref.where('especialistaId', '==', especialistaId)).valueChanges();
   }
 
-  addTurno(turno: Turno): Promise<void> {
+  public getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
+    return this.firestore.collection<Turno>(this.PATH, ref => ref.where('pacienteId', '==', pacienteId)).valueChanges();
+  }
+
+  public async crearTurno(turno: Turno): Promise<void> {
     const id = this.firestore.createId();
     turno.id = id;
-    return this.firestore.collection(this.PATH).doc(id).set(turno);
+    return this.firestore.collection(this.PATH).doc(id).set({ ...turno });
   }
 
-  updateTurno(id: string, turno: Partial<Turno>): Promise<void> {
-    return this.firestore.collection(this.PATH).doc(id).update(turno);
+  public async actualizarTurno(turno: Turno): Promise<void> {
+    return this.firestore.collection(this.PATH).doc(turno.id).update({ ...turno });
   }
 
-  deleteTurno(id: string): Promise<void> {
+  public async eliminarTurno(id: string): Promise<void> {
     return this.firestore.collection(this.PATH).doc(id).delete();
   }
- 
-   
- 
-public async solicitarTurno(turno: Turno): Promise<void> {
-  const id = this.firestore.createId();
-  turno.id = id;
-  try {
-    const dniUsuario = await this.authService.getCurrentUserDni();
-    if (dniUsuario) {
-      turno.dniUsuario = dniUsuario;
-      await this.firestore.collection(this.PATH).doc(id).set(turno);
-    } else {
-      throw new Error('No se encontró el dni del usuario');
-    }
-  } catch (error) {
-    console.error('Error al solicitar turno:', error);
-    throw error;
-  }
-}
+
+
+
+
+
+obtenerEncuesta(turnoId: string): Observable<any> {
+  return this.firestore.collection('Encuestas').doc(turnoId).valueChanges();}
+
+obtenerReseña(turnoId: string): Observable<any> {
+  return this.firestore.collection('Reseñas').doc(turnoId).valueChanges();}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
-  crearTurno(turno: Turno): Promise<DocumentReference<Turno>> {
-    // Convertir Turno a un objeto plano
-    const turnoObj = {
-      id: turno.id,
-      especialidad: turno.especialidad,
-      especialista: turno.especialista,
-      fecha: turno.fecha,
-      estado: turno.estado,
-      paciente: turno.paciente,
-      resenia: turno.resenia || '', // Asegúrate de manejar valores nulos o undefined
-      encuestaCompletada: turno.encuestaCompletada || false,
-      calificacionCompletada: turno.calificacionCompletada || false
-    };
-
-    return this.turnosCollection.add(turnoObj as Turno) as unknown as Promise<DocumentReference<Turno>>;
-  }
   public obtenerEspecialistasPorEspecialidad(especialidad: string): Observable<any[]> {
     return this.firestore.collection('Usuarios', ref => ref.where('especialidad', 'array-contains', especialidad)).valueChanges();
   }
@@ -113,5 +109,10 @@ obtenerTurnosDisponibles = (especialistaId: string): Observable<any[]> => {
   return this.firestore.collection('Turnos', ref => ref.where('especialista', '==', especialistaId)).valueChanges();
 
 }
+
+
+
+
+
 
 }
