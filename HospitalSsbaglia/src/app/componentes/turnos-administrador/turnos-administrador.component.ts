@@ -11,32 +11,32 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './turnos-administrador.component.html',
   styleUrl: './turnos-administrador.component.css'
 })
-export class TurnosAdministradorComponent implements OnInit {
-  turnos: Turno[] = [];
-  turnosFiltrados: Turno[] = [];
-  filtroEspecialidad: string = '';
-  filtroEspecialista: string = '';
+export class TurnosAdministradorComponent   {
+  // turnos: Turno[] = [];
+  // turnosFiltrados: Turno[] = [];
+  // filtroEspecialidad: string = '';
+  // filtroEspecialista: string = '';
 
-  constructor(private turnoService: TurnoService) {}
+  // constructor(private turnoService: TurnoService) {}
 
-  ngOnInit(): void {
-    this.turnoService.getTurnos().subscribe(turnos => {
-      this.turnos = turnos;
-      this.turnosFiltrados = turnos;
-    });
-  }
+  // // ngOnInit(): void {
+  // //   this.turnoService.getTurnos().subscribe(turnos => {
+  // //     this.turnos = turnos;
+  // //     this.turnosFiltrados = turnos;
+  // //   });
+  // // }
 
-  filtrarTurnos(): void {
-    this.turnosFiltrados = this.turnos.filter(turno =>
-      turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-      turno.especialista.toLowerCase().includes(this.filtroEspecialista.toLowerCase())
-    );
-  }
+  // filtrarTurnos(): void {
+  //   this.turnosFiltrados = this.turnos.filter(turno =>
+  //     turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
+  //     turno.especialista.toLowerCase().includes(this.filtroEspecialista.toLowerCase())
+  //   );
+  // }
  
 
-  puedeCancelar(turno: Turno): boolean {
-    return turno.estado !== 'realizado';
-  }
+  // puedeCancelar(turno: Turno): boolean {
+  //   return turno.estado !== 'realizado';
+  // }
 
   
 }

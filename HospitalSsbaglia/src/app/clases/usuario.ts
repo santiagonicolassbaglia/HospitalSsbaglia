@@ -13,9 +13,9 @@ export class Usuario {
   public code: string;
   public lastLogin: Date | null = null;
   public esAdmin: boolean = false;
-
+  public idTurnos: string[] = []; 
   constructor(
-    uid: string, // Modificar el constructor
+    uid: string, 
     nombre: string,
     apellido: string,
     dni: string,
@@ -29,8 +29,9 @@ export class Usuario {
     lastLogin: Date | null,
     esAdmin: boolean = false,
     aprobado: boolean | null = null,
+    idTurnos: string[] = []  
   ) {
-    this.uid = uid; // Inicializar la propiedad
+    this.uid = uid; 
     this.nombre = nombre;
     this.apellido = apellido;
     this.dni = dni;

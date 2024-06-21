@@ -1,26 +1,19 @@
-<div>
-  <h2>Mis Turnos</h2>
+<div class="turno" *ngFor="let turno of turnos$ | async">
+  <div class="turno-info">
+     
 
-  <div>
-    <label for="filtroEspecialidad">Filtrar por Especialidad:</label>
-    <input id="filtroEspecialidad" [(ngModel)]="filtroEspecialidad" (ngModelChange)="filtrarTurnos()">
+    <p class="especialidad">Especialidad: {{ turno.especialidad }}</p>
+    <p>Estado: {{ turno.estado }}</p>
+    
+
+    <p class="fecha">Fecha: {{ turno.fecha | date: 'shortDate' }}</p>
+    <p class="hora">Hora: {{ turno.hora }}</p>
   </div>
-
-  <div>
-    <label for="filtroEspecialista">Filtrar por Especialista:</label>
-    <input id="filtroEspecialista" [(ngModel)]="filtroEspecialista" (ngModelChange)="filtrarTurnos()">
-  </div>
-
-  <ul>
-    <li *ngFor="let turno of turnosFiltrados">
-      <p>Especialidad: {{ turno.especialidad }}</p>
-      <p>Especialista: {{ especialistas[turno.especialista]?.nombre }} {{ especialistas[turno.especialista]?.apellido }}</p>
-      <p>Fecha: {{ turno.fecha | date }}</p>
-      <p>Estado: {{ turno.estado }}</p>
-      <button *ngIf="puedeCancelar(turno)" (click)="cancelarTurno(turno)">Cancelar</button>
-      <button *ngIf="puedeCompletarEncuesta(turno)" (click)="completarEncuesta(turno)">Completar Encuesta</button>
-      <button *ngIf="puedeCalificarAtencion(turno)" (click)="calificarAtencion(turno)">Calificar Atención</button>
-      <button *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
-    </li>
-  </ul>
 </div>
+
+<ng-template #loading>
+  <p>Loading...</p>
+</ng-template>
+<ng-template #noTurnos>
+  <p>No hay turnos disponibles.</p>
+</ng-template>

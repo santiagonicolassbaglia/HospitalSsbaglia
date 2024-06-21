@@ -14,8 +14,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
   providedIn: 'root'
 })
 export class AuthService {
-
-
+ 
   private PATH = 'Usuarios';
   private items$: Observable<Usuario[]>;
   public loguado: boolean = false;
@@ -87,6 +86,7 @@ async login(mail: string, pass: string) {
 
       this.loguado = true;
       this.esAdmin = userData.esAdmin;
+      localStorage.setItem('dni', userData.dni);
       await this.updateLastLogin(userCredential.user.uid);
     }
   } catch (error) {
@@ -121,13 +121,11 @@ async login(mail: string, pass: string) {
     }
   }
 
-  private async updateLastLogin(uid: string) {
-    const now = new Date();
+  private async updateLastLogin(uid: string): Promise<void> {
     await this.firestore.collection(this.PATH).doc(uid).update({
-      lastLogin: now
+      lastLogin: new Date()
     });
   }
-
   public async guardarUsuarioFirestore(
     uid: string, 
     nombre: string, 
@@ -207,20 +205,17 @@ async login(mail: string, pass: string) {
   getUserById(uid: string): Observable<Usuario> {
     return this.firestore.collection('usuarios').doc<Usuario>(uid).valueChanges();
   }
-    getCurrentUser(): Observable<Usuario | null> {
-      return new Observable(observer => {
-        this.auth.authState.subscribe(user => {
-          if (user) {
-            this.firestore.collection('usuarios').doc(user.uid).valueChanges().subscribe((usuario: any) => {
-              observer.next({ ...usuario, uid: user.uid });
-            });
-          } else {
-            observer.next(null);
-          }
-        });
-      });
-    }
-
+  getCurrentUser(): Observable<Usuario | null> {
+    return this.auth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.firestore.collection<Usuario>('Usuarios').doc(user.uid).valueChanges();
+        } else {
+          return of(null);
+        }
+      })
+    );
+  }
   getCurrentUserName(): Observable<string | null> {
     return this.auth.authState.pipe(
       switchMap(user => {
@@ -416,5 +411,42 @@ async login(mail: string, pass: string) {
     );
   }
 
+  public obtenerEspecialidades(): Observable<string[]> {
+    return this.firestore.collection<Usuario>(this.PATH).valueChanges().pipe(
+      map(usuarios => {
+        const especialidades: string[] = [];
+        usuarios.forEach(usuario => {
+          usuario.especialidad.forEach(especialidad => {
+            if (!especialidades.includes(especialidad)) {
+              especialidades.push(especialidad);
+            }
+          });
+        });
+        return especialidades;
+      })
+    );
+  }
 
-}  
+  getUsuariosByEspecialidad(especialidad: string): Observable<Usuario[]> {
+    return this.firestore.collection<Usuario>(this.PATH, ref => ref.where('especialidad', 'array-contains', especialidad)).valueChanges();
+  }
+
+  async getCurrentUserDni(): Promise<string | null> {
+    return new Promise((resolve, reject) => {
+      this.auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          const userDoc = await this.firestore.collection(this.PATH).doc(user.uid).get().toPromise();
+          const userData = userDoc?.data() as Usuario;
+          if (userData && userData.dni) {
+            resolve(userData.dni);
+          } else {
+            resolve(null);
+          }
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }5
+}
+ 
