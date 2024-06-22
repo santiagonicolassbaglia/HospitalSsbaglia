@@ -49,7 +49,7 @@ export class TurnosComponent implements OnInit {
   }
 
   aplicarFiltro(): void {
-    this.turnosFiltrados = this.turnos.filter(turno => 
+    this.turnosFiltrados = this.turnos.filter(turno =>
       (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
       (this.filtroEspecialista === '' || turno.especialistaId === this.filtroEspecialista)
     );

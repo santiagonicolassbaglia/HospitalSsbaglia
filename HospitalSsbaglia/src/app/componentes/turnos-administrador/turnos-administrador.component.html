@@ -1,22 +1,25 @@
-<div>
-    <h2>Turnos de la Clínica</h2>
-  
-    <!-- <div>
-      <label>Filtrar por especialidad:</label>
-      <input [(ngModel)]="filtroEspecialidad" (input)="filtrarTurnos()" type="text">
-      <label>Filtrar por especialista:</label>
-      <input [(ngModel)]="filtroEspecialista" (input)="filtrarTurnos()" type="text">
-    </div>
-  
-    <div *ngFor="let turno of turnosFiltrados">
-      <div class="turno">
-        <p>Especialidad: {{ turno.especialidad }}</p>
-        <p>Especialista: {{ turno.especialista }}</p>
-        <p>Paciente: {{ turno.paciente }}</p>
-        <p>Fecha: {{ turno.fecha | date }}</p>
-        <p>Estado: {{ turno.estado }}</p>
-  
-      
-    </div> -->
+<div class="filtros">
+  <div class="filtro-especialidad">
+    <button *ngFor="let especialidad of especialidades" (click)="filtroEspecialidad = especialidad; aplicarFiltro()">
+      {{ especialidad }}
+    </button>
   </div>
-  
+  <div class="filtro-especialista">
+    <button *ngFor="let especialista of especialistas" (click)="filtroEspecialista = especialista.id; aplicarFiltro()">
+      {{ especialista.nombre }}
+    </button>
+  </div>
+</div>
+
+<div class="turnos">
+  <div *ngFor="let turno of turnosFiltrados" class="turno">
+    <p>Especialidad: {{ turno.especialidad }}</p>
+    <p>Especialista: {{ turno.especialistaNombre }}</p>
+    <p>Paciente: {{ turno.pacienteNombre }}</p>
+    <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p>Estado: {{ turno.estado }}</p>
+
+    <button *ngIf="turno.estado !== 'confirmado' && turno.estado !== 'realizado' && turno.estado !== 'cancelado'"
+            (click)="cancelarTurno(turno, 'Razón de cancelación')">Cancelar Turno</button>
+  </div>
+</div>

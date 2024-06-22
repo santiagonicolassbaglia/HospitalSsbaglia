@@ -50,12 +50,14 @@ obtenerEncuesta(turnoId: string): Observable<any> {
   return this.firestore.collection('Encuestas').doc(turnoId).valueChanges();}
 
 obtenerReseña(turnoId: string): Observable<any> {
-  return this.firestore.collection('Reseñas').doc(turnoId).valueChanges();}
+  return this.firestore.collection('comentario').doc(turnoId).valueChanges();}
+
+obtenerComentario(turnoId: string): Observable<any> {
+  return this.firestore.collection('comentario').doc(turnoId).valueChanges();}
+
+
 
   
-
-
-
 
 
 

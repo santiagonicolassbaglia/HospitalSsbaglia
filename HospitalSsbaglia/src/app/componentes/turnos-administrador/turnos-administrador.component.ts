@@ -3,6 +3,7 @@ import { TurnoService } from '../../services/turno.service';
 import { Turno } from '../../clases/turno';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-turnos-administrador',
@@ -12,31 +13,48 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './turnos-administrador.component.css'
 })
 export class TurnosAdministradorComponent   {
-  // turnos: Turno[] = [];
-  // turnosFiltrados: Turno[] = [];
-  // filtroEspecialidad: string = '';
-  // filtroEspecialista: string = '';
+  turnos: Turno[] = [];
+  turnosFiltrados: Turno[] = [];
+  especialidades: string[] = [];
+  especialistas: { id: string, nombre: string }[] = [];
+  filtroEspecialidad: string = '';
+  filtroEspecialista: string = '';
 
-  // constructor(private turnoService: TurnoService) {}
+  constructor(private authService: AuthService, private turnoService: TurnoService) {}
 
-  // // ngOnInit(): void {
-  // //   this.turnoService.getTurnos().subscribe(turnos => {
-  // //     this.turnos = turnos;
-  // //     this.turnosFiltrados = turnos;
-  // //   });
-  // // }
+  async ngOnInit(): Promise<void> {
+    this.turnoService.getTurnos().subscribe(turnos => {
+      this.turnos = turnos;
+      this.turnosFiltrados = turnos;
+      this.obtenerEspecialidadesYEspecialistas(turnos);
+    });
+  }
 
-  // filtrarTurnos(): void {
-  //   this.turnosFiltrados = this.turnos.filter(turno =>
-  //     turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-  //     turno.especialista.toLowerCase().includes(this.filtroEspecialista.toLowerCase())
-  //   );
-  // }
- 
+  private obtenerEspecialidadesYEspecialistas(turnos: Turno[]): void {
+    const especialidadesSet = new Set<string>();
+    const especialistasSet = new Set<{ id: string, nombre: string }>();
 
-  // puedeCancelar(turno: Turno): boolean {
-  //   return turno.estado !== 'realizado';
-  // }
+    turnos.forEach(turno => {
+      especialidadesSet.add(turno.especialidad);
+      especialistasSet.add({ id: turno.especialistaId, nombre: turno.especialistaNombre });
+    });
 
-  
+    this.especialidades = Array.from(especialidadesSet);
+    this.especialistas = Array.from(especialistasSet);
+  }
+
+  aplicarFiltro(): void {
+    this.turnosFiltrados = this.turnos.filter(turno => 
+      (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
+      (this.filtroEspecialista === '' || turno.especialistaId === this.filtroEspecialista)
+    );
+  }
+
+  async cancelarTurno(turno: Turno, comentario: string): Promise<void> {
+    if (turno.estado !== 'confirmado' && turno.estado !== 'realizado' && turno.estado !== 'cancelado') {
+      turno.estado = 'cancelado';
+      turno.comentario = comentario;
+      await this.turnoService.actualizarTurno(turno);
+    }
+  }
 }

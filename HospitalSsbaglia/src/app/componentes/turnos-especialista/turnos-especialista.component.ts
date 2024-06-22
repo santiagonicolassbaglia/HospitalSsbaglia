@@ -16,110 +16,84 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrl: './turnos-especialista.component.css'
 })
 export class TurnosEspecialistaComponent   {
-  // turnos: Turno[] = [];
-  // turnosFiltrados: Turno[] = [];
-  // filtroEspecialidad: string = '';
-  // filtroEspecialista: string = '';
-  // pacienteId: string = '';
-  // especialistas: { [key: string]: Usuario } = {}; // Mapa de especialistas por ID
+  turnos: Turno[] = [];
+  turnosFiltrados: Turno[] = [];
+  especialidades: string[] = [];
+  pacientes: { id: string, nombre: string }[] = [];
+  filtroEspecialidad: string = '';
+  filtroPaciente: string = '';
 
-  // turnoSeleccionado: Turno; // Variable para almacenar el turno seleccionado para cancelar
-  // comentarioCancelacion: string = ''; // Variable para almacenar el comentario de cancelación
+  constructor(private authService: AuthService, private turnoService: TurnoService) {}
 
-  // constructor(
-  //   private turnoService: TurnoService,
-  //   private authService: AuthService
-  // ) {}
+  async ngOnInit(): Promise<void> {
+    const currentUser = await this.authService.usuarioActual();
+    this.turnoService.getTurnosByEspecialista(currentUser.uid).subscribe(turnos => {
+      this.turnos = turnos;
+      this.turnosFiltrados = turnos;
+      this.obtenerEspecialidadesYPacientes(turnos);
+    });
+  }
 
-  // ngOnInit(): void {
-  //   this.obtenerPacienteId();
-  // }
+  private obtenerEspecialidadesYPacientes(turnos: Turno[]): void {
+    const especialidadesSet = new Set<string>();
+    const pacientesSet = new Set<{ id: string, nombre: string }>();
 
-  // obtenerPacienteId(): void {
-  //   this.authService.usuarioActual().then((usuario: Usuario) => {
-  //     this.pacienteId = usuario.uid;
-  //     this.obtenerTurnos();
-  //   }).catch(error => {
-  //     console.error('Error al obtener el usuario actual:', error);
-  //     // Manejar el error apropiadamente
-  //   });
-  // }
+    turnos.forEach(turno => {
+      especialidadesSet.add(turno.especialidad);
+      pacientesSet.add({ id: turno.pacienteId, nombre: turno.pacienteNombre });
+    });
 
-  // obtenerTurnos(): void {
-  //   this.turnoService.getTurnosByPaciente(this.pacienteId).subscribe(turnos => {
-  //     this.turnos = turnos;
-  //     this.obtenerNombresEspecialistas(turnos); // Obtener los nombres de los especialistas
-  //   });
-  // }
+    this.especialidades = Array.from(especialidadesSet);
+    this.pacientes = Array.from(pacientesSet);
+  }
 
-  // obtenerNombresEspecialistas(turnos: Turno[]): void {
-  //   const especialistaIds = [...new Set(turnos.map(turno => turno.especialista))];
-  //   especialistaIds.forEach(id => {
-  //     this.authService.getUserById(id).subscribe((usuario: Usuario) => {
-  //       this.especialistas[id] = usuario;
-  //       if (Object.keys(this.especialistas).length === especialistaIds.length) {
-  //         this.filtrarTurnos();  
-  //       }
-  //     }, error => {
-  //       console.error('Error al obtener el especialista:', error);
-  //     });
-  //   });
-  // }
+  aplicarFiltro(): void {
+    this.turnosFiltrados = this.turnos.filter(turno => 
+      (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
+      (this.filtroPaciente === '' || turno.pacienteId === this.filtroPaciente)
+    );
+  }
 
-  // filtrarTurnos(): void {
-  //   this.turnosFiltrados = this.turnos.filter(turno =>
-  //     turno.especialidad.toLowerCase().includes(this.filtroEspecialidad.toLowerCase()) &&
-  //     (`${this.especialistas[turno.especialista]?.nombre.toLowerCase()} ${this.especialistas[turno.especialista]?.apellido.toLowerCase()}`).includes(this.filtroEspecialista.toLowerCase())
-  //   );
-  // }
+  async cancelarTurno(turno: Turno, comentario: string): Promise<void> {
+    if (turno.estado !== 'realizado' && turno.estado !== 'cancelado') {
+      turno.estado = 'cancelado';
+      turno.comentario = comentario;
+      await this.turnoService.actualizarTurno(turno);
+    }
+  }
 
-  // puedeCancelar(turno: Turno): boolean {
-  //   return turno.estado !== 'realizado';
-  // }
+  async rechazarTurno(turno: Turno, comentario: string): Promise<void> {
+    if (turno.estado === 'pendiente') {
+      turno.estado = 'cancelado';
+      turno.comentario = comentario;
+      await this.turnoService.actualizarTurno(turno);
+    }
+  }
 
- 
+  async aceptarTurno(turno: Turno): Promise<void> {
+    if (turno.estado === 'pendiente') {
+      turno.estado = 'confirmado';
+      await this.turnoService.actualizarTurno(turno);
+    }
+  }
 
-  // cerrarModalCancelar(): void {
-  //   document.getElementById('modalCancelar').style.display = 'none';
-  // }
+  async finalizarTurno(turno: Turno, comentario: string): Promise<void> {
+    if (turno.estado === 'confirmado') {
+      turno.estado = 'realizado';
+      turno.comentario = comentario;  
+      await this.turnoService.actualizarTurno(turno);
+    }
+  }
 
+  verResenia(turno: Turno): void {
+    if (turno.estado === 'realizado' || turno.estado === 'cancelado') {
+      turno.mostrarresenia = !turno.mostrarresenia; 
   
-
-  // completarEncuesta(turno: Turno): void {
-  //   const encuesta = prompt('Por favor, complete la encuesta:');
-  //   if (encuesta) {
-  //     this.turnoService.completarEncuesta(turno.id, encuesta).then(() => {
-  //       turno.encuestaCompletada = true;
-  //       console.log('Encuesta completada exitosamente');
-  //       this.filtrarTurnos(); // Actualizar la lista después de completar la encuesta
-  //     }).catch(error => {
-  //       console.error('Error al completar encuesta:', error);
-  //     });
-  //   }
-  // }
-
-  // puedeCompletarEncuesta(turno: Turno): boolean {
-  //   return turno.estado === 'realizado' && !turno.encuestaCompletada;
-  // }
-
-  // calificarAtencion(turno: Turno): void {
-  //   const calificacion = prompt('Califique la atención del especialista:');
-  //   if (calificacion) {
-  //     this.turnoService.calificarAtencion(turno.id, calificacion).then(() => {
-  //       turno.calificacionCompletada = true;
-  //       console.log('Calificación completada exitosamente');
-  //       this.filtrarTurnos(); // Actualizar la lista después de calificar la atención
-  //     }).catch(error => {
-  //       console.error('Error al calificar atención:', error);
-  //     });
-  //   }
-  // }
-
-  // puedeCalificarAtencion(turno: Turno): boolean {
-  //   return turno.estado === 'realizado' && !turno.calificacionCompletada;
-  // }
-
-  // verResenia(turno: Turno): void {
-  //   alert(`Reseña: ${turno.resenia}`);
-  // }
+      if (turno.mostrarresenia && !turno.comentario) {
+        this.turnoService.obtenerComentario(turno.id).subscribe(comentario => {
+          turno.comentario = comentario ? comentario : 'No hay reseña';  
+        });
+      }
+    }
+  }
 }
