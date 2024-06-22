@@ -1,0 +1,92 @@
+/* General styles */
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 800px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Profile header */
+  h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    color: #555;
+    margin-top: 30px;
+  }
+  
+  /* Profile details */
+  .profile-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-details p {
+    flex: 1 1 45%;
+    margin: 0;
+    color: #555;
+  }
+  
+  .profile-details p strong {
+    color: #333;
+  }
+  
+  /* Images section */
+  .images-section {
+    margin-top: 20px;
+  }
+  
+  .images-section p {
+    margin: 0 0 10px;
+    color: #555;
+  }
+  
+  .images-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Availability section */
+  .availability-section {
+    margin-top: 20px;
+  }
+  
+  .availability-section p {
+    margin: 0;
+    color: #555;
+  }
+  
+  .availability-section p strong {
+    color: #333;
+  }
+  
+  /* Button */
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

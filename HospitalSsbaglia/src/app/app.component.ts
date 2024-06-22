@@ -20,6 +20,7 @@ import { TurnosComponent } from './componentes/turnos/turnos.component';
 import { TurnosAdministradorComponent } from './componentes/turnos-administrador/turnos-administrador.component';
 import { TurnosEspecialistaComponent } from './componentes/turnos-especialista/turnos-especialista.component';
 import { SolicitarTurnoComponent } from './componentes/solicitar-turno/solicitar-turno.component';
+import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
  
  
 
@@ -46,7 +47,7 @@ import { SolicitarTurnoComponent } from './componentes/solicitar-turno/solicitar
     TurnosEspecialistaComponent,
     TurnosAdministradorComponent,
     SolicitarTurnoComponent,
-
+MiPerfilComponent
 
   ],
   templateUrl: './app.component.html',

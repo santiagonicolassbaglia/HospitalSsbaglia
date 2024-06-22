@@ -18,7 +18,7 @@ export const routes: Routes = [
      {path: 'turnosEspecialista', loadComponent: () => import('./componentes/turnos-especialista/turnos-especialista.component').then(m => m.TurnosEspecialistaComponent) },
    {path: 'turnosAdministrador', loadComponent: () => import('./componentes/turnos-administrador/turnos-administrador.component').then(m => m.TurnosAdministradorComponent) },
    {path: 'solicitarTurno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
-   
+   {path: 'miPerfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent) },
    
    
    
