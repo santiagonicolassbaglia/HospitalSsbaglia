@@ -37,4 +37,6 @@ export class EspecialistaService {
   guardarDisponibilidad(uid: string, disponibilidad: Disponibilidad[]): Promise<void> {
     return this.firestore.collection('disponibilidades').doc(uid).set({ uid, disponibilidad });
   }
+
+  
 }

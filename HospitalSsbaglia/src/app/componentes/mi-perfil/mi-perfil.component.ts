@@ -6,22 +6,21 @@ import { EspecialistaService } from '../../services/especialista.service';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Disponibilidad, Especialista } from '../../Interfaces/especialista';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [NgIf,NgFor,FormsModule],
+  imports: [NgIf, NgFor, FormsModule],
   templateUrl: './mi-perfil.component.html',
-  styleUrl: './mi-perfil.component.css'
+  styleUrls: ['./mi-perfil.component.css']
 })
-export class MiPerfilComponent  implements OnInit {
+export class MiPerfilComponent implements OnInit {
   usuario: Usuario | Especialista | undefined;
   esEspecialista = false;
   disponibilidadHoraria: Disponibilidad[] = [];
   imagenes: string[] = [];
-  diasDisponibles: string[] = [];
-  
+  diasDisponibles: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
   constructor(
     private authService: AuthService,
     private usuarioService: UsuarioService,
@@ -47,7 +46,9 @@ export class MiPerfilComponent  implements OnInit {
 
   private cargarDisponibilidadHoraria(uid: string): void {
     this.especialistaService.getDisponibilidad(uid).subscribe(disponibilidad => {
-      this.disponibilidadHoraria = disponibilidad.length ? disponibilidad : [{ dia: 'Lunes', horarios: [{ inicio: '', fin: '' }] }];
+      this.disponibilidadHoraria = disponibilidad.length ? disponibilidad : [];
+      const diasConDisponibilidad = this.disponibilidadHoraria.map(d => d.dia);
+      this.diasDisponibles = this.diasDisponibles.filter(dia => !diasConDisponibilidad.includes(dia));
     });
   }
 
@@ -56,7 +57,7 @@ export class MiPerfilComponent  implements OnInit {
       if (typeof imagen === 'string') {
         return imagen;
       } else {
-        return URL.createObjectURL(imagen);
+        return URL.createObjectURL(imagen); 
       }
     });
   }
@@ -71,18 +72,28 @@ export class MiPerfilComponent  implements OnInit {
     }
   }
 
-  agregarDisponibilidad(dia: string): void {
-    this.disponibilidadHoraria.push({ dia, horarios: [{ inicio: '', fin: '' }] });
-  }
-
   agregarHorario(diaIndex: number): void {
     this.disponibilidadHoraria[diaIndex].horarios.push({ inicio: '', fin: '' });
+  }
+
+  agregarDisponibilidad(dia: string): void {
+    this.disponibilidadHoraria.push({ dia: dia, horarios: [{ inicio: '', fin: '' }] });
+    this.diasDisponibles = this.diasDisponibles.filter(d => d !== dia);
+  }
+
+  eliminarDisponibilidad(dia: string): void {
+    this.disponibilidadHoraria = this.disponibilidadHoraria.filter(d => d.dia !== dia);
+    if (!this.diasDisponibles.includes(dia)) {
+      this.diasDisponibles.push(dia);
+    }
   }
 
   guardarDisponibilidad(): void {
     if (this.usuario && this.usuario.uid) {
       this.especialistaService.guardarDisponibilidad(this.usuario.uid, this.disponibilidadHoraria).then(() => {
         console.log('Disponibilidad horaria guardada correctamente.');
+        // Recargar la disponibilidad actualizada después de guardar
+        this.cargarDisponibilidadHoraria(this.usuario!.uid);
       }).catch(error => {
         console.error('Error al guardar disponibilidad horaria:', error);
       });
