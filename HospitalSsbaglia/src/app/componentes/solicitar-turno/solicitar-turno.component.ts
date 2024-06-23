@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { Disponibilidad } from '../../Interfaces/especialista';
+import { EspecialistaService } from '../../services/especialista.service';
 
 
 @Component({
@@ -30,7 +32,8 @@ export class SolicitarTurnoComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private turnoService: TurnoService,
-    private router: Router // Inyecta Router en el constructor
+    private especialistaService: EspecialistaService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +49,7 @@ export class SolicitarTurnoComponent implements OnInit {
   public seleccionarEspecialidad(especialidad: string): void {
     this.especialidadSeleccionada = especialidad;
     this.cargarEspecialistasPorEspecialidad(especialidad);
-    this.mensajeConfirmacion = false; // Reset mensaje de confirmación
+    this.mensajeConfirmacion = false;
   }
 
   private cargarEspecialistasPorEspecialidad(especialidad: string): void {
@@ -58,32 +61,40 @@ export class SolicitarTurnoComponent implements OnInit {
   public seleccionarEspecialista(especialista: Usuario): void {
     this.especialistaSeleccionado = especialista;
     this.cargarTurnosDisponibles(especialista);
-    this.mensajeConfirmacion = false; // Reset mensaje de confirmación
+    this.mensajeConfirmacion = false;
   }
 
   private cargarTurnosDisponibles(especialista: Usuario): void {
-    // Implementación de la lógica para cargar los turnos disponibles
-    this.turnosDisponibles = this.generarTurnosDisponibles();
+    this.especialistaService.getDisponibilidad(especialista.uid).subscribe(disponibilidad => {
+      this.turnosDisponibles = this.generarTurnosDisponibles(disponibilidad);
+    });
   }
 
-  private generarTurnosDisponibles(): Date[] {
-    // Generación de turnos de ejemplo
+  private generarTurnosDisponibles(disponibilidad: Disponibilidad[]): Date[] {
     const turnos: Date[] = [];
     const now = new Date();
-    for (let i = 1; i <= 15; i++) {
-      const fecha = new Date();
-      fecha.setDate(now.getDate() + i);
-      fecha.setHours(9, 0, 0); // Ejemplo de horario: 9:00 AM
-      turnos.push(new Date(fecha));
-      fecha.setHours(13, 0, 0); // Ejemplo de horario: 1:00 PM
-      turnos.push(new Date(fecha));
-    }
+
+    disponibilidad.forEach(d => {
+      d.horarios.forEach(h => {
+        const [inicioHora, inicioMinuto] = h.inicio.split(':').map(Number);
+        const [finHora, finMinuto] = h.fin.split(':').map(Number);
+
+        const diaInicio = new Date(now.getFullYear(), now.getMonth(), now.getDate(), inicioHora, inicioMinuto);
+        const diaFin = new Date(now.getFullYear(), now.getMonth(), now.getDate(), finHora, finMinuto);
+
+        while (diaInicio < diaFin) {
+          turnos.push(new Date(diaInicio));
+          diaInicio.setMinutes(diaInicio.getMinutes() + 30); // Incrementar por 30 minutos
+        }
+      });
+    });
+
     return turnos;
   }
 
   public seleccionarTurno(turno: Date): void {
     this.turnoSeleccionado = turno;
-    this.mensajeConfirmacion = false; // Reset mensaje de confirmación
+    this.mensajeConfirmacion = false;
   }
 
   public async confirmarTurno(): Promise<void> {
@@ -102,20 +113,17 @@ export class SolicitarTurnoComponent implements OnInit {
         currentUser.dni || '',
         false,
         false
-
-
       );
       await this.turnoService.crearTurno(nuevoTurno);
       console.log('Turno creado con éxito');
-      this.mensajeConfirmacion = true; 
+      this.mensajeConfirmacion = true;
       setTimeout(() => {
-        this.router.navigate(['/home']); // Ajusta la ruta según corresponda
-      }, 2000); // Redirige después de 2 segundos (2000 milisegundos)
+        this.router.navigate(['/home']); // Redirige después de 2 segundos (2000 milisegundos)
+      }, 2000);
     } catch (error) {
       console.error('Error al crear el turno:', error);
     }
   }
-
   getEspecialidadImagen(especialidad: string): string {
     // Lógica para obtener la imagen según la especialidad
     switch (especialidad) {
@@ -133,5 +141,4 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   
-
 }

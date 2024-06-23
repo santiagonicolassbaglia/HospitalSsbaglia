@@ -7,17 +7,19 @@ import { PaginaErrorComponent } from '../pagina-error/pagina-error.component';
 import { NgIf } from '@angular/common';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { SpinnerService } from '../../services/spinner.service';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink],
+  imports: [FormsModule, ReactiveFormsModule, PaginaErrorComponent, NgIf, RouterLink, CaptchaComponent],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent implements OnInit {
   form: FormGroup;
   mensajeError: string = '';
+  captchaVerified: boolean = false;
 
   private fb = inject(FormBuilder);
 
@@ -39,6 +41,10 @@ export class RegistroComponent implements OnInit {
 
   registrar() {
     if (this.form.invalid) {
+      return;
+    }
+    if (!this.captchaVerified) {
+      this.mensajeError = 'Por favor, resuelve el captcha primero.';
       return;
     }
 
@@ -95,5 +101,10 @@ export class RegistroComponent implements OnInit {
         imagenes: fileArray
       });
     }
+  }
+
+  onCaptchaResolved(resolved: boolean) {
+    this.captchaVerified = resolved;
+    this.mensajeError = resolved ? '' : 'Captcha incorrecto. Por favor, inténtalo de nuevo.';
   }
 }

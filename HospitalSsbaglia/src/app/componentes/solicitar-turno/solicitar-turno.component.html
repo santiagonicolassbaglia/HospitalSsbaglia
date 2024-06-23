@@ -17,7 +17,7 @@
       <div *ngFor="let especialista of especialistas" (click)="seleccionarEspecialista(especialista)">
         <button [class.selected]="especialista === especialistaSeleccionado">
           <img [src]="especialista.imagenes[0]" alt="Especialista">
-          <span>{{ especialista.nombre }}</span>
+          <span>{{ especialista.nombre }} {{ especialista.apellido }}</span>
         </button>
       </div>
     </div>
@@ -38,6 +38,4 @@
       <p>Turno solicitado con éxito</p> 
     </div>
   </div>
-
-  
 </div>

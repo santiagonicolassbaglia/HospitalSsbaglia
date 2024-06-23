@@ -19,7 +19,6 @@ export class MiPerfilComponent implements OnInit {
   esEspecialista = false;
   disponibilidadHoraria: Disponibilidad[] = [];
   imagenes: string[] = [];
-  diasDisponibles: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
   constructor(
     private authService: AuthService,
@@ -46,10 +45,20 @@ export class MiPerfilComponent implements OnInit {
 
   private cargarDisponibilidadHoraria(uid: string): void {
     this.especialistaService.getDisponibilidad(uid).subscribe(disponibilidad => {
-      this.disponibilidadHoraria = disponibilidad.length ? disponibilidad : [];
-      const diasConDisponibilidad = this.disponibilidadHoraria.map(d => d.dia);
-      this.diasDisponibles = this.diasDisponibles.filter(dia => !diasConDisponibilidad.includes(dia));
+      this.disponibilidadHoraria = disponibilidad.length ? disponibilidad : this.inicializarDisponibilidad();
     });
+  }
+
+  private inicializarDisponibilidad(): Disponibilidad[] {
+    return [
+      { dia: 'Lunes', horarios: [] },
+      { dia: 'Martes', horarios: [] },
+      { dia: 'Miércoles', horarios: [] },
+      { dia: 'Jueves', horarios: [] },
+      { dia: 'Viernes', horarios: [] },
+      { dia: 'Sábado', horarios: [] },
+      { dia: 'Domingo', horarios: [] }
+    ];
   }
 
   private obtenerURLsImagenes(imagenes: File[] | string[]): string[] {
@@ -57,7 +66,7 @@ export class MiPerfilComponent implements OnInit {
       if (typeof imagen === 'string') {
         return imagen;
       } else {
-        return URL.createObjectURL(imagen); 
+        return URL.createObjectURL(imagen);
       }
     });
   }
@@ -73,30 +82,32 @@ export class MiPerfilComponent implements OnInit {
   }
 
   agregarHorario(diaIndex: number): void {
+    if (!this.disponibilidadHoraria[diaIndex].horarios) {
+      this.disponibilidadHoraria[diaIndex].horarios = [];
+    }
     this.disponibilidadHoraria[diaIndex].horarios.push({ inicio: '', fin: '' });
   }
 
-  agregarDisponibilidad(dia: string): void {
-    this.disponibilidadHoraria.push({ dia: dia, horarios: [{ inicio: '', fin: '' }] });
-    this.diasDisponibles = this.diasDisponibles.filter(d => d !== dia);
-  }
-
-  eliminarDisponibilidad(dia: string): void {
-    this.disponibilidadHoraria = this.disponibilidadHoraria.filter(d => d.dia !== dia);
-    if (!this.diasDisponibles.includes(dia)) {
-      this.diasDisponibles.push(dia);
-    }
+  eliminarHorario(diaIndex: number, horarioIndex: number): void {
+    this.disponibilidadHoraria[diaIndex].horarios.splice(horarioIndex, 1);
   }
 
   guardarDisponibilidad(): void {
     if (this.usuario && this.usuario.uid) {
-      this.especialistaService.guardarDisponibilidad(this.usuario.uid, this.disponibilidadHoraria).then(() => {
-        console.log('Disponibilidad horaria guardada correctamente.');
-        // Recargar la disponibilidad actualizada después de guardar
-        this.cargarDisponibilidadHoraria(this.usuario!.uid);
-      }).catch(error => {
-        console.error('Error al guardar disponibilidad horaria:', error);
-      });
+      const horariosValidos = this.disponibilidadHoraria.every(dia =>
+        dia.horarios.every(horario => horario.inicio && horario.fin)
+      );
+
+      if (horariosValidos) {
+        this.especialistaService.guardarDisponibilidad(this.usuario.uid, this.disponibilidadHoraria).then(() => {
+          console.log('Disponibilidad horaria guardada correctamente.');
+          this.cargarDisponibilidadHoraria(this.usuario!.uid);
+        }).catch(error => {
+          console.error('Error al guardar disponibilidad horaria:', error);
+        });
+      } else {
+        console.error('Error: Algunos horarios no están completos.');
+      }
     }
   }
 }

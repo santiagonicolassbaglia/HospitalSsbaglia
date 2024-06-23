@@ -5,11 +5,12 @@ import { NgFor, NgIf } from '@angular/common';
 import { Usuario } from '../../clases/usuario';
 import { AuthService } from '../../services/auth.service';
 import { SpinnerService } from '../../services/spinner.service';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
   selector: 'app-registro-especialista',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf, RouterLink, NgFor],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, RouterLink, NgFor, CaptchaComponent],
   templateUrl: './registro-especialista.component.html',
   styleUrls: ['./registro-especialista.component.css']
 })
@@ -17,6 +18,7 @@ export class RegistroEspecialistaComponent implements OnInit {
   form: FormGroup;
   mensajeError: string = '';
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Neurología', 'Pediatría'];
+  captchaVerified: boolean = false;
 
   private fb = inject(FormBuilder);
 
@@ -57,6 +59,10 @@ export class RegistroEspecialistaComponent implements OnInit {
   registrar() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    } 
+     if (!this.captchaVerified) {
+      this.mensajeError = 'Por favor, resuelve el captcha primero.';
       return;
     }
 
@@ -103,5 +109,10 @@ export class RegistroEspecialistaComponent implements OnInit {
       const fileArray = Array.from(files).map((file: File) => file);
       this.form.patchValue({ imagenes: fileArray });
     }
+  }
+
+  onCaptchaResolved(resolved: boolean) {
+    this.captchaVerified = resolved;
+    this.mensajeError = resolved ? '' : 'Captcha incorrecto. Por favor, inténtalo de nuevo.';
   }
 }

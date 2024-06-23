@@ -31,11 +31,18 @@ export class EspecialistaService {
     return this.firestore.doc(`${this.coleccionEspecialistas}/${uid}`).update({ disponibilidadHoraria: disponibilidad });
   }
   getDisponibilidad(uid: string): Observable<Disponibilidad[]> {
-    return this.firestore.collection('disponibilidades', ref => ref.where('uid', '==', uid)).valueChanges() as Observable<Disponibilidad[]>;
+    return this.firestore.collection('especialistas').doc(uid).collection<Disponibilidad>('disponibilidad').valueChanges();
   }
 
   guardarDisponibilidad(uid: string, disponibilidad: Disponibilidad[]): Promise<void> {
-    return this.firestore.collection('disponibilidades').doc(uid).set({ uid, disponibilidad });
+    const disponibilidadRef = this.firestore.collection('especialistas').doc(uid).collection('disponibilidad');
+    return this.firestore.firestore.runTransaction(async transaction => {
+      const snapshot = await disponibilidadRef.get().toPromise();
+      snapshot.forEach(doc => transaction.delete(doc.ref));
+      disponibilidad.forEach(dia => {
+        disponibilidadRef.doc(dia.dia).set(dia);
+      });
+    });
   }
 
   

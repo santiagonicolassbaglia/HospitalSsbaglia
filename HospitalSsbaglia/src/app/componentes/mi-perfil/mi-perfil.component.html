@@ -1,43 +1,53 @@
-<div *ngIf="usuario" class="container">
+<!-- mi-perfil.component.html -->
+<div *ngIf="usuario"class="container">
     <h2>Mi Perfil</h2>
-  
-    <div>
-      <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
-      <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
-      <p><strong>DNI:</strong> {{ usuario.dni }}</p>
-      <p><strong>Edad:</strong> {{ usuario.edad }}</p>
-      <p><strong>Obra Social:</strong> {{ usuario.obraSocial || 'No especificada' }}</p>
-      <p><strong>Especialidades:</strong> {{ usuario.especialidad.join(', ') }}</p>
-      <p><strong>Correo Electrónico:</strong> {{ usuario.mail }}</p>
-    </div>
-  
+
+  <div>
+    <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
+    <p><strong>DNI:</strong> {{ usuario.dni }}</p>
+    <p><strong>Edad:</strong> {{ usuario.edad }}</p>
+    <p><strong>Obra Social:</strong> {{ usuario.obraSocial || 'No especificada' }}</p>
+    <p><strong>Especialidades:</strong> {{ usuario.especialidad.join(', ') }}</p>
+    <p><strong>Correo Electrónico:</strong> {{ usuario.mail }}</p>
+
+    <p><strong>Horarios:</strong></p>
+    <ul>
+      <li *ngFor="let dia of disponibilidadHoraria">
+        <strong>{{ dia.dia }}:</strong>
+        <ul>
+          <li *ngFor="let horario of dia.horarios">
+            {{ horario.inicio }} - {{ horario.fin }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+
     <div *ngIf="imagenes.length">
-      <p><strong>Imágenes:</strong></p>
+     
       <div *ngFor="let imagen of imagenes">
-        <img [src]="imagen" alt="Imagen">
+        <img [src]="imagen" alt="Imagen" style="width: 40rem; height: 40rem;">
       </div>
     </div>
-  
+    
     <div *ngIf="esEspecialista">
       <h3>Mis Horarios</h3>
-      <div *ngFor="let dia of disponibilidadHoraria;  let diaIndex = index">
+      <div *ngFor="let dia of disponibilidadHoraria; let diaIndex = index">
         <p><strong>{{ dia.dia }}:</strong></p>
         <div *ngFor="let horario of dia.horarios; let horarioIndex = index">
           <input type="time" [(ngModel)]="dia.horarios[horarioIndex].inicio">
           <input type="time" [(ngModel)]="dia.horarios[horarioIndex].fin">
+          <button (click)="eliminarHorario(diaIndex, horarioIndex)">Eliminar Horario</button>
         </div>
         <button (click)="agregarHorario(diaIndex)">Agregar Horario</button>
-        <button (click)="eliminarDisponibilidad(dia.dia)">Cancelar Disponibilidad</button>
       </div>
-  
-      <!-- Botones para agregar disponibilidad por día -->
-      <div *ngFor="let dia of diasDisponibles">
-        <button (click)="agregarDisponibilidad(dia)">Agregar Disponibilidad {{ dia }}</button>
-      </div>
-  
-      <button (click)="guardarDisponibilidad()">Guardar Disponibilidad</button>
+
+<br><br><br>
+      <button (click)="guardarDisponibilidad()" style="color: chartreuse;">Guardar Disponibilidad</button>
     </div>
-  
-    <button (click)="actualizarPerfil()">Actualizar Perfil</button>
+
+   
   </div>
-  
+
+  <button (click)="actualizarPerfil()" style="color: rgb(248, 218, 24);">Actualizar Perfil</button>
+</div>
