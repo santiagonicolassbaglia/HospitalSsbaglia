@@ -19,8 +19,8 @@ export const routes: Routes = [
    {path: 'turnosAdministrador', loadComponent: () => import('./componentes/turnos-administrador/turnos-administrador.component').then(m => m.TurnosAdministradorComponent) },
    {path: 'solicitarTurno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
    {path: 'miPerfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent) },
-   
-   
+   {path: 'historiaClinicaAdmin', loadComponent: () => import('./componentes/hist-clinica-admin/hist-clinica-admin.component').then(m => m.HistClinicaAdminComponent) },
+   {path: 'historiaClinicaEspecialista', loadComponent: () => import('./componentes/hist-clinica-especialista/hist-clinica-especialista.component').then(m => m.HistClinicaEspecialistaComponent) },
    
      { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'pagina-error' }

@@ -21,6 +21,8 @@ import { TurnosAdministradorComponent } from './componentes/turnos-administrador
 import { TurnosEspecialistaComponent } from './componentes/turnos-especialista/turnos-especialista.component';
 import { SolicitarTurnoComponent } from './componentes/solicitar-turno/solicitar-turno.component';
 import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
+import { HistClinicaAdminComponent } from './componentes/hist-clinica-admin/hist-clinica-admin.component';
+import { HistClinicaEspecialistaComponent } from './componentes/hist-clinica-especialista/hist-clinica-especialista.component';
  
  
 
@@ -47,7 +49,9 @@ import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
     TurnosEspecialistaComponent,
     TurnosAdministradorComponent,
     SolicitarTurnoComponent,
-MiPerfilComponent
+MiPerfilComponent,
+HistClinicaAdminComponent,
+HistClinicaEspecialistaComponent
 
   ],
   templateUrl: './app.component.html',

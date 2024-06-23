@@ -50,4 +50,18 @@
   </div>
 
   <button (click)="actualizarPerfil()" style="color: rgb(248, 218, 24);">Actualizar Perfil</button>
+
+
+  <div class="historias-clinicas">
+    <h2>Historia Clínica</h2>
+    <div *ngFor="let historia of historiasClinicas">
+      <p><strong>Fecha:</strong> {{ historia.fecha | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
+      <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
+      <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
+      <p><strong>Presión:</strong> {{ historia.presion }}</p>
+      <div *ngFor="let dato of historia.datosDinamicos">
+        <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
+      </div>
+    </div>
 </div>

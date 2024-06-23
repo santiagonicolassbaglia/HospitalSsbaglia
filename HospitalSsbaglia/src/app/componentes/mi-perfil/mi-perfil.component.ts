@@ -3,14 +3,16 @@ import { UsuarioService } from '../../services/usuario.service';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../Interfaces/usuario';
 import { EspecialistaService } from '../../services/especialista.service';
-import { NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Disponibilidad, Especialista } from '../../Interfaces/especialista';
+import { HistoriaClinica } from '../../clases/historia-clinica';
+import { HistoriaClinicaService } from '../../services/historia-clinica.service';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgIf, NgFor, FormsModule, DatePipe],
   templateUrl: './mi-perfil.component.html',
   styleUrls: ['./mi-perfil.component.css']
 })
@@ -19,11 +21,13 @@ export class MiPerfilComponent implements OnInit {
   esEspecialista = false;
   disponibilidadHoraria: Disponibilidad[] = [];
   imagenes: string[] = [];
+  historiasClinicas: HistoriaClinica[] = [];  // Agregar una propiedad para las historias clínicas
 
   constructor(
     private authService: AuthService,
     private usuarioService: UsuarioService,
-    private especialistaService: EspecialistaService
+    private especialistaService: EspecialistaService,
+    private historiaClinicaService: HistoriaClinicaService  // Inyectar el servicio de Historia Clínica
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +41,10 @@ export class MiPerfilComponent implements OnInit {
           if (usuario && (usuario as Especialista).especialidad.length > 0) {
             this.esEspecialista = true;
             this.cargarDisponibilidadHoraria(user.uid);
+          }
+          // if (usuario && (usuario.esAdmin === false))
+          if (usuario) {
+            this.cargarHistoriasClinicas(usuario.uid);  // Cargar historias clínicas
           }
         });
       }
@@ -68,6 +76,17 @@ export class MiPerfilComponent implements OnInit {
       } else {
         return URL.createObjectURL(imagen);
       }
+    });
+  }
+
+  private cargarHistoriasClinicas(uid: string): void {
+    this.historiaClinicaService.obtenerHistoriasPorPaciente(uid).subscribe(historial => {
+      this.historiasClinicas = historial.map(e => {
+        return {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data() as HistoriaClinica
+        };
+      });
     });
   }
 
