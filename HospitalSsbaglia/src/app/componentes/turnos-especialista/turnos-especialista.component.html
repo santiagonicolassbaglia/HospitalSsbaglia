@@ -20,12 +20,42 @@
   <button *ngIf="turno.estado !== 'realizado' && turno.estado !== 'cancelado'" (click)="cancelarTurno(turno, 'Razón de cancelación')">Cancelar Turno</button>
   <button *ngIf="turno.estado === 'pendiente'" (click)="rechazarTurno(turno, 'Razón de rechazo')">Rechazar Turno</button>
   <button *ngIf="turno.estado === 'pendiente'" (click)="aceptarTurno(turno)">Aceptar Turno</button>
-  <button *ngIf="turno.estado === 'confirmado'" (click)="finalizarTurno(turno, 'Reseña de la consulta y diagnóstico')">Finalizar Turno</button>
-  
+  <button *ngIf="turno.estado === 'confirmado'" (click)="mostrarFormularioHistoriaClinica(turno)">Finalizar Turno</button>
+
   <button *ngIf="turno.comentario && !turno.mostrarresenia" (click)="verResenia(turno)">Ver Reseña</button>
-  
+
   <div *ngIf="turno.mostrarresenia">
     <p>Reseña: {{ turno.comentario }}</p>
     <button (click)="turno.mostrarresenia = false">Ocultar Reseña</button>
   </div>
+</div>
+
+<div *ngIf="mostrarFormulario" class="formulario-historia-clinica">
+  <h3>Datos de Historia Clínica</h3>
+  <form (ngSubmit)="finalizarTurno()">
+    <label for="altura">Altura:</label>
+    <input id="altura" [(ngModel)]="datosClinicos.altura" name="altura" required />
+
+    <label for="peso">Peso:</label>
+    <input id="peso" [(ngModel)]="datosClinicos.peso" name="peso" required />
+
+    <label for="temperatura">Temperatura:</label>
+    <input id="temperatura" [(ngModel)]="datosClinicos.temperatura" name="temperatura" required />
+
+    <label for="presion">Presión:</label>
+    <input id="presion" [(ngModel)]="datosClinicos.presion" name="presion" required />
+
+    <div *ngFor="let dinamico of datosClinicos.dinamicos; let i = index">
+      <label for="clave-{{i}}">Clave:</label>
+      <input id="clave-{{i}}" [(ngModel)]="dinamico.clave" name="clave-{{i}}" required />
+
+      <label for="valor-{{i}}">Valor:</label>
+      <input id="valor-{{i}}" [(ngModel)]="dinamico.valor" name="valor-{{i}}" required />
+
+      <button (click)="eliminarDatoDinamico(i)" *ngIf="datosClinicos.dinamicos.length > 1">Eliminar</button>
+    </div>
+    <button (click)="agregarDatoDinamico()" *ngIf="datosClinicos.dinamicos.length < 3">Agregar Dato Dinámico</button>
+
+    <button type="submit">Guardar Historia Clínica y Finalizar Turno</button>
+  </form>
 </div>

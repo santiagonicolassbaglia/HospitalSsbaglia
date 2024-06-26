@@ -11,9 +11,7 @@ export class HistoriaClinicaService {
 
   constructor(private firestore: AngularFirestore) {}
 
-  obtenerTodasHistorias(): Observable<any[]> {
-    return this.firestore.collection(this.collectionName).snapshotChanges();
-  }
+  
 
   obtenerHistoriasPorEspecialista(especialistaId: string): Observable<any[]> {
     return this.firestore.collection(this.collectionName, ref => ref.where('especialistaId', '==', especialistaId)).snapshotChanges();
@@ -25,7 +23,15 @@ export class HistoriaClinicaService {
   obtenerHistoriasPorPaciente(pacienteId: string) {
     return this.firestore.collection('historiasClinicas', ref => ref.where('pacienteId', '==', pacienteId)).snapshotChanges();
   }
+  obtenerTodasHistorias(): Observable<any[]> {
+    return this.firestore.collection(this.collectionName).snapshotChanges();
+  }
 
+   
+  agregarHistoriaClinica(historiaClinica: HistoriaClinica): Promise<void> {
+    const id = this.firestore.createId();
+    return this.firestore.collection(this.collectionName).doc(id).set({ ...historiaClinica, id });
+  }
   // obtenerHistoriasPorEspecialista(especialistaId: string) {
   //   return this.firestore.collection('historiasClinicas', ref => ref.where('especialistaId', '==', especialistaId)).snapshotChanges();
   // }
