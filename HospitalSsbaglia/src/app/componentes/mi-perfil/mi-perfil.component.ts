@@ -22,13 +22,13 @@ export class MiPerfilComponent implements OnInit {
   esEspecialista = false;
   disponibilidadHoraria: Disponibilidad[] = [];
   imagenes: string[] = [];
-  historiasClinicas: HistoriaClinica[] = [];  // Agregar una propiedad para las historias clínicas
+  historiasClinicas: HistoriaClinica[] = [];  
 
   constructor(
     private authService: AuthService,
     private usuarioService: UsuarioService,
     private especialistaService: EspecialistaService,
-    private historiaClinicaService: HistoriaClinicaService  // Inyectar el servicio de Historia Clínica
+    private historiaClinicaService: HistoriaClinicaService  
   ) {}
 
   ngOnInit(): void {

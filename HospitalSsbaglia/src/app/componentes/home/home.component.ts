@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   username: string = '';
   nombreUsuario: string = '';
 user: Usuario | null = null;
-  constructor(private router: Router, private authService: AuthService) { } // Inject Router service
+  constructor(private router: Router, private authService: AuthService) { } 
  
   
   ngOnInit(): void {

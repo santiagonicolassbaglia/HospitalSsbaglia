@@ -74,12 +74,7 @@ export class TurnoService {
     );
   }
 
-
-
-
-
-
-
+ 
 
 obtenerEncuesta(turnoId: string): Observable<any> {
   return this.firestore.collection('Encuestas').doc(turnoId).valueChanges();}

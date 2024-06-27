@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [NgIf, AsyncPipe],
   templateUrl: './spinner.component.html',
-  styleUrls: ['./spinner.component.css']  // <- Correction here
+  styleUrls: ['./spinner.component.css']  
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
 

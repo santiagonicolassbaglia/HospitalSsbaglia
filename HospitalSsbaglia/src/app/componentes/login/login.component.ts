@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     }
 
   this.authService.getAllUsers().subscribe(users => {
-      console.log(users); // Añade esta línea para verificar los usuarios recibidos
+      console.log(users); 
       this.usuariosPredeterminados = users.filter(user => 
         user.mail === 'usuario1@gmail.com' || 
         user.mail === 'especialista1@gmail.com' || 

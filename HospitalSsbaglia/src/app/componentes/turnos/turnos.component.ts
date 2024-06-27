@@ -118,7 +118,7 @@ export class TurnosComponent implements OnInit {
   calificarAtencion(turno: Turno, comentario: string): void {
     if (turno.estado === 'realizado') {
       turno.comentario = comentario;
-      // Implementar la lógica para guardar la calificación
+     
     }
   }
 

@@ -131,7 +131,7 @@ export class SolicitarTurnoComponent implements OnInit {
     }
   }
   getEspecialidadImagen(especialidad: string): string {
-    // Lógica para obtener la imagen según la especialidad
+  
     switch (especialidad) {
       case 'Cardiología':
         return 'assets/imagenes/especialidades/cardiologo.png';
