@@ -16,7 +16,6 @@ import { Usuario } from '../../clases/usuario';
   styleUrls: ['./turnos.component.css']
 })
 export class TurnosComponent implements OnInit {
-
   turnos: Turno[] = [];
   turnosFiltrados: Turno[] = [];
   especialidades: string[] = [];
@@ -115,10 +114,11 @@ export class TurnosComponent implements OnInit {
     }
   }
 
-  calificarAtencion(turno: Turno, comentario: string): void {
+  calificarAtencion(turno: Turno, calificacion: number): void {
     if (turno.estado === 'realizado') {
-      turno.comentario = comentario;
-     
+      turno.calificacion = calificacion;
+      // Guardar la calificación en la base de datos
+      this.turnoService.actualizarTurno(turno);
     }
   }
 
@@ -130,5 +130,10 @@ export class TurnosComponent implements OnInit {
     turno.mostrarcomentario = !turno.mostrarcomentario;
   }
 
-
+  eliminarTurno(turnoId: string): void {
+    this.turnoService.eliminarTurno(turnoId).then(() => {
+      this.turnos = this.turnos.filter(turno => turno.id !== turnoId);
+      this.turnosFiltrados = this.turnosFiltrados.filter(turno => turno.id !== turnoId);
+    });
+  }
 }

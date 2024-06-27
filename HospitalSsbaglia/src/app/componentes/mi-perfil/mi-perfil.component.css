@@ -1,4 +1,4 @@
-/* General styles */
+ 
 .container {
     margin: 0 auto;
     padding: 20px;
@@ -9,7 +9,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  /* Profile header */
+ 
   h2 {
     color: #333;
     text-align: center;
@@ -21,7 +21,7 @@
     margin-top: 30px;
   }
   
-  /* Profile details */
+ 
   .profile-details {
     display: flex;
     flex-wrap: wrap;
@@ -38,8 +38,7 @@
   .profile-details p strong {
     color: #333;
   }
-  
-  /* Images section */
+ 
   .images-section {
     margin-top: 20px;
   }
@@ -57,7 +56,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  /* Availability section */
+ 
   .availability-section {
     margin-top: 20px;
   }
@@ -70,8 +69,7 @@
   .availability-section p strong {
     color: #333;
   }
-  
-  /* Button */
+   
   button {
     display: block;
     width: 100%;
@@ -91,11 +89,11 @@
   }
   
   .historias-clinicas {
-    margin-top: 20px; /* Add some space between sections */
+    margin-top: 20px;  
   }
   
   .historias-clinicas h2 {
-    margin-bottom: 10px; /* Reduce margin for inner heading */
+    margin-bottom: 10px; 
   }
   
   .historia-clinica {

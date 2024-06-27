@@ -13,6 +13,10 @@
     <p>Especialista: {{ turno.especialistaNombre }}</p>
     <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
     <p>Estado: {{ turno.estado }}</p>
+    <p *ngIf="turno.comentario">Comentario: {{ turno.comentario }}</p>
+    <p *ngIf="turno.calificacion">Calificación: {{ turno.calificacion }}</p>
+
+    <button   (click)="eliminarTurno(turno.id)">✖</button>
 
     <div *ngIf="turno.estado !== 'realizado'">
       <button (click)="toggleCancelarTurno(turno)">
@@ -24,12 +28,21 @@
       </div>
     </div>
     
-    <button *ngIf="turno.comentario && !turno.mostrarresenia" (click)="verResenia(turno)">Ver Reseña</button>
+    <!-- <button *ngIf="turno.comentario && !turno.mostrarresenia" (click)="verResenia(turno)">Ver Reseña</button>
     <div *ngIf="turno.mostrarresenia">
       <p>Reseña: {{ turno.comentario }}</p>
       <button (click)="turno.mostrarresenia = false">Ocultar Reseña</button>
+    </div> -->
+    <!-- <button *ngIf="turno.estado === 'realizado'" (click)="completarEncuesta(turno)">Completar Encuesta</button> -->
+    
+    <div *ngIf="turno.estado === 'realizado'" class="calificacion">
+      <p>Calificar Atención:</p>
+      <span 
+        *ngFor="let estrella of [1, 2, 3, 4, 5]" 
+        class="estrella" 
+        [class.seleccionada]="turno.calificacion >= estrella"
+        (click)="calificarAtencion(turno, estrella)"
+      >☆</span>
     </div>
-    <button *ngIf="turno.estado === 'realizado'" (click)="completarEncuesta(turno)">Completar Encuesta</button>
-    <button *ngIf="turno.estado === 'realizado'" (click)="calificarAtencion(turno, 'Comentario de la atención')">Calificar Atención</button>
   </div>
 </div>

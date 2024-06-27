@@ -54,3 +54,43 @@ textarea {
 .turno .mostrarresenia p {
   font-style: italic;
 }
+
+.btn-eliminar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: red;
+}
+
+.btn-eliminar:hover {
+  color: darkred;
+}
+textarea {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.calificacion {
+  display: flex;
+  align-items: center;
+}
+
+.calificacion p {
+  margin: 0;
+  margin-right: 10px;
+}
+
+.estrella {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.estrella.seleccionada {
+  color: gold;
+}
+

@@ -15,7 +15,8 @@ export class Turno {
     public dniUsuario?: string,
     public mostrarresenia?: boolean,
     public mostrarcomentario?: boolean,
-    public historiaClinica?: HistoriaClinica 
+    public historiaClinica?: HistoriaClinica ,
+    public calificacion?: number,
     
   ) {}
 }
