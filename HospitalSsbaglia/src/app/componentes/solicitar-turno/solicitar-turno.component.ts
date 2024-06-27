@@ -114,6 +114,12 @@ export class SolicitarTurnoComponent implements OnInit {
         false,
         false
       );
+  
+      // Eliminar la propiedad historiaClinica si es undefined
+      if (nuevoTurno.historiaClinica === undefined) {
+        delete nuevoTurno.historiaClinica;
+      }
+  
       await this.turnoService.crearTurno(nuevoTurno);
       console.log('Turno creado con éxito');
       this.mensajeConfirmacion = true;

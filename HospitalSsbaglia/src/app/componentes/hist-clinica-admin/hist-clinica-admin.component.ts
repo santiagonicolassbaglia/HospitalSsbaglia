@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-hist-clinica-admin',
   standalone: true,
-  imports: [NgFor,NgIf,FormsModule, DatePipe],
+  imports: [NgFor,NgIf,FormsModule, DatePipe ],
   templateUrl: './hist-clinica-admin.component.html',
   styleUrl: './hist-clinica-admin.component.css'
 })

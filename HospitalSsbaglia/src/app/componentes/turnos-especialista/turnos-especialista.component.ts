@@ -26,6 +26,8 @@ export class TurnosEspecialistaComponent implements OnInit {
   filtroPaciente: string = '';
   mostrarFormulario: boolean = false;
   turnoSeleccionado: Turno | null = null;
+  filtroGeneral: string = '';
+
   datosClinicos: any = {
     altura: '',
     peso: '',
@@ -43,9 +45,11 @@ export class TurnosEspecialistaComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const currentUser = await this.authService.usuarioActual();
     this.turnoService.getTurnosByEspecialista(currentUser.uid).subscribe(turnos => {
-      this.turnos = turnos;
-      this.turnosFiltrados = turnos;
-      this.obtenerEspecialidadesYPacientes(turnos);
+      this.turnoService.cargarHistoriasClinicas(turnos).subscribe(turnosConHistorias => {
+        this.turnos = turnosConHistorias;
+        this.turnosFiltrados = turnosConHistorias;
+        this.obtenerEspecialidadesYPacientes(turnosConHistorias);
+      });
     });
   }
 
@@ -64,10 +68,10 @@ export class TurnosEspecialistaComponent implements OnInit {
 
   aplicarFiltro(): void {
     this.turnosFiltrados = this.turnos.filter(turno =>
-      (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
-      (this.filtroPaciente === '' || turno.pacienteId === this.filtroPaciente)
+      this.buscarEnTurno(turno, this.filtroGeneral)
     );
   }
+
 
   async cancelarTurno(turno: Turno, comentario: string): Promise<void> {
     if (turno.estado !== 'realizado' && turno.estado !== 'cancelado') {
@@ -116,6 +120,7 @@ export class TurnosEspecialistaComponent implements OnInit {
 
       const historiaClinica: HistoriaClinica = {
         id: '',
+        turnoId: this.turnoSeleccionado.id,
         pacienteId: this.turnoSeleccionado.pacienteId,
         especialistaId: this.turnoSeleccionado.especialistaId,
         fecha: new Date(),
@@ -125,7 +130,9 @@ export class TurnosEspecialistaComponent implements OnInit {
         presion: this.datosClinicos.presion,
         nombrePaciente: this.turnoSeleccionado.pacienteNombre,
         nombreEspecialista: this.turnoSeleccionado.especialistaNombre,
-        datosDinamicos: this.datosClinicos.dinamicos
+        datosDinamicos: this.datosClinicos.dinamicos,
+
+        
       };
 
       await this.historiaClinicaService.agregarHistoriaClinica(historiaClinica);
@@ -147,4 +154,37 @@ export class TurnosEspecialistaComponent implements OnInit {
       }
     }
   }
+ 
+  buscarEnTurno(turno: Turno, filtro: string): boolean {
+    if (!filtro) return true;
+    filtro = filtro.toLowerCase();
+
+    // Buscar en los campos del turno
+    if (
+      turno.especialidad.toLowerCase().includes(filtro) ||
+      turno.pacienteNombre.toLowerCase().includes(filtro) ||
+      turno.estado.toLowerCase().includes(filtro) ||
+      turno.fechaHora.toString().toLowerCase().includes(filtro)
+    ) {
+      return true;
+    }
+
+    // Buscar en la historia clínica asociada
+    if (turno.historiaClinica) {
+      const { altura, peso, temperatura, presion, datosDinamicos } = turno.historiaClinica;
+      if (
+        altura.toString().includes(filtro) ||
+        peso.toString().includes(filtro) ||
+        temperatura.toString().includes(filtro) ||
+        presion.toLowerCase().includes(filtro) ||
+        datosDinamicos.some(d => d.clave.toLowerCase().includes(filtro) || d.valor.toLowerCase().includes(filtro))
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
+
+ 

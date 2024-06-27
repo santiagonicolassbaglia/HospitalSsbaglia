@@ -1,14 +1,10 @@
 <div class="filtros">
-  <div class="filtro-especialidad">
-    <button *ngFor="let especialidad of especialidades" (click)="filtroEspecialidad = especialidad; aplicarFiltro()">
-      {{ especialidad }}
-    </button>
-  </div>
-  <div class="filtro-paciente">
-    <button *ngFor="let paciente of pacientes" (click)="filtroPaciente = paciente.id; aplicarFiltro()">
-      {{ paciente.nombre }}
-    </button>
-  </div>
+  <input 
+    type="text" 
+    placeholder="Buscar..." 
+    [(ngModel)]="filtroGeneral" 
+    (input)="aplicarFiltro()" 
+  />
 </div>
 
 <div *ngFor="let turno of turnosFiltrados" class="turno">

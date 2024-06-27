@@ -6,6 +6,7 @@ import { Turno } from '../clases/turno';
 import { DocumentReference } from 'firebase/firestore';
 import { AuthService } from './auth.service';
 import { Usuario } from '../clases/usuario';
+import { HistoriaClinica } from '../clases/historia-clinica';
 
 @Injectable({
   providedIn: 'root'
@@ -20,19 +21,20 @@ export class TurnoService {
     return this.firestore.collection<Turno>(this.PATH).valueChanges();
   }
 
-  public getTurnosByEspecialista(especialistaId: string): Observable<Turno[]> {
-    return this.firestore.collection<Turno>(this.PATH, ref => ref.where('especialistaId', '==', especialistaId)).valueChanges();
-  }
+ 
 
   public getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {
     return this.firestore.collection<Turno>(this.PATH, ref => ref.where('pacienteId', '==', pacienteId)).valueChanges();
   }
-
   public async crearTurno(turno: Turno): Promise<void> {
     const id = this.firestore.createId();
     turno.id = id;
-    return this.firestore.collection(this.PATH).doc(id).set({ ...turno });
+   
+    const turnoData = Object.fromEntries(Object.entries(turno).filter(([_, v]) => v !== undefined));
+  
+    return this.firestore.collection(this.PATH).doc(id).set(turnoData);
   }
+
 
   public async actualizarTurno(turno: Turno): Promise<void> {
     return this.firestore.collection(this.PATH).doc(turno.id).update({ ...turno });
@@ -41,6 +43,39 @@ export class TurnoService {
   public async eliminarTurno(id: string): Promise<void> {
     return this.firestore.collection(this.PATH).doc(id).delete();
   }
+
+
+  getTurnosByEspecialista(especialistaId: string): Observable<Turno[]> {
+    return this.firestore.collection(this.PATH, ref => ref.where('especialistaId', '==', especialistaId)).snapshotChanges().pipe(
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data() as Turno;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      }))
+    );
+  }
+
+ 
+
+  // Nueva función para cargar historias clínicas
+  cargarHistoriasClinicas(turnos: Turno[]): Observable<Turno[]> {
+    return this.firestore.collection('historiasClinicas').snapshotChanges().pipe(
+      map(actions => {
+        const historiasClinicas = actions.map(a => {
+          const data = a.payload.doc.data() as HistoriaClinica;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+        return turnos.map(turno => {
+          turno.historiaClinica = historiasClinicas.find(historia => historia.turnoId === turno.id);
+          return turno;
+        });
+      })
+    );
+  }
+
+
+
 
 
 

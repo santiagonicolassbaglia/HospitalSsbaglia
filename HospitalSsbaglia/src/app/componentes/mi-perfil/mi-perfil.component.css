@@ -90,3 +90,33 @@
     background-color: #0056b3;
   }
   
+  .historias-clinicas {
+    margin-top: 20px; /* Add some space between sections */
+  }
+  
+  .historias-clinicas h2 {
+    margin-bottom: 10px; /* Reduce margin for inner heading */
+  }
+  
+  .historia-clinica {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .historia-clinica p {
+    margin-bottom: 5px;
+  }
+  
+  .historia-clinica strong {
+    font-weight: bold;
+  }
+  
+  .datos-dinamicos {
+    margin-top: 10px;
+  }
+  
+  .datos-dinamicos p {
+    margin-bottom: 0;
+  }

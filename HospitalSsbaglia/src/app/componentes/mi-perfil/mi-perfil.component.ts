@@ -82,14 +82,22 @@ export class MiPerfilComponent implements OnInit {
   private cargarHistoriasClinicas(uid: string): void {
     this.historiaClinicaService.obtenerHistoriasPorPaciente(uid).subscribe(historial => {
       this.historiasClinicas = historial.map(e => {
-        return {
+        const historiaClinica = {
           id: e.payload.doc.id,
           ...e.payload.doc.data() as HistoriaClinica
         };
-      });
+        
+        // Filtrar historias clínicas con datos completos
+        const { fecha, altura, peso, temperatura, presion } = historiaClinica;
+        if (fecha && altura && peso && temperatura && presion) {
+          return historiaClinica;
+        } else {
+          return null;
+        }
+      }).filter(historia => historia !== null);
     });
   }
-
+  
   actualizarPerfil(): void {
     if (this.usuario) {
       this.usuarioService.actualizarUsuario(this.usuario).then(() => {
@@ -129,4 +137,8 @@ export class MiPerfilComponent implements OnInit {
       }
     }
   }
+
+
+
+ 
 }

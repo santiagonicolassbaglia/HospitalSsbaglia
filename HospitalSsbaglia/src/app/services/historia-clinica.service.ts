@@ -10,9 +10,7 @@ export class HistoriaClinicaService {
   private collectionName = 'historiasClinicas';
 
   constructor(private firestore: AngularFirestore) {}
-
-  
-
+ 
   obtenerHistoriasPorEspecialista(especialistaId: string): Observable<any[]> {
     return this.firestore.collection(this.collectionName, ref => ref.where('especialistaId', '==', especialistaId)).snapshotChanges();
   }

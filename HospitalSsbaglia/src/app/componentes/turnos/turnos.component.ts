@@ -21,8 +21,7 @@ export class TurnosComponent implements OnInit {
   turnosFiltrados: Turno[] = [];
   especialidades: string[] = [];
   especialistas: { id: string, nombre: string }[] = [];
-  filtroEspecialidad: string = '';
-  filtroEspecialista: string = '';
+  filtroGeneral: string = '';
 
   constructor(private authService: AuthService, private turnoService: TurnoService) {}
 
@@ -50,9 +49,39 @@ export class TurnosComponent implements OnInit {
 
   aplicarFiltro(): void {
     this.turnosFiltrados = this.turnos.filter(turno =>
-      (this.filtroEspecialidad === '' || turno.especialidad === this.filtroEspecialidad) &&
-      (this.filtroEspecialista === '' || turno.especialistaId === this.filtroEspecialista)
+      this.buscarEnTurno(turno, this.filtroGeneral)
     );
+  }
+
+  buscarEnTurno(turno: Turno, filtro: string): boolean {
+    if (!filtro) return true;
+    filtro = filtro.toLowerCase();
+
+    // Buscar en los campos del turno
+    if (
+      turno.especialidad.toLowerCase().includes(filtro) ||
+      turno.especialistaNombre.toLowerCase().includes(filtro) ||
+      turno.estado.toLowerCase().includes(filtro) ||
+      turno.fechaHora.toString().toLowerCase().includes(filtro)
+    ) {
+      return true;
+    }
+
+    // Buscar en la historia clínica asociada
+    if (turno.historiaClinica) {
+      const { altura, peso, temperatura, presion, datosDinamicos } = turno.historiaClinica;
+      if (
+        altura.toString().includes(filtro) ||
+        peso.toString().includes(filtro) ||
+        temperatura.toString().includes(filtro) ||
+        presion.toLowerCase().includes(filtro) ||
+        datosDinamicos.some(d => d.clave.toLowerCase().includes(filtro) || d.valor.toLowerCase().includes(filtro))
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   async cancelarTurno(turno: Turno): Promise<void> {

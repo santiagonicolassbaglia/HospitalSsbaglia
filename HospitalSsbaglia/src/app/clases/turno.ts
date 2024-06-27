@@ -1,3 +1,5 @@
+import { HistoriaClinica } from "./historia-clinica";
+
 export class Turno {
   constructor(
     public id: string,
@@ -12,5 +14,7 @@ export class Turno {
     public dniUsuario?: string,
     public mostrarresenia?: boolean,
     public mostrarcomentario?: boolean,
+    public historiaClinica?: HistoriaClinica 
+    
   ) {}
 }

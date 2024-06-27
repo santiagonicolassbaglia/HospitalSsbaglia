@@ -1,7 +1,6 @@
-<!-- mi-perfil.component.html -->
 <div *ngIf="usuario" class="container">
-    <h2>Mi Perfil</h2>
-
+  <h2>Mi Perfil</h2>
+  <!-- Información del usuario -->
   <div>
     <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
     <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
@@ -11,6 +10,7 @@
     <p><strong>Especialidades:</strong> {{ usuario.especialidad.join(', ') }}</p>
     <p><strong>Correo Electrónico:</strong> {{ usuario.mail }}</p>
 
+    <!-- Horarios -->
     <p><strong>Horarios:</strong></p>
     <ul>
       <li *ngFor="let dia of disponibilidadHoraria">
@@ -23,13 +23,14 @@
       </li>
     </ul>
 
+    <!-- Imágenes -->
     <div *ngIf="imagenes.length">
-     
       <div *ngFor="let imagen of imagenes">
         <img [src]="imagen" alt="Imagen" style="width: 40rem; height: 40rem;">
       </div>
     </div>
-    
+
+    <!-- Horarios del especialista -->
     <div *ngIf="esEspecialista">
       <h3>Mis Horarios</h3>
       <div *ngFor="let dia of disponibilidadHoraria; let diaIndex = index">
@@ -41,21 +42,18 @@
         </div>
         <button (click)="agregarHorario(diaIndex)">Agregar Horario</button>
       </div>
-
-<br><br><br>
+      <br><br><br>
       <button (click)="guardarDisponibilidad()" style="color: chartreuse;">Guardar Disponibilidad</button>
     </div>
-
-   
   </div>
 
   <button (click)="actualizarPerfil()" style="color: rgb(248, 218, 24);">Actualizar Perfil</button>
 
-
+  <!-- Historia clínica -->
   <div class="historias-clinicas">
     <h2>Historia Clínica</h2>
     <div *ngFor="let historia of historiasClinicas">
-      <p><strong>Fecha:</strong> {{ historia.fecha | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Fecha:</strong> {{ historia.fecha.getTime }}</p>
       <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
       <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
       <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
@@ -64,4 +62,5 @@
         <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
       </div>
     </div>
+  </div>
 </div>
