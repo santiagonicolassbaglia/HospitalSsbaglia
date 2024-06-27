@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div *ngIf="user && !user.esAdmin && user.aprobado===false">
+    <div *ngIf="user && !user.esAdmin && user.aprobado===null">
     <div>
       <button routerLink="/turnos" class="btn btn-primary">Turnos</button>
     </div>
