@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <!-- Botón común para todos los usuarios -->
+    <div *ngIf="user && !user.esAdmin && user.aprobado===false">
     <div>
       <button routerLink="/turnos" class="btn btn-primary">Turnos</button>
     </div>
@@ -47,4 +47,5 @@
       <button routerLink="/miPerfil" class="btn btn-primary">Mi Perfil</button>
     </div>
   </div>
+</div>
 </div>
