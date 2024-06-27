@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { Disponibilidad, Especialista } from '../../Interfaces/especialista';
 import { HistoriaClinica } from '../../clases/historia-clinica';
 import { HistoriaClinicaService } from '../../services/historia-clinica.service';
-
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
@@ -139,6 +140,47 @@ export class MiPerfilComponent implements OnInit {
   }
 
 
+  generatePDF(): void {
+    const doc = new jsPDF();
+  
+    //  logo de la clínica
+    const logoURL = '../../../assets/imagenes/cruzRoja.png';  
+    const img = new Image();
+    img.src = logoURL;
+  
+    img.onload = () => {
+      doc.addImage(img, 'PNG', 10, 10, 50, 20);
+      
+      //  título  
+      doc.setFontSize(18);
+      doc.text('Informe de Historia Clínica', 70, 20);
+      doc.setFontSize(12);
+      doc.text('Fecha de emisión: ' + new Date().toLocaleDateString(), 70, 30);
+  
+      // datos del usuario
+      doc.setFontSize(12);
+      doc.text(`Nombre: ${this.usuario.nombre}`, 10, 50);
+      doc.text(`Apellido: ${this.usuario.apellido}`, 10, 60);
+      doc.text(`DNI: ${this.usuario.dni}`, 10, 70);
+      doc.text(`Edad: ${this.usuario.edad}`, 10, 80);
+      doc.text(`Obra Social: ${this.usuario.obraSocial || 'No especificada'}`, 10, 90);
+      doc.text(`Correo Electrónico: ${this.usuario.mail}`, 10, 100);
+  
+      //   historias clínicas del usuario
+      let y = 120;
+      this.historiasClinicas.forEach(historia => {
+        doc.text(`Fecha: ${new Date(historia.fecha).toLocaleDateString()}`, 10, y);
+        doc.text(`Altura: ${historia.altura} cm`, 10, y + 10);
+        doc.text(`Peso: ${historia.peso} kg`, 10, y + 20);
+        doc.text(`Temperatura: ${historia.temperatura} °C`, 10, y + 30);
+        doc.text(`Presión: ${historia.presion}`, 10, y + 40);
+        y += 60;
+      });
+  
+      doc.save('historia_clinica.pdf');
+    };
+  }
+  
 
  
 }
