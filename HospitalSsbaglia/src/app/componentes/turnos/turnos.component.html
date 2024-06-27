@@ -15,13 +15,15 @@
     <p>Estado: {{ turno.estado }}</p>
 
     <div *ngIf="turno.estado !== 'realizado'">
-      <button (click)="turno.mostrarcomentario = !turno.mostrarcomentario">Cancelar Turno</button>
+      <button (click)="toggleCancelarTurno(turno)">
+        {{ turno.mostrarcomentario ? 'No Cancelar' : 'Cancelar Turno' }}
+      </button>
       <div *ngIf="turno.mostrarcomentario">
         <textarea [(ngModel)]="turno.comentario" placeholder="Razón de cancelación"></textarea>
         <button (click)="cancelarTurno(turno)">Confirmar Cancelación</button>
       </div>
     </div>
-
+    
     <button *ngIf="turno.comentario && !turno.mostrarresenia" (click)="verResenia(turno)">Ver Reseña</button>
     <div *ngIf="turno.mostrarresenia">
       <p>Reseña: {{ turno.comentario }}</p>

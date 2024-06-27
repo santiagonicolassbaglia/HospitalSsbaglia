@@ -1,56 +1,56 @@
-.contenedor {
-  margin: 20px;
-}
-
-h2 {
-  margin-bottom: 20px;
-  font-family: Arial, sans-serif;
-  color: #333;
-  text-align: center; /* Centramos los títulos */
-}
-
+/* Estilos generales */
 .filtros {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.filtro-especialidad, .filtro-especialista {
+.turnos {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.filtro-especialidad button, .filtro-especialista button {
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.filtro-especialidad button.selected, .filtro-especialista button.selected {
+/* Estilos para los botones */
+button {
   background-color: #007bff;
-  color: white;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para los elementos de turno */
 .turno {
   border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
 }
 
-.turno p {
-  margin-bottom: 5px;
-}
-
-.turno button {
-  margin-right: 10px;
-}
-
-.turno textarea {
+/* Estilos para los campos de texto */
+input[type="text"],
+textarea {
   width: 100%;
-  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.turno .botones {
-  display: flex;
-  justify-content: space-between;
+/* Ajustes específicos */
+.turno p {
+  margin: 0;
+}
+
+/* Estilos para los botones dentro de .turno */
+.turno button {
+  margin-top: 10px;
+}
+
+/* Estilos para la reseña */
+.turno .mostrarresenia p {
+  font-style: italic;
 }

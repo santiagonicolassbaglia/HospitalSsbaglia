@@ -1,36 +1,50 @@
-<div class="home-container"> 
-    <div>
-    
-      <div class="container">
-        <div class="header">
-          <h1>Bienvenido {{nombreUsuario}}</h1>
-          <button (click)="cerrarSesion()" class="btn btn-logout" style="margin-top: -1rem;">Cerrar sesión</button>
-        </div>
-        <div>
-          <button routerLink="/homeAdmin" class="btn btn-primary">Home Admin</button>
-        </div>
-        <div>
-          <button routerLink="/turnos" class="btn btn-primary">Turnos</button>
-        </div>
-        <div>
-          <button routerLink="/turnosEspecialista" class="btn btn-primary">Turnos Especialista</button>
-        </div>
-        <div>
-          <button routerLink="/turnosAdministrador" class="btn btn-primary">Turnos Admin</button>
-        </div>
-        <div>
-          <button routerLink="/solicitarTurno" class="btn btn-primary">Solicitar Turno</button>
-        </div>
-        <div>
-          <button routerLink="/miPerfil" class="btn btn-primary">Mi Perfil</button>
-        </div>
-        <div>
-          <button routerLink="/historiaClinicaEspecialista" class="btn btn-primary">Historia Clinica Especialistas</button>
-        </div>
-        <div>
-          <button routerLink="/historiaClinicaAdmin" class="btn btn-primary">Historia Clinica Admin</button>
-        </div>
+<div class="home-container">
+  <div class="container">
+    <div class="header">
+      <h1>Bienvenido {{ nombreUsuario }}</h1>
+      <button (click)="cerrarSesion()" class="btn btn-logout" style="margin-top: -1rem;">Cerrar sesión</button>
+    </div>
+
+    <!-- Botones visibles solo para administradores -->
+    <div *ngIf="user && user.esAdmin">
+      <div>
+        <button routerLink="/homeAdmin" class="btn btn-primary">Home Admin</button>
+      </div>
+      <div>
+        <button routerLink="/turnosAdministrador" class="btn btn-primary">Turnos Admin</button>
+      </div>
+      <div>
+        <button routerLink="/historiaClinicaAdmin" class="btn btn-primary">Historia Clinica Admin</button>
+      </div>
+      <div>
+        <button routerLink="/miPerfil" class="btn btn-primary">Mi Perfil</button>
       </div>
     </div>
+
+    <!-- Botones visibles solo para especialistas -->
+    <div *ngIf="user && !user.esAdmin && user.aprobado===true">
+      <div>
+        <button routerLink="/turnosEspecialista" class="btn btn-primary">Turnos Especialista</button>
+      </div>
+      <div>
+        <button routerLink="/historiaClinicaEspecialista" class="btn btn-primary">Historia Clinica Especialistas</button>
+      </div>
+      <div>
+        <button routerLink="/miPerfil" class="btn btn-primary">Mi Perfil</button>
+      </div>
+    </div>
+
+    <!-- Botón común para todos los usuarios -->
+    <div>
+      <button routerLink="/turnos" class="btn btn-primary">Turnos</button>
+    </div>
+
+    <div>
+      <button routerLink="/solicitarTurno" class="btn btn-primary">Solicitar Turno</button>
+    </div>
+
+    <div>
+      <button routerLink="/miPerfil" class="btn btn-primary">Mi Perfil</button>
+    </div>
   </div>
- 
+</div>

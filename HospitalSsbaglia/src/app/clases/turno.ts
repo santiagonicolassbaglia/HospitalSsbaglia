@@ -1,6 +1,7 @@
 import { HistoriaClinica } from "./historia-clinica";
 
 export class Turno {
+  mostrarCancelar: boolean;
   constructor(
     public id: string,
     public pacienteId: string,

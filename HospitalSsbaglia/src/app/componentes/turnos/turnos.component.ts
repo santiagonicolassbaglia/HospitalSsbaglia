@@ -121,4 +121,14 @@ export class TurnosComponent implements OnInit {
       // Implementar la lógica para guardar la calificación
     }
   }
+
+  toggleCancelarTurno(turno: any): void {
+    if (turno.mostrarcomentario) {
+      // Si estaba mostrando el comentario, guarda el texto antes de ocultarlo
+      turno.comentarioGuardado = turno.comentario;
+    }
+    turno.mostrarcomentario = !turno.mostrarcomentario;
+  }
+
+
 }

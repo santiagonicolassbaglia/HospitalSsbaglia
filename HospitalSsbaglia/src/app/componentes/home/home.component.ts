@@ -16,18 +16,19 @@ import { HomeAdminComponent } from '../home-admin/home-admin.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  user: any;
+   
   username: string = '';
   nombreUsuario: string = '';
-
+user: Usuario | null = null;
   constructor(private router: Router, private authService: AuthService) { } // Inject Router service
  
+  
   ngOnInit(): void {
-
-    this.authService.usuarioActual().then((usuario: Usuario) => {
+    this.authService.usuarioActual().then((usuario: Usuario | null) => {
       if (usuario) {
+        this.user = usuario;
         this.nombreUsuario = usuario.nombre;
-      } 
+      }
     }).catch(error => {
       console.error('Error al obtener el usuario actual:', error);
     });
@@ -42,5 +43,5 @@ export class HomeComponent implements OnInit {
       .catch(error => {
         console.error('Error al cerrar sesión:', error);
       });
-}
+  }
 }

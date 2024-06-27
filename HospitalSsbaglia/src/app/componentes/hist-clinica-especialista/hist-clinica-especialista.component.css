@@ -1,0 +1,37 @@
+.contenedor {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .historia-clinica {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .historia-clinica p {
+    margin-bottom: 5px;
+  }
+  
+  .historia-clinica strong {
+    font-weight: bold;
+  }
+  
+  .datos-dinamicos {
+    margin-top: 10px;
+  }
+  
+  .datos-dinamicos p {
+    margin-bottom: 0;
+  }
