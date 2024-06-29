@@ -1,7 +1,7 @@
 <div class="contenedor">
     <h2>Historias Clínicas (Admin)</h2>
     <div *ngFor="let historia of historiasClinicas" class="historia-clinica">
-      <p><strong>Fecha:</strong> {{ historia.fecha | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short'  }}</p>
       <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
       <p><strong>Especialista:</strong> {{ historia.nombreEspecialista }}</p>
       <p><strong>Altura:</strong> {{ historia.altura }} cm</p>

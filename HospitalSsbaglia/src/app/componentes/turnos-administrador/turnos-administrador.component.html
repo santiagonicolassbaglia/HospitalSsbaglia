@@ -16,7 +16,7 @@
     <p>Especialidad: {{ turno.especialidad }}</p>
     <p>Especialista: {{ turno.especialistaNombre }}</p>
     <p>Paciente: {{ turno.pacienteNombre }}</p>
-    <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p>Fecha y Hora: {{ turno.fechaHora | date: 'short'  }}</p>
     <p>Estado: {{ turno.estado }}</p>
 
     <button *ngIf="turno.estado !== 'confirmado' && turno.estado !== 'realizado' && turno.estado !== 'cancelado'"

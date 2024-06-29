@@ -35,8 +35,10 @@ export class TurnoService {
   }
 
   public async actualizarTurno(turno: Turno): Promise<void> {
-    return this.firestore.collection(this.PATH).doc(turno.id).update({ ...turno });
+    const turnoData = Object.fromEntries(Object.entries(turno).filter(([_, v]) => v !== undefined));
+    return this.firestore.collection(this.PATH).doc(turno.id).update(turnoData);
   }
+  
 
   public async eliminarTurno(id: string): Promise<void> {
     return this.firestore.collection(this.PATH).doc(id).delete();
@@ -61,12 +63,18 @@ export class TurnoService {
           return { id, ...data };
         });
         return turnos.map(turno => {
+          turno.fechaHora = this.convertTimestampToDate(turno.fechaHora);
           turno.historiaClinica = historiasClinicas.find(historia => historia.turnoId === turno.id);
           return turno;
         });
       })
     );
   }
+  
+  private convertTimestampToDate(timestamp: any): Date {
+    return timestamp instanceof Date ? timestamp : timestamp.toDate();
+  }
+  
 
   obtenerEncuesta(turnoId: string): Observable<any> {
     return this.firestore.collection('Encuestas').doc(turnoId).valueChanges();

@@ -22,13 +22,23 @@ export class TurnosAdministradorComponent   {
 
   constructor(private authService: AuthService, private turnoService: TurnoService) {}
 
+
   async ngOnInit(): Promise<void> {
     this.turnoService.getTurnos().subscribe(turnos => {
-      this.turnos = turnos;
-      this.turnosFiltrados = turnos;
-      this.obtenerEspecialidadesYEspecialistas(turnos);
+      this.turnos = turnos.map(turno => ({
+        ...turno,
+        fechaHora: this.convertTimestampToDate(turno.fechaHora)
+      }));
+      this.turnos.sort((a, b) => a.fechaHora.getTime() - b.fechaHora.getTime());
+      this.turnosFiltrados = this.turnos;
+      this.obtenerEspecialidadesYEspecialistas(this.turnos);
     });
   }
+
+  private convertTimestampToDate(timestamp: any): Date {
+    return timestamp instanceof Date ? timestamp : timestamp.toDate();
+  }
+
 
   private obtenerEspecialidadesYEspecialistas(turnos: Turno[]): void {
     const especialidadesSet = new Set<string>();

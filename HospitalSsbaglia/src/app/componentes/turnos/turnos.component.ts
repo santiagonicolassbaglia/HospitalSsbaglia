@@ -27,11 +27,20 @@ export class TurnosComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const currentUser = await this.authService.usuarioActual();
     this.turnoService.getTurnosByPaciente(currentUser.uid).subscribe(turnos => {
-      this.turnos = turnos;
-      this.turnosFiltrados = turnos;
+      this.turnos = turnos.map(turno => ({
+        ...turno,
+        fechaHora: this.convertTimestampToDate(turno.fechaHora)
+      }));
+      this.turnos.sort((a, b) => a.fechaHora.getTime() - b.fechaHora.getTime());
+      this.turnosFiltrados = this.turnos;
       this.obtenerEspecialidadesYEspecialistas(turnos);
     });
   }
+
+  private convertTimestampToDate(timestamp: any): Date {
+    return timestamp instanceof Date ? timestamp : timestamp.toDate();
+  }
+
 
   private obtenerEspecialidadesYEspecialistas(turnos: Turno[]): void {
     const especialidadesSet = new Set<string>();

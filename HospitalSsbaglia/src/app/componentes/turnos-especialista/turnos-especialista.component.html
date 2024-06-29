@@ -10,7 +10,7 @@
 <div *ngFor="let turno of turnosFiltrados" class="turno">
   <p>Especialidad: {{ turno.especialidad }}</p>
   <p>Paciente: {{ turno.pacienteNombre }}</p>
-  <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
+  <p>Fecha y Hora:   {{ turno.fechaHora | date: 'short' }}
   <p>Estado: {{ turno.estado }}</p>
 
   <button *ngIf="turno.estado !== 'realizado' && turno.estado !== 'cancelado'" (click)="cancelarTurno(turno, 'Razón de cancelación')">Cancelar Turno</button>
@@ -53,5 +53,8 @@
     <button (click)="agregarDatoDinamico()" *ngIf="datosClinicos.dinamicos.length < 3">Agregar Dato Dinámico</button>
 
     <button type="submit">Guardar Historia Clínica y Finalizar Turno</button>
+    <div *ngIf="mensajeExito" class="mensaje-exito">
+      <p>Historia Clínica guardada correctamente.</p>
+    </div>
   </form>
 </div>

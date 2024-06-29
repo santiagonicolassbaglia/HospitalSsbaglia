@@ -1,7 +1,7 @@
 export class HistoriaClinica {
   
         id: string;
-        turnoId: string;  // Añadir esta línea
+        turnoId: string;   
         pacienteId: string;
         especialistaId: string;
         fecha: Date;

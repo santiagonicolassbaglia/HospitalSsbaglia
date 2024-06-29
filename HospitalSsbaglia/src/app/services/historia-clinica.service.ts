@@ -14,6 +14,7 @@ export class HistoriaClinicaService {
   obtenerHistoriasPorEspecialista(especialistaId: string): Observable<any[]> {
     return this.firestore.collection(this.collectionName, ref => ref.where('especialistaId', '==', especialistaId)).snapshotChanges();
   }
+  
   crearHistoriaClinica(historia: HistoriaClinica) {
     return this.firestore.collection('historiasClinicas').add(historia);
   }

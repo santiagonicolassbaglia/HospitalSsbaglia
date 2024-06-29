@@ -27,6 +27,7 @@ export class TurnosEspecialistaComponent implements OnInit {
   mostrarFormulario: boolean = false;
   turnoSeleccionado: Turno | null = null;
   filtroGeneral: string = '';
+  mensajeExito: boolean = false;
 
   datosClinicos: any = {
     altura: '',
@@ -46,12 +47,21 @@ export class TurnosEspecialistaComponent implements OnInit {
     const currentUser = await this.authService.usuarioActual();
     this.turnoService.getTurnosByEspecialista(currentUser.uid).subscribe(turnos => {
       this.turnoService.cargarHistoriasClinicas(turnos).subscribe(turnosConHistorias => {
-        this.turnos = turnosConHistorias;
-        this.turnosFiltrados = turnosConHistorias;
-        this.obtenerEspecialidadesYPacientes(turnosConHistorias);
+        this.turnos = turnosConHistorias.map(turno => {
+          turno.fechaHora = this.convertTimestampToDate(turno.fechaHora);
+          return turno;
+        }).sort((a, b) => a.fechaHora.getTime() - b.fechaHora.getTime());
+        this.turnosFiltrados = this.turnos;
+        this.obtenerEspecialidadesYPacientes(this.turnos);
       });
     });
   }
+  
+ 
+  private convertTimestampToDate(timestamp: any): Date {
+    return timestamp instanceof Date ? timestamp : timestamp.toDate();
+  }
+  
 
   private obtenerEspecialidadesYPacientes(turnos: Turno[]): void {
     const especialidadesSet = new Set<string>();
@@ -88,13 +98,33 @@ export class TurnosEspecialistaComponent implements OnInit {
       await this.turnoService.actualizarTurno(turno);
     }
   }
-
   async aceptarTurno(turno: Turno): Promise<void> {
     if (turno.estado === 'pendiente') {
       turno.estado = 'confirmado';
+  
+      // Inicializar historiaClinica si es undefined
+      if (!turno.historiaClinica) {
+        turno.historiaClinica = {
+
+          id: '',
+          turnoId: turno.id,
+          pacienteId: turno.pacienteId,
+          especialistaId: turno.especialistaId,
+          fecha: new Date(),
+          altura: null,
+          peso:null,
+          temperatura: null,
+          presion: '',
+          nombrePaciente: turno.pacienteNombre,
+          nombreEspecialista: turno.especialistaNombre,
+          datosDinamicos: [{ clave: '', valor: '' }]
+        };
+      }
+  
       await this.turnoService.actualizarTurno(turno);
     }
   }
+  
 
   mostrarFormularioHistoriaClinica(turno: Turno): void {
     this.turnoSeleccionado = turno;
@@ -115,6 +145,7 @@ export class TurnosEspecialistaComponent implements OnInit {
 
   async finalizarTurno(): Promise<void> {
     if (this.turnoSeleccionado) {
+      this.mensajeExito = true;
       this.turnoSeleccionado.estado = 'realizado';
       await this.turnoService.actualizarTurno(this.turnoSeleccionado);
 
@@ -132,11 +163,11 @@ export class TurnosEspecialistaComponent implements OnInit {
         nombreEspecialista: this.turnoSeleccionado.especialistaNombre,
         datosDinamicos: this.datosClinicos.dinamicos,
 
-        
+      
       };
 
       await this.historiaClinicaService.agregarHistoriaClinica(historiaClinica);
-
+     
       this.mostrarFormulario = false;
       this.turnoSeleccionado = null;
       this.datosClinicos = { altura: '', peso: '', temperatura: '', presion: '', dinamicos: [{ clave: '', valor: '' }] };

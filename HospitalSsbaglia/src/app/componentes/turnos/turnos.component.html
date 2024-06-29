@@ -11,7 +11,7 @@
   <div *ngFor="let turno of turnosFiltrados" class="turno">
     <p>Especialidad: {{ turno.especialidad }}</p>
     <p>Especialista: {{ turno.especialistaNombre }}</p>
-    <p>Fecha y Hora: {{ turno.fechaHora | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p>Fecha y Hora: {{ turno.fechaHora| date: 'short' }}</p>
     <p>Estado: {{ turno.estado }}</p>
     <p *ngIf="turno.comentario">Comentario: {{ turno.comentario }}</p>
     <p *ngIf="turno.calificacion">Calificación: {{ turno.calificacion }}</p>
