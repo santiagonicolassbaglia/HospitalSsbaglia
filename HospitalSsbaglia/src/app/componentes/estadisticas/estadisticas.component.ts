@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import 'jspdf-autotable';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class EstadisticasComponent implements OnInit {
   turnosPorMedicoSolicitados: any;
   turnosFinalizadosPorMedico: any;
   logIngresos: any;
+  descargando: boolean = false;
 
   constructor(private turnoService: TurnoService, private authService: AuthService) { }
 
@@ -30,8 +32,6 @@ export class EstadisticasComponent implements OnInit {
     this.obtenerTurnosPorDia();
     this.obtenerTurnosPorMedico('solicitados');
     this.obtenerTurnosFinalizadosPorMedico('finalizados');
-
-
   }
 
   obtenerLogIngresos(): void {
@@ -112,51 +112,105 @@ export class EstadisticasComponent implements OnInit {
     }
   }
   
-  // Descargar PDF
-  descargarPDF(estadistica: any, nombreArchivo: string): void {
+  descargarEstadisticasPDF(): void {
     const doc = new jsPDF();
-    if (estadistica) {
-      const headers = ['Día', 'Cantidad'];
-      const data = Object.entries(estadistica).map(([key, value]) => [key, value]);
-      let startY = 20;
-      const startX = 10;
-      const lineHeight = 10;
+    let currentY = 10; // Starting Y position
   
+    const addTitleToPDF = (title: string) => {
+      doc.setFontSize(16);
+      doc.text(title, 10, currentY);
+      currentY += 10; // Add some space after the title
       doc.setFontSize(12);
-      doc.text('Estadísticas', startX, startY);
+    };
   
-      data.forEach(([day, count]) => {
-        startY += lineHeight;
-        doc.text(`${day}, ${count}`, startX, startY);
-  
-        if (startY >= doc.internal.pageSize.height - 20) {
+    const addDataToPDF = (data: any[]) => {
+      data.forEach(row => {
+        doc.text(`${row[0]}: ${row[1]}`, 10, currentY);
+        currentY += 10; // Add some space after each row
+        if (currentY > 280) { // If currentY exceeds the page height, add a new page
           doc.addPage();
-          startY = 20;
+          currentY = 10; // Reset currentY to top of the new page
         }
       });
+      currentY += 10; // Add some space after the data
+    };
   
-      doc.save(`${nombreArchivo}.pdf`);
-    } else {
-      console.error(`No se pudo descargar ${nombreArchivo} porque estadistica es undefined o null.`);
+    if (this.logIngresos) {
+      addTitleToPDF('Log de Ingresos');
+      const logIngresosData = Object.entries(this.logIngresos).map(([key, value]) => [key, value]);
+      addDataToPDF(logIngresosData);
     }
+  
+    if (this.turnosPorEspecialidad) {
+      addTitleToPDF('Turnos por Especialidad');
+      const turnosPorEspecialidadData = Object.entries(this.turnosPorEspecialidad).map(([key, value]) => [key, value]);
+      addDataToPDF(turnosPorEspecialidadData);
+    }
+  
+    if (this.turnosPorDia) {
+      addTitleToPDF('Turnos por Día');
+      const turnosPorDiaData = Object.entries(this.turnosPorDia).map(([key, value]) => [key, value]);
+      addDataToPDF(turnosPorDiaData);
+    }
+  
+    if (this.turnosPorMedicoSolicitados) {
+      addTitleToPDF('Turnos Solicitados por Médico');
+      const turnosPorMedicoSolicitadosData = Object.entries(this.turnosPorMedicoSolicitados).map(([key, value]) => [key, value]);
+      addDataToPDF(turnosPorMedicoSolicitadosData);
+    }
+  
+    if (this.turnosFinalizadosPorMedico) {
+      addTitleToPDF('Turnos Finalizados por Médico');
+      const turnosFinalizadosPorMedicoData = Object.entries(this.turnosFinalizadosPorMedico).map(([key, value]) => [key, value]);
+      addDataToPDF(turnosFinalizadosPorMedicoData);
+    }
+  
+    doc.save('Estadisticas.pdf');
   }
+  
+  
   descargarEstadisticasExcel(): void {
-    this.descargarExcel(this.logIngresos, 'log_ingresos');
-    this.descargarExcel(this.turnosPorEspecialidad, 'turnos_por_especialidad');
-    this.descargarExcel(this.turnosPorDia, 'turnos_por_dia');
-    this.descargarExcel(this.turnosPorMedicoSolicitados, 'turnos_solicitados_por_medico');
-    this.descargarExcel(this.turnosFinalizadosPorMedico, 'turnos_finalizados_por_medico');
-
-
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+  
+    if (this.logIngresos) {
+      const logIngresosSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+        Object.entries(this.logIngresos).map(([key, value]) => ({ Día: key, Cantidad: value }))
+      );
+      XLSX.utils.book_append_sheet(workbook, logIngresosSheet, 'Log de Ingresos');
+    }
+  
+    if (this.turnosPorEspecialidad) {
+      const turnosPorEspecialidadSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+        Object.entries(this.turnosPorEspecialidad).map(([key, value]) => ({ Especialidad: key, Cantidad: value }))
+      );
+      XLSX.utils.book_append_sheet(workbook, turnosPorEspecialidadSheet, 'Turnos por Especialidad');
+    }
+  
+    if (this.turnosPorDia) {
+      const turnosPorDiaSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+        Object.entries(this.turnosPorDia).map(([key, value]) => ({ Día: key, Cantidad: value }))
+      );
+      XLSX.utils.book_append_sheet(workbook, turnosPorDiaSheet, 'Turnos por Día');
+    }
+  
+    if (this.turnosPorMedicoSolicitados) {
+      const turnosPorMedicoSolicitadosSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+        Object.entries(this.turnosPorMedicoSolicitados).map(([key, value]) => ({ Médico: key, Cantidad: value }))
+      );
+      XLSX.utils.book_append_sheet(workbook, turnosPorMedicoSolicitadosSheet, 'Turnos Solicitados por Médico');
+    }
+  
+    if (this.turnosFinalizadosPorMedico) {
+      const turnosFinalizadosPorMedicoSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+        Object.entries(this.turnosFinalizadosPorMedico).map(([key, value]) => ({ Médico: key, Cantidad: value }))
+      );
+      XLSX.utils.book_append_sheet(workbook, turnosFinalizadosPorMedicoSheet, 'Turnos Finalizados por Médico');
+    }
+  
+    XLSX.writeFile(workbook, 'Estadisticas.xlsx');
   }
-
-  descargarEstadisticasPDF(): void {
-    this.descargarPDF(this.logIngresos, 'log_ingresos');
-    this.descargarPDF(this.turnosPorEspecialidad, 'turnos_por_especialidad');
-    this.descargarPDF(this.turnosPorDia, 'turnos_por_dia');
-    this.descargarPDF(this.turnosPorMedicoSolicitados, 'turnos_solicitados_por_medico');
-    this.descargarPDF(this.turnosFinalizadosPorMedico, 'turnos_finalizados_por_medico');
+  
 
 
-  }
+  
 }
