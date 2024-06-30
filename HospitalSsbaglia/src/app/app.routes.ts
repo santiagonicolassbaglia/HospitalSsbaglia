@@ -22,7 +22,7 @@ export const routes: Routes = [
    {path: 'miPerfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent), canActivate: [logueadoGuard]  },
    {path: 'historiaClinicaAdmin', loadComponent: () => import('./componentes/hist-clinica-admin/hist-clinica-admin.component').then(m => m.HistClinicaAdminComponent) , canActivate: [adminGuard]},
    {path: 'historiaClinicaEspecialista', loadComponent: () => import('./componentes/hist-clinica-especialista/hist-clinica-especialista.component').then(m => m.HistClinicaEspecialistaComponent), canActivate: [logueadoGuard]  },
-   
+   {path: 'estadisticas', loadComponent: () => import('./componentes/estadisticas/estadisticas.component').then(m => m.EstadisticasComponent), canActivate: [adminGuard]},
      { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: '**', redirectTo: 'pagina-error' }
 

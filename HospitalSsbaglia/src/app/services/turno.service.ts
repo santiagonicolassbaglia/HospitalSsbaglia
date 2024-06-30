@@ -18,7 +18,12 @@ export class TurnoService {
   constructor(private firestore: AngularFirestore) {}
 
   public getTurnos(): Observable<Turno[]> {
-    return this.firestore.collection<Turno>(this.PATH).valueChanges();
+    return this.firestore.collection<Turno>(this.PATH).valueChanges().pipe(
+      map(turnos => turnos.map(turno => {
+        turno.fechaHora = (turno.fechaHora as any).toDate ? (turno.fechaHora as any).toDate() : new Date(turno.fechaHora);
+        return turno;
+      }))
+    );
   }
 
   public getTurnosByPaciente(pacienteId: string): Observable<Turno[]> {

@@ -23,6 +23,8 @@ import { SolicitarTurnoComponent } from './componentes/solicitar-turno/solicitar
 import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
 import { HistClinicaAdminComponent } from './componentes/hist-clinica-admin/hist-clinica-admin.component';
 import { HistClinicaEspecialistaComponent } from './componentes/hist-clinica-especialista/hist-clinica-especialista.component';
+import { EstadisticasComponent } from './componentes/estadisticas/estadisticas.component';
+
  
  
 
@@ -51,7 +53,8 @@ import { HistClinicaEspecialistaComponent } from './componentes/hist-clinica-esp
     SolicitarTurnoComponent,
 MiPerfilComponent,
 HistClinicaAdminComponent,
-HistClinicaEspecialistaComponent
+HistClinicaEspecialistaComponent,
+EstadisticasComponent
 
   ],
   templateUrl: './app.component.html',

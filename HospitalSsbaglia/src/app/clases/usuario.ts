@@ -1,5 +1,5 @@
 export class Usuario {
-  public uid: string; 
+  public uid: string;
   public nombre: string;
   public apellido: string;
   public dni: string;
@@ -13,15 +13,23 @@ export class Usuario {
   public code: string;
   public lastLogin: Date | null = null;
   public esAdmin: boolean = false;
-  public idTurnos: string[] = []; 
+  public idTurnos: string[] = [];
+  
+  
+  // Nuevas propiedades para estadísticas de turnos
+  public turnosPorEspecialidad?: any[];
+  public turnosPorDia?: any[];
+  public turnosSolicitados?: any[];
+  public turnosFinalizados?: any[];
+
   constructor(
-    uid: string, 
+    uid: string,
     nombre: string,
     apellido: string,
     dni: string,
     edad: number,
     obraSocial: string | null,
-    especialidad: string[] = [] ,
+    especialidad: string[] = [],
     contraseña: string,
     mail: string,
     imagenes: File[] | string[],
@@ -29,9 +37,9 @@ export class Usuario {
     lastLogin: Date | null,
     esAdmin: boolean = false,
     aprobado: boolean | null = null,
-    idTurnos: string[] = []  
+    idTurnos: string[] = []
   ) {
-    this.uid = uid; 
+    this.uid = uid;
     this.nombre = nombre;
     this.apellido = apellido;
     this.dni = dni;
@@ -45,5 +53,6 @@ export class Usuario {
     this.lastLogin = lastLogin;
     this.esAdmin = esAdmin;
     this.aprobado = aprobado;
+    this.idTurnos = idTurnos;
   }
 }

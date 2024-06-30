@@ -464,6 +464,10 @@ async login(mail: string, pass: string) {
     return this.firestore.collection(`Turnos/${uid}/Reservados`).doc(`${fecha} ${hora}`).set(paciente);
   }
 
+  getLogIngresos(): Observable<any[]> {
+    return this.firestore.collection('Logs', ref => ref.orderBy('timestamp')).valueChanges();
+  }
+
 
 }
  

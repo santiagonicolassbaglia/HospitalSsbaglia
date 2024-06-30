@@ -1,5 +1,11 @@
 <div class="contenedor">
-    <h2>Historias Clínicas (Admin)</h2>
+  <!-- <input 
+  type="text" 
+  placeholder="Buscar por paciente, especialista o fecha" 
+  [(ngModel)]="filtro" 
+  (input)="aplicarFiltro()" 
+  class="filtro-input"
+/> -->
     <div *ngFor="let historia of historiasClinicas" class="historia-clinica">
       <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short'  }}</p>
       <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>

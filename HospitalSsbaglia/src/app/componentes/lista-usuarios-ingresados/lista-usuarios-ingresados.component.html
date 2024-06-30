@@ -30,4 +30,9 @@
       </tbody>
     </table>
   </div>
+
+  <div class="estadisticas-container">
+    <button (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
+    <app-estadisticas *ngIf="mostrarEstadisticas"></app-estadisticas>
+  </div>
 </div>

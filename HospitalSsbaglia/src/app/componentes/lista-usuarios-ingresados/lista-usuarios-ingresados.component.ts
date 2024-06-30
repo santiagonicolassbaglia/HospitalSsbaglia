@@ -5,17 +5,20 @@ import { Usuario } from '../../clases/usuario';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 
 @Component({
   selector: 'app-lista-usuarios-ingresados',
   standalone: true,
-  imports:  [RouterLink, CommonModule ],
+  imports:  [RouterLink, CommonModule,EstadisticasComponent ],
   templateUrl: './lista-usuarios-ingresados.component.html',
   styleUrl: './lista-usuarios-ingresados.component.css'
 })
 export class ListaUsuariosIngresadosComponent implements OnInit {
 
   usuarios$: Observable<Usuario[]>;
+
+  mostrarEstadisticas = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -27,8 +30,7 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
     try {
       await this.authService.cambiarEstadoAdmin(code, esAdmin);
       console.log(`Estado de admin cambiado para usuario con ID ${code}`);
-      // Actualizar la lista de usuarios después de hacer el cambio (opcional)
-     this.usuarios$ = this.authService.getAllUsers();
+      this.usuarios$ = this.authService.getAllUsers();
     } catch (error) {
       console.error('Error al cambiar estado de admin:', error);
     }
@@ -45,7 +47,6 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
       });
   }
 
-
   async eliminarUsuario(usuario: Usuario) {
     try {
       await this.authService.eliminarUsuario(usuario.uid);
@@ -54,6 +55,7 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
       console.error('Error al eliminar el usuario:', error);
     }
   }
+
   async cambiarAdmin(usuario: Usuario) {
     try {
       usuario.esAdmin = !usuario.esAdmin;
@@ -62,6 +64,10 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
     } catch (error) {
       console.error('Error al cambiar estado de admin:', error);
     }
+  }
+
+  mostrarOcultarEstadisticas() {
+    this.mostrarEstadisticas = !this.mostrarEstadisticas;
   }
 
   
