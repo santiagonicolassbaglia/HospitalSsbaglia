@@ -30,11 +30,11 @@ export class EstadisticasComponent implements OnInit {
   constructor(private turnoService: TurnoService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.obtenerLogIngresos();
-    this.obtenerTurnosPorEspecialidad();
-    this.obtenerTurnosPorDia();
-    this.obtenerTurnosPorMedico('solicitados');
-    this.obtenerTurnosFinalizadosPorMedico('finalizados');
+ 
+    // this.obtenerTurnosPorEspecialidad();
+    // this.obtenerTurnosPorDia();
+    // this.obtenerTurnosPorMedico('solicitados');
+    // this.obtenerTurnosFinalizadosPorMedico('finalizados');
   }
 
   obtenerLogIngresos(): void {

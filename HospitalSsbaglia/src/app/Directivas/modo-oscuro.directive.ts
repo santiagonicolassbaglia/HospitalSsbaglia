@@ -23,7 +23,7 @@ export class ModoOscuroDirective {
       this.changeIcon('../../assets/imagenes/ModoOscuroNoche.png');
     } else {
       this.renderer.removeClass(document.body, 'modo-oscuro');
-      this.changeIcon('assets/icons/ModoOscuro.png');
+      this.changeIcon('../../assets/imagenes/ModoOscuro.png');
     }
   }
 

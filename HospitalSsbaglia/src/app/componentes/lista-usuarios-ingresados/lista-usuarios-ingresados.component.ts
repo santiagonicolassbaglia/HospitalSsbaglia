@@ -17,13 +17,16 @@ import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 export class ListaUsuariosIngresadosComponent implements OnInit {
 
   usuarios$: Observable<Usuario[]>;
-
+  totalUsuarios: number = 0;
   mostrarEstadisticas = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.usuarios$ = this.authService.getAllUsers();
+     this.usuarios$.subscribe((usuarios) => {
+    this.totalUsuarios = usuarios.length;
+  });
   }
 
   async cambiarEstadoAdmin(code: string, esAdmin: boolean) {

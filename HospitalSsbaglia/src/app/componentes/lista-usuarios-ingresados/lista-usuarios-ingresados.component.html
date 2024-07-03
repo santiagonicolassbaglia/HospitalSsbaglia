@@ -24,15 +24,16 @@
             <input type="checkbox" [checked]="usuario.esAdmin" (change)="cambiarAdmin(usuario)" />
           </td>
           <td>
-            <button (click)="eliminarUsuario(usuario)">Eliminar</button>
+            <button class="botonEliminar" (click)="eliminarUsuario(usuario)">Eliminar</button>
           </td>
         </tr>
+        <td colspan="5">Cantidad de usuarios en total: {{ totalUsuarios }}</td>
       </tbody>
     </table>
   </div>
 
-  <div class="estadisticas-container">
-    <button (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
+  <div class="botonEstadisticas-contenedor">
+    <button class="botonEstadisticas" (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
     <app-estadisticas *ngIf="mostrarEstadisticas"></app-estadisticas>
-  </div>
+    </div>
 </div>

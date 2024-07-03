@@ -57,3 +57,33 @@
   color: #666;
 }
 
+.botonEstadisticas {
+  background-color: #09435ff8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 18px;  
+  padding: 15px 30px; 
+  margin: 0 auto;
+
+}
+
+.botonEstadisticas-contenedor {
+   
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.botonEliminar {
+  background-color: #6c0000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}

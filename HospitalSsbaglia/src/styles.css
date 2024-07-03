@@ -33,10 +33,10 @@
 		}
 }
 
-/* styles.css o styles.scss */
+ 
 body.modo-oscuro {
-	background-color: #121212;
-	color: #ffffff;
+	background-color: #052738f8;
+	color: #565656;
   }
   
   body.modo-oscuro a {
@@ -47,6 +47,49 @@ body.modo-oscuro {
 	background-color: #333333;
 	color: #ffffff;
   }
+
+  body.modo-oscuro .navbar {
+	background-color: #333333;
+	border-bottom: 1px solid #000000;
+  }
   
-  /* Agrega más estilos según sea necesario para tu aplicación */
+  body.modo-oscuro .navbar h3 {
+	color: #ffffff;
+  }
+
+  body.modo-oscuro .modo-oscuro-btn img {
+	filter: invert(1);
+  }
+
+  body.modo-oscuro .card {
+	background-color: #333333;
+	color: #625959;
+  }
+  
+  body.modo-oscuro .card h5 {
+	color: #ffffff;
+  }
+
+  body.modo-oscuro .card button {
+	background-color: #333333;
+	color: #ffffff;
+  }
+
+  body.modo-oscuro .card button:hover {
+	background-color: #000000;
+  }
+
+  body.modo-oscuro .card button:active {
+	background-color: #000000;
+  }
+
+  body.modo-oscuro .card button:focus {
+	background-color: #000000;
+  }
+
+  body.modo-oscuro .card button:disabled {
+	background-color: #333333;
+	color: #ffffff;
+  }
+
   
