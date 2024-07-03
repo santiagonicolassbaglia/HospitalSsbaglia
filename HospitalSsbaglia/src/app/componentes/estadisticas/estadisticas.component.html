@@ -4,7 +4,7 @@
   <!-- Cantidad de turnos por especialidad -->
   <div class="estadistica">
     <h3>Cantidad de turnos por especialidad</h3>
-    <button class="btn-ver" (click)="obtenerTurnosPorEspecialidad()">Ver Turnos por Especialidad</button>
+    <button class="btn-ver" appCambiarFondo (click)="obtenerTurnosPorEspecialidad()">Ver Turnos por Especialidad</button>
     <div *ngIf="mostrarTurnosPorEspecialidad" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
@@ -28,7 +28,7 @@
   <!-- Cantidad de turnos por día -->
   <div class="estadistica">
     <h3>Cantidad de turnos por día</h3>
-    <button class="btn-ver" (click)="obtenerTurnosPorDia()">Ver Turnos por Día</button>
+    <button class="btn-ver" appCambiarFondo appMostrarOcultar (click)="obtenerTurnosPorDia()">Ver Turnos por Día</button>
     <div *ngIf="mostrarTurnosPorDia" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
@@ -52,7 +52,7 @@
   <!-- Cantidad de turnos solicitados por médico -->
   <div class="estadistica">
     <h3>Cantidad de turnos solicitados por médico</h3>
-    <button class="btn-ver" (click)="obtenerTurnosPorMedico('solicitados')">Ver Turnos Solicitados</button>
+    <button class="btn-ver" appCambiarFondo (click)="obtenerTurnosPorMedico('solicitados')">Ver Turnos Solicitados</button>
     <div *ngIf="mostrarTurnosPorMedicoSolicitados" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
@@ -76,7 +76,7 @@
   <!-- Cantidad de turnos finalizados por médico -->
   <div class="estadistica">
     <h3>Cantidad de turnos finalizados por médico</h3>
-    <button class="btn-ver" (click)="obtenerTurnosFinalizadosPorMedico('finalizados')">Ver Turnos Finalizados</button>
+    <button class="btn-ver" appCambiarFondo (click)="obtenerTurnosFinalizadosPorMedico('finalizados')">Ver Turnos Finalizados</button>
     <div *ngIf="mostrarTurnosFinalizadosPorMedico" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>

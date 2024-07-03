@@ -7,11 +7,13 @@ import { Observable } from 'rxjs';
 import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 import { FiltrarAdminPipe } from '../../pipes/filtrar-admin.pipe';
 import { FormsModule } from '@angular/forms';
+import { ResaltaTextoDirective } from '../../Directivas/resalta-texto.directive';
+import { FiltrarPorEstadoPipe } from '../../pipes/filtrar-por-estado.pipe';
 
 @Component({
   selector: 'app-lista-usuarios-ingresados',
   standalone: true,
-  imports: [RouterLink, CommonModule, EstadisticasComponent, FiltrarAdminPipe, FormsModule],
+  imports: [RouterLink, CommonModule, EstadisticasComponent, FiltrarAdminPipe, FormsModule, ResaltaTextoDirective,FiltrarPorEstadoPipe],
   templateUrl: './lista-usuarios-ingresados.component.html',
   styleUrls: ['./lista-usuarios-ingresados.component.css']
 })

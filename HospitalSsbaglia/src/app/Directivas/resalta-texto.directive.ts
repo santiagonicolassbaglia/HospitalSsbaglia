@@ -11,7 +11,7 @@ export class ResaltaTextoDirective {
   constructor(private el: ElementRef) {}
 
   @HostListener('mouseenter') onMouseEnter() {
-    this.highlight(this.appHighlight || 'yellow');
+    this.highlight(this.appHighlight || 'red');
   }
 
   @HostListener('mouseleave') onMouseLeave() {

@@ -1,7 +1,7 @@
 <div class="home-container">
   <div class="header">
-    <h1>Administración de Usuarios</h1>
-    <button (click)="cerrarSesion()" class="btn-logout">Cerrar sesión</button>
+    <h1 >Administración de Usuarios</h1>
+    <button appResaltaTexto (click)="cerrarSesion()" class="btn-logout">Cerrar sesión</button>
   </div>
 
   <div class="table-container">
@@ -29,7 +29,7 @@
             <input type="checkbox" [checked]="usuario.esAdmin" (change)="cambiarAdmin(usuario)" />
           </td>
           <td>
-            <button class="botonEliminar" (click)="eliminarUsuario(usuario)">Eliminar</button>
+            <button class="botonEliminar" appResaltaTexto (click)="eliminarUsuario(usuario)">Eliminar</button>
           </td>
         </tr>
         <tr>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="botonEstadisticas-contenedor">
-    <button class="botonEstadisticas" (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
+    <button class="botonEstadisticas" appResaltaTexto (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
     <app-estadisticas *ngIf="mostrarEstadisticas"></app-estadisticas>
   </div>
 </div>

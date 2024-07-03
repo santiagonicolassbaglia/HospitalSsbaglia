@@ -11,11 +11,13 @@ import { FechaPipe } from '../../pipes/fecha.pipe';
 import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
 import { Chart, ChartData, ChartType } from 'chart.js/auto';
 import { ChartComponent } from '../chart/chart.component';
+import { CambiarFondoDirective } from '../../Directivas/cambiar-fondo.directive';
+import { MostrarOcultarDirective } from '../../Directivas/mostrar-ocultar.directive';
  
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [NgIf, FormsModule, NgFor, KeyValuePipe, OrdenarDatosPipe, FechaPipe, FiltrarDatosPipe, ChartComponent],
+  imports: [NgIf, FormsModule, NgFor, KeyValuePipe, OrdenarDatosPipe, FechaPipe, FiltrarDatosPipe, ChartComponent, CambiarFondoDirective, MostrarOcultarDirective],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.css'
 })
