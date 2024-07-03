@@ -8,7 +8,7 @@
 </div>
 
 <div class="turnos">
-  <div *ngFor="let turno of turnosFiltrados" class="turno">
+  <div *ngFor="let turno of turnos | filtrarDatos: ['especialidad', 'especialistaNombre', 'estado', 'comentario', 'calificacion']: filtroGeneral" class="turno">
     <p>Especialidad: {{ turno.especialidad }}</p>
     <p>Especialista: {{ turno.especialistaNombre }}</p>
     <p>Fecha y Hora: {{ turno.fechaHora| date: 'short' }}</p>

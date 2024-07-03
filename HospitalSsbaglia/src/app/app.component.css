@@ -1,0 +1,25 @@
+/* styles.css o styles.scss */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .navbar h3 {
+    margin: 0;
+  }
+  
+  .modo-oscuro-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .modo-oscuro-btn img {
+    width: 24px; /* Ajusta el tamaño del icono según sea necesario */
+    height: 24px;
+  }

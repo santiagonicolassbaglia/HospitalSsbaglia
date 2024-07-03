@@ -9,14 +9,17 @@
       {{ especialista.nombre }}
     </button>
   </div>
+  <div class="filtro-busqueda">
+    <input type="text" placeholder="Buscar..." [(ngModel)]="filtroGeneral" (input)="aplicarFiltro()" />
+  </div>
 </div>
 
 <div class="turnos">
-  <div *ngFor="let turno of turnosFiltrados" class="turno">
+  <div *ngFor="let turno of turnosFiltrados | filtrarDatos: ['especialidad', 'especialistaNombre', 'pacienteNombre', 'estado']: filtroGeneral" class="turno">
     <p>Especialidad: {{ turno.especialidad }}</p>
     <p>Especialista: {{ turno.especialistaNombre }}</p>
     <p>Paciente: {{ turno.pacienteNombre }}</p>
-    <p>Fecha y Hora: {{ turno.fechaHora | date: 'short'  }}</p>
+    <p>Fecha y Hora: {{ turno.fechaHora | date: 'short' }}</p>
     <p>Estado: {{ turno.estado }}</p>
 
     <button *ngIf="turno.estado !== 'confirmado' && turno.estado !== 'realizado' && turno.estado !== 'cancelado'"

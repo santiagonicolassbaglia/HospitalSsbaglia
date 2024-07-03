@@ -1,120 +1,119 @@
 <div class="estadisticas-container">
-    <h2 class="estadisticas-title">Estadísticas Generales</h2>
-  
-    <!-- Log de ingresos al sistema -->
-    <div class="estadistica">
-      <h3>Log de ingresos al sistema</h3>
-      <button class="btn-ver" (click)="obtenerLogIngresos()">Ver Log</button>
-      <div *ngIf="logIngresos" class="estadisticas-table-container">
-        <table class="estadisticas-table">
-          <thead>
-            <tr>
-              <th>Día</th>
-              <th>Cantidad de Ingresos</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let log of logIngresos | keyvalue">
-              <td>{{ log.key }}</td>
-              <td>{{ log.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Cantidad de turnos por especialidad -->
-    <div class="estadistica">
-      <h3>Cantidad de turnos por especialidad</h3>
-      <button class="btn-ver" (click)="obtenerTurnosPorEspecialidad()">Ver Turnos por Especialidad</button>
-      <div *ngIf="turnosPorEspecialidad" class="estadisticas-table-container">
-        <table class="estadisticas-table">
-          <thead>
-            <tr>
-              <th>Especialidad</th>
-              <th>Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let especialidad of turnosPorEspecialidad | keyvalue">
-              <td>{{ especialidad.key }}</td>
-              <td>{{ especialidad.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Cantidad de turnos por día -->
-    <div class="estadistica">
-      <h3>Cantidad de turnos por día</h3>
-      <button class="btn-ver" (click)="obtenerTurnosPorDia()">Ver Turnos por Día</button>
-      <div *ngIf="turnosPorDia" class="estadisticas-table-container">
-        <table class="estadisticas-table">
-          <thead>
-            <tr>
-              <th>Día</th>
-              <th>Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let dia of turnosPorDia | keyvalue">
-              <td>{{ dia.key }}</td>
-              <td>{{ dia.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Cantidad de turnos solicitados por médico -->
-    <div class="estadistica">
-      <h3>Cantidad de turnos solicitados por médico</h3>
-      <button class="btn-ver" (click)="obtenerTurnosPorMedico('solicitados')">Ver Turnos Solicitados</button>
-      <div *ngIf="turnosPorMedicoSolicitados" class="estadisticas-table-container">
-        <table class="estadisticas-table">
-          <thead>
-            <tr>
-              <th>Médico</th>
-              <th>Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let medico of turnosPorMedicoSolicitados | keyvalue">
-              <td>{{ medico.key }}</td>
-              <td>{{ medico.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Cantidad de turnos finalizados por médico -->
-    <div class="estadistica">
-      <h3>Cantidad de turnos finalizados por médico</h3>
-      <button class="btn-ver" (click)="obtenerTurnosFinalizadosPorMedico('finalizados')">Ver Turnos Finalizados</button>
-      <div *ngIf="turnosFinalizadosPorMedico" class="estadisticas-table-container">
-        <table class="estadisticas-table">
-          <thead>
-            <tr>
-              <th>Médico</th>
-              <th>Cantidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let medico of turnosFinalizadosPorMedico | keyvalue">
-              <td>{{ medico.key }}</td>
-              <td>{{ medico.value }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- Botones de descarga -->
-    <div class="download-buttons">
-      <button class="btn-descargar" (click)="descargarEstadisticasExcel()">Descargar en Excel</button>
-      <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar en PDF</button>
+  <h2 class="estadisticas-title">Estadísticas Generales</h2>
+
+  <!-- Log de ingresos al sistema -->
+  <div class="estadistica">
+    <h3>Log de ingresos al sistema</h3>
+    <button class="btn-ver" (click)="obtenerLogIngresos()">Ver Log</button>
+    <div *ngIf="logIngresos" class="estadisticas-table-container">
+      <table class="estadisticas-table">
+        <thead>
+          <tr>
+            <th>Día</th>
+            <th>Cantidad de Ingresos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of logIngresos | keyvalue | ordenarDatos: 'key'">
+            <td>{{ log.key }}</td>
+            <td>{{ log.value }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  
+
+  <!-- Cantidad de turnos por especialidad -->
+  <div class="estadistica">
+    <h3>Cantidad de turnos por especialidad</h3>
+    <button class="btn-ver" (click)="obtenerTurnosPorEspecialidad()">Ver Turnos por Especialidad</button>
+    <div *ngIf="turnosPorEspecialidad" class="estadisticas-table-container">
+      <table class="estadisticas-table">
+        <thead>
+          <tr>
+            <th>Especialidad</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let especialidad of turnosPorEspecialidad | keyvalue | ordenarDatos: 'key'">
+            <td>{{ especialidad.key }}</td>
+            <td>{{ especialidad.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cantidad de turnos por día -->
+  <div class="estadistica">
+    <h3>Cantidad de turnos por día</h3>
+    <button class="btn-ver" (click)="obtenerTurnosPorDia()">Ver Turnos por Día</button>
+    <div *ngIf="turnosPorDia" class="estadisticas-table-container">
+      <table class="estadisticas-table">
+        <thead>
+          <tr>
+            <th>Día</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dia of turnosPorDia | keyvalue | ordenarDatos: 'key'">
+            <td>{{ dia.key }}</td>
+            <td>{{ dia.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cantidad de turnos solicitados por médico -->
+  <div class="estadistica">
+    <h3>Cantidad de turnos solicitados por médico</h3>
+    <button class="btn-ver" (click)="obtenerTurnosPorMedico('solicitados')">Ver Turnos Solicitados</button>
+    <div *ngIf="turnosPorMedicoSolicitados" class="estadisticas-table-container">
+      <table class="estadisticas-table">
+        <thead>
+          <tr>
+            <th>Médico</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medico of turnosPorMedicoSolicitados | keyvalue | ordenarDatos: 'key'">
+            <td>{{ medico.key }}</td>
+            <td>{{ medico.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cantidad de turnos finalizados por médico -->
+  <div class="estadistica">
+    <h3>Cantidad de turnos finalizados por médico</h3>
+    <button class="btn-ver" (click)="obtenerTurnosFinalizadosPorMedico('finalizados')">Ver Turnos Finalizados</button>
+    <div *ngIf="turnosFinalizadosPorMedico" class="estadisticas-table-container">
+      <table class="estadisticas-table">
+        <thead>
+          <tr>
+            <th>Médico</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medico of turnosFinalizadosPorMedico | keyvalue | ordenarDatos: 'key'">
+            <td>{{ medico.key }}</td>
+            <td>{{ medico.value }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Botones de descarga -->
+  <div class="download-buttons">
+    <button class="btn-descargar" (click)="descargarEstadisticasExcel()">Descargar en Excel</button>
+    <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar en PDF</button>
+  </div>
+</div>

@@ -5,11 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Turno } from '../../clases/turno';
 import { FormsModule } from '@angular/forms';
+import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
 
 @Component({
   selector: 'app-hist-clinica-especialista',
   standalone: true,
-  imports: [DatePipe,NgFor,NgIf,FormsModule],
+  imports: [DatePipe,NgFor,NgIf,FormsModule, FiltrarDatosPipe],
   templateUrl: './hist-clinica-especialista.component.html',
   styleUrl: './hist-clinica-especialista.component.css'
 })

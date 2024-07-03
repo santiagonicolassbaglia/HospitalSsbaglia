@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
   
     setTimeout(() => {
       this.loadingService.hide();
-    }, 3000);
+    }, 4000);
   
     try {
       await this.authService.login(this.mail, this.clave);

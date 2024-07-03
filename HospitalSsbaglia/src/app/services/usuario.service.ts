@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Observable } from 'rxjs';
 import { Usuario } from '../clases/usuario';
+import { HistoriaClinica } from '../clases/historia-clinica';
 
 
 
@@ -24,6 +25,9 @@ export class UsuarioService {
   actualizarUsuario(usuario: Usuario): Promise<void> {
     const userRef = this.firestore.collection(this.usuariosCollection).doc(usuario.uid);
     return userRef.update(usuario);
+  }
+  filtrarHistoriasClinicasPorEspecialidad = (historiasClinicas: HistoriaClinica[], especialidad: string): HistoriaClinica[] => {
+    return historiasClinicas.filter(historiaClinica => historiaClinica.especialidad === especialidad);
   }
 
    

@@ -32,3 +32,21 @@
 			transform: translateX(100px);
 		}
 }
+
+/* styles.css o styles.scss */
+body.modo-oscuro {
+	background-color: #121212;
+	color: #ffffff;
+  }
+  
+  body.modo-oscuro a {
+	color: #bb86fc;
+  }
+  
+  body.modo-oscuro button {
+	background-color: #333333;
+	color: #ffffff;
+  }
+  
+  /* Agrega más estilos según sea necesario para tu aplicación */
+  

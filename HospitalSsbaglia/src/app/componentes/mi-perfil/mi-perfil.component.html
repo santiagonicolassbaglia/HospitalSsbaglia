@@ -47,30 +47,26 @@
     </div>
   </div>
 
-  <!-- <button (click)="actualizarPerfil()" style="color: rgb(248, 218, 24);">Actualizar Perfil</button> -->
-
- 
-    <!-- Historia clínica -->
-    <div class="historias-clinicas">
-      <h2>Historia Clínica</h2>
-      <!-- Select para elegir la especialidad -->
-      <label for="especialidad">Selecciona una especialidad:</label>
-      <select id="especialidad" [(ngModel)]="especialidadSeleccionada">
-        <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
-      </select>
-      
-      <div *ngFor="let historia of historiasClinicasFiltradas">
-        <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
-        <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
-        <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
-        <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
-        <p><strong>Presión:</strong> {{ historia.presion }}</p>
-        <div *ngFor="let dato of historia.datosDinamicos">
-          <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
-        </div>
-      </div>
+  <!-- Historia clínica -->
+<div class="historias-clinicas">
+  <h2>Historia Clínica</h2>
+  <!-- Select para elegir la especialidad -->
+  <label for="especialidad">Selecciona una especialidad:</label>
+  <select id="especialidad" [(ngModel)]="especialidadSeleccionada" (change)="filtrarHistoriasClinicas()">
+    <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
+  </select>
+  
+  <div *ngIf="historiaClinicaReciente">
+    <p><strong>Fecha:</strong> {{ historiaClinicaReciente.fecha | date: 'short' }}</p>
+    <p><strong>Altura:</strong> {{ historiaClinicaReciente.altura }} cm</p>
+    <p><strong>Peso:</strong> {{ historiaClinicaReciente.peso }} kg</p>
+    <p><strong>Temperatura:</strong> {{ historiaClinicaReciente.temperatura }} °C</p>
+    <p><strong>Presión:</strong> {{ historiaClinicaReciente.presion }}</p>
+    <div *ngFor="let dato of historiaClinicaReciente.datosDinamicos">
+      <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
     </div>
-
-    <button (click)="generatePDF()">Descargar Historia Clínica en PDF</button>
   </div>
- 
+</div>
+
+<button (click)="generatePDF()">Descargar Historia Clínica en PDF</button>
+</div>

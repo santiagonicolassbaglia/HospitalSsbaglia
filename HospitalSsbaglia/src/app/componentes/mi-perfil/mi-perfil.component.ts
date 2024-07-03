@@ -9,12 +9,14 @@ import { Disponibilidad, Especialista } from '../../Interfaces/especialista';
 import { HistoriaClinica } from '../../clases/historia-clinica';
 import { HistoriaClinicaService } from '../../services/historia-clinica.service';
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { EspecialidadesPipe } from '../../pipes/especialidades.pipe';
+import { DisponibilidadPipe } from '../../pipes/disponibilidad.pipe';
+import { OrdenarHistoriasPipe } from '../../pipes/ordenar-historias.pipe';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, DatePipe],
+  imports: [NgIf, NgFor, FormsModule, DatePipe, EspecialidadesPipe, DisponibilidadPipe, OrdenarHistoriasPipe],
   templateUrl: './mi-perfil.component.html',
   styleUrls: ['./mi-perfil.component.css']
 })
@@ -25,6 +27,7 @@ export class MiPerfilComponent implements OnInit {
   imagenes: string[] = [];
   historiasClinicas: HistoriaClinica[] = [];
   historiasClinicasFiltradas: HistoriaClinica[] = [];
+  historiaClinicaReciente: HistoriaClinica | undefined;
   especialidades: string[] = [];
   especialidadSeleccionada = '';
 
@@ -82,40 +85,6 @@ export class MiPerfilComponent implements OnInit {
       }
     });
   }
-
-  private cargarHistoriasClinicas(uid: string): void {
-    this.historiaClinicaService.obtenerHistoriasPorPaciente(uid).subscribe(historial => {
-      this.historiasClinicas = historial.map(e => {
-        const historiaClinica = {
-          id: e.payload.doc.id,
-          ...e.payload.doc.data() as HistoriaClinica
-        };
-        
-        // Filtrar historias clínicas con datos completos
-        const { fecha, altura, peso, temperatura, presion, nombreEspecialista } = historiaClinica;
-        if (fecha && altura && peso && temperatura && presion) {
-          return historiaClinica;
-        } else {
-          return null;
-        }
-      }).filter(historia => historia !== null);
-
-      // Obtener especialidades únicas
-      this.especialidades = [...new Set(this.historiasClinicas.map(historia => historia.nombreEspecialista))];
-
-      // Filtrar historias clínicas por especialidad seleccionada
-      this.filtrarHistoriasClinicas();
-    });
-  }
-
-  filtrarHistoriasClinicas(): void {
-    if (this.especialidadSeleccionada) {
-      this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia.nombreEspecialista === this.especialidadSeleccionada);
-    } else {
-      this.historiasClinicasFiltradas = this.historiasClinicas;
-    }
-  }
-
   actualizarPerfil(): void {
     if (this.usuario) {
       this.usuarioService.actualizarUsuario(this.usuario).then(() => {
@@ -155,42 +124,107 @@ export class MiPerfilComponent implements OnInit {
       }
     }
   }
+  private convertirTimestampAFecha(historia: HistoriaClinica): HistoriaClinica {
+    return {
+      ...historia,
+      fecha: (historia.fecha as any).toDate()
+    };
+  }
 
+  private cargarHistoriasClinicas(uid: string): void {
+    this.historiaClinicaService.obtenerHistoriasPorPaciente(uid).subscribe(historial => {
+      this.historiasClinicas = historial.map(e => {
+        const historiaClinica = {
+          id: e.payload.doc.id,
+          ...e.payload.doc.data() as HistoriaClinica
+        };
+
+        // Convertir Timestamp a Date
+        const historiaConFechaConvertida = this.convertirTimestampAFecha(historiaClinica);
+
+        // Filtrar historias clínicas con datos completos
+        const { fecha, altura, peso, temperatura, presion, nombreEspecialista } = historiaConFechaConvertida;
+        if (fecha && altura && peso && temperatura && presion) {
+          return historiaConFechaConvertida;
+        } else {
+          return null;
+        }
+      }).filter(historia => historia !== null);
+
+      // Obtener especialidades únicas
+      this.especialidades = [...new Set(this.historiasClinicas.map(historia => historia.nombreEspecialista))]; 
+  
+
+      
+
+      
+
+      // Filtrar historias clínicas por especialidad seleccionada
+      this.filtrarHistoriasClinicas();
+    });
+  }
+
+  // filtrarHistoriasClinicas(): void {
+  //   if (this.especialidadSeleccionada) {
+  //     this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia.nombreEspecialista === this.especialidadSeleccionada);
+  //   } else {
+  //     this.historiasClinicasFiltradas = [...this.historiasClinicas];
+  //   }
+
+  //   // Obtener la historia clínica más reciente
+  //   this.historiaClinicaReciente = this.historiasClinicasFiltradas.reduce((acc, curr) => {
+  //     return (!acc || curr.fecha > acc.fecha) ? curr : acc;
+  //   }, undefined);
+
+filtrarHistoriasClinicas(): void {
+  if (this.especialidadSeleccionada) {
+    this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia.nombreEspecialista === this.especialidadSeleccionada);
+  } else {
+    this.historiasClinicasFiltradas = [...this.historiasClinicas];
+  }
+
+  // Obtener la historia clínica más reciente
+  this.historiaClinicaReciente = this.historiasClinicasFiltradas.reduce((acc, curr) => {
+    return (!acc || curr.fecha > acc.fecha) ? curr : acc;
+  }, undefined);
+
+  // Update the especialidadSeleccionada with the speciality of the specialist
+  if (this.historiaClinicaReciente) {
+    const especialista = this.historiaClinicaReciente.nombreEspecialista;
+    const especialidad = this.historiaClinicaReciente.especialidad;
+    this.especialidadSeleccionada = `${especialista} ${especialidad}`;
+  }
+}
+  
+
+ 
   generatePDF(): void {
     const doc = new jsPDF();
-  
-    //  logo de la clínica
-    const logoURL = '../../../assets/imagenes/cruzRoja.png';  
-    const img = new Image();
-    img.src = logoURL;
-  
-    img.onload = () => {
-      doc.addImage(img, 'PNG', 10, 10, 50, 20);
-      
-      //  título  
-      doc.setFontSize(18);
-      doc.text('Informe de Historia Clínica', 70, 20);
-      doc.setFontSize(12);
-      doc.text('Fecha de emisión: ' + new Date().toLocaleDateString(), 70, 30);
-  
-      // datos del usuario
-      doc.setFontSize(12);
-      doc.text(`Nombre: ${this.usuario.nombre}`, 10, 50);
-      doc.text(`Apellido: ${this.usuario.apellido}`, 10, 60);
-      doc.text(`DNI: ${this.usuario.dni}`, 10, 70);
-      doc.text(`Edad: ${this.usuario.edad}`, 10, 80);
-      doc.text(`Obra Social: ${this.usuario.obraSocial || 'No especificada'}`, 10, 90);
-      doc.text(`Correo Electrónico: ${this.usuario.mail}`, 10, 100);
-      let y = 120;
-  this.historiasClinicasFiltradas.forEach(historia => {
-    doc.text(`Fecha: ${new Date(historia.fecha).toLocaleDateString()}`, 10, y);
-    doc.text(`Altura: ${historia.altura} cm`, 10, y + 10);
-    doc.text(`Peso: ${historia.peso} kg`, 10, y + 20);
-    doc.text(`Temperatura: ${historia.temperatura} °C`, 10, y + 30);
-    doc.text(`Presión: ${historia.presion}`, 10, y + 40);
-    y += 60;
-  });
 
-  doc.save('historia_clinica.pdf');
-};
-}}
+    let y = 10; // Posición inicial en el eje Y
+
+    doc.text('Historia Clínica', 10, y);
+    y += 10;
+
+    this.historiasClinicasFiltradas.forEach(historia => {
+      doc.text(`Fecha: ${new Date(historia.fecha).toLocaleString()}`, 10, y);
+      y += 10;
+      doc.text(`Altura: ${historia.altura} cm`, 10, y);
+      y += 10;
+      doc.text(`Peso: ${historia.peso} kg`, 10, y);
+      y += 10;
+      doc.text(`Temperatura: ${historia.temperatura} °C`, 10, y);
+      y += 10;
+      doc.text(`Presión: ${historia.presion}`, 10, y);
+      y += 10;
+      historia.datosDinamicos.forEach(dato => {
+        doc.text(`${dato.clave}: ${dato.valor}`, 10, y);
+        y += 10;
+      });
+      y += 10; // Espacio entre historias
+    });
+
+    doc.save('historia_clinica.pdf');
+  }
+  }
+ 

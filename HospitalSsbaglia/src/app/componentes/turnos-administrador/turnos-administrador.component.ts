@@ -4,24 +4,25 @@ import { Turno } from '../../clases/turno';
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
 
 @Component({
   selector: 'app-turnos-administrador',
   standalone: true,
-  imports: [NgFor,NgIf,DatePipe,FormsModule],
+  imports: [NgFor, NgIf, DatePipe, FormsModule, FiltrarDatosPipe],
   templateUrl: './turnos-administrador.component.html',
-  styleUrl: './turnos-administrador.component.css'
+  styleUrls: ['./turnos-administrador.component.css']
 })
-export class TurnosAdministradorComponent   {
+export class TurnosAdministradorComponent implements OnInit {
   turnos: Turno[] = [];
   turnosFiltrados: Turno[] = [];
   especialidades: string[] = [];
   especialistas: { id: string, nombre: string }[] = [];
   filtroEspecialidad: string = '';
   filtroEspecialista: string = '';
+  filtroGeneral: string = '';
 
   constructor(private authService: AuthService, private turnoService: TurnoService) {}
-
 
   async ngOnInit(): Promise<void> {
     this.turnoService.getTurnos().subscribe(turnos => {
@@ -38,7 +39,6 @@ export class TurnosAdministradorComponent   {
   private convertTimestampToDate(timestamp: any): Date {
     return timestamp instanceof Date ? timestamp : timestamp.toDate();
   }
-
 
   private obtenerEspecialidadesYEspecialistas(turnos: Turno[]): void {
     const especialidadesSet = new Set<string>();

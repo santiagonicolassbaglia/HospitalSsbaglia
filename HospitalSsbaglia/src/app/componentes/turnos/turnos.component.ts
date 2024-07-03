@@ -7,11 +7,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { Usuario } from '../../clases/usuario';
+import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
 
 @Component({
   selector: 'app-turnos',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, RouterLink, RouterLinkActive, AsyncPipe, DatePipe, NgSwitchCase, AsyncPipe],
+  imports: [NgFor, NgIf, FormsModule, RouterLink, RouterLinkActive, AsyncPipe, DatePipe, NgSwitchCase, AsyncPipe, FiltrarDatosPipe],
   templateUrl: './turnos.component.html',
   styleUrls: ['./turnos.component.css']
 })

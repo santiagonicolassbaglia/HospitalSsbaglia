@@ -7,12 +7,15 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import 'jspdf-autotable';
+import { OrdenarDatosPipe } from '../../pipes/ordenar-datos.pipe';
+import { FechaPipe } from '../../pipes/fecha.pipe';
+import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
 
 
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [ NgIf, FormsModule,NgFor,KeyValuePipe],
+  imports: [ NgIf, FormsModule,NgFor,KeyValuePipe, OrdenarDatosPipe, FechaPipe,FiltrarDatosPipe],
   templateUrl: './estadisticas.component.html',
   styleUrl: './estadisticas.component.css'
 })

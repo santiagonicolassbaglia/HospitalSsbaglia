@@ -24,6 +24,16 @@ import { MiPerfilComponent } from './componentes/mi-perfil/mi-perfil.component';
 import { HistClinicaAdminComponent } from './componentes/hist-clinica-admin/hist-clinica-admin.component';
 import { HistClinicaEspecialistaComponent } from './componentes/hist-clinica-especialista/hist-clinica-especialista.component';
 import { EstadisticasComponent } from './componentes/estadisticas/estadisticas.component';
+import { FormatearNumerosDirective } from './Directivas/formatear-numeros.directive';
+import { CambiarFondoDirective } from './Directivas/cambiar-fondo.directive';
+import { ResaltaTextoDirective } from './Directivas/resalta-texto.directive';
+import { DisponibilidadPipe } from './pipes/disponibilidad.pipe';
+import { EspecialidadesPipe } from './pipes/especialidades.pipe';
+import { FechaPipe } from './pipes/fecha.pipe';
+import { FiltrarDatosPipe } from './pipes/filtrar-datos.pipe';
+import { OrdenarDatosPipe } from './pipes/ordenar-datos.pipe';
+import { OrdenarHistoriasPipe } from './pipes/ordenar-historias.pipe';
+import { ModoOscuroDirective } from './Directivas/modo-oscuro.directive';
 
  
  
@@ -54,7 +64,17 @@ import { EstadisticasComponent } from './componentes/estadisticas/estadisticas.c
 MiPerfilComponent,
 HistClinicaAdminComponent,
 HistClinicaEspecialistaComponent,
-EstadisticasComponent
+EstadisticasComponent,
+FormatearNumerosDirective,
+CambiarFondoDirective,
+ResaltaTextoDirective,
+DisponibilidadPipe,
+EspecialidadesPipe,
+FechaPipe,
+FiltrarDatosPipe,
+OrdenarDatosPipe,
+OrdenarHistoriasPipe,
+ModoOscuroDirective
 
   ],
   templateUrl: './app.component.html',

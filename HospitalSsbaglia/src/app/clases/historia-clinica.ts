@@ -11,6 +11,7 @@ export class HistoriaClinica {
         presion: string;
         nombrePaciente: string;
         nombreEspecialista: string;
+        especialidad: string;
         datosDinamicos: { clave: string; valor: string }[];
   
 }

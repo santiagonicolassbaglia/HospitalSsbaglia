@@ -8,6 +8,7 @@ import {AngularFireDatabase} from '@angular/fire/compat/database';
 import firebase from 'firebase/compat/app';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { HistoriaClinica } from '../clases/historia-clinica';
  
  
 @Injectable({
@@ -19,6 +20,7 @@ export class AuthService {
   private items$: Observable<Usuario[]>;
   public loguado: boolean = false;
   public esAdmin: boolean = false;
+  userType: string = '';
   constructor(
     public auth: AngularFireAuth,
     public firestore: AngularFirestore,
@@ -467,6 +469,15 @@ async login(mail: string, pass: string) {
   getLogIngresos(): Observable<any[]> {
     return this.firestore.collection('Logs', ref => ref.orderBy('timestamp')).valueChanges();
   }
+
+  filtrarHistoriasClinicasPorEspecialidad = (historiasClinicas: HistoriaClinica[], especialidad: string): HistoriaClinica[] => {
+    
+    this.userType = 'especialista';
+    return historiasClinicas.filter(historiaClinica => historiaClinica.especialidad === especialidad);
+
+    
+  }
+
 
 
 }

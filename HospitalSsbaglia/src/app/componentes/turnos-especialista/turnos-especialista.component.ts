@@ -117,6 +117,7 @@ export class TurnosEspecialistaComponent implements OnInit {
           presion: '',
           nombrePaciente: turno.pacienteNombre,
           nombreEspecialista: turno.especialistaNombre,
+          especialidad: turno.especialidad,
           datosDinamicos: [{ clave: '', valor: '' }]
         };
       }
@@ -161,6 +162,7 @@ export class TurnosEspecialistaComponent implements OnInit {
         presion: this.datosClinicos.presion,
         nombrePaciente: this.turnoSeleccionado.pacienteNombre,
         nombreEspecialista: this.turnoSeleccionado.especialistaNombre,
+        especialidad: this.turnoSeleccionado.especialidad,
         datosDinamicos: this.datosClinicos.dinamicos,
 
       

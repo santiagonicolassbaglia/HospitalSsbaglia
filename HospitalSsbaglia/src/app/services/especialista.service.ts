@@ -45,5 +45,9 @@ export class EspecialistaService {
     });
   }
 
+  getEspecialidades(): Observable<string[]> {
+    return this.firestore.collection('especialidades').valueChanges() as Observable<string[]>;
+  }
+
   
 }

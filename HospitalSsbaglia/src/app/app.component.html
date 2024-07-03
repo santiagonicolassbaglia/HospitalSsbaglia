@@ -1,16 +1,19 @@
 <!-- app.component.html -->
+
 <app-spinner *ngIf="isLoading"></app-spinner>
 
-<body><nav> 
-    <h3>Hospital UTN</h3>
-  
-      <a routerLink="/home" routerLinkActive="active">Home  </a>
-  
-      <a routerLink="/login" routerLinkActive="active">login</a>
- 
+<div>
+  <body>
+    <nav>
+         <h3>Hospital UTN</h3>
+      <a routerLink="/home" routerLinkActive="active">Home</a>
+      <a routerLink="/login" routerLinkActive="active">Login</a>
    
-      
+      <button appModoOscuro>
+        <img src="../assets/imagenes/ModoOscuro.png" alt="Modo Oscuro" style="margin-inline: 50rem;"/>
+      </button>
+
     </nav>
     <router-outlet></router-outlet>
   </body>
-   
+</div>
