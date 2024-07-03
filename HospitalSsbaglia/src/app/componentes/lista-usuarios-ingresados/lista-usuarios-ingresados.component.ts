@@ -4,29 +4,32 @@ import { Router, RouterLink } from '@angular/router';
 import { Usuario } from '../../clases/usuario';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
 import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
+import { FiltrarAdminPipe } from '../../pipes/filtrar-admin.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lista-usuarios-ingresados',
   standalone: true,
-  imports:  [RouterLink, CommonModule,EstadisticasComponent ],
+  imports: [RouterLink, CommonModule, EstadisticasComponent, FiltrarAdminPipe, FormsModule],
   templateUrl: './lista-usuarios-ingresados.component.html',
-  styleUrl: './lista-usuarios-ingresados.component.css'
+  styleUrls: ['./lista-usuarios-ingresados.component.css']
 })
 export class ListaUsuariosIngresadosComponent implements OnInit {
 
+ 
   usuarios$: Observable<Usuario[]>;
   totalUsuarios: number = 0;
   mostrarEstadisticas = false;
+  mostrarSoloAdmins: boolean | null = null;
 
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.usuarios$ = this.authService.getAllUsers();
-     this.usuarios$.subscribe((usuarios) => {
-    this.totalUsuarios = usuarios.length;
-  });
+    this.usuarios$.subscribe((usuarios) => {
+      this.totalUsuarios = usuarios.length;
+    });
   }
 
   async cambiarEstadoAdmin(code: string, esAdmin: boolean) {
@@ -72,6 +75,4 @@ export class ListaUsuariosIngresadosComponent implements OnInit {
   mostrarOcultarEstadisticas() {
     this.mostrarEstadisticas = !this.mostrarEstadisticas;
   }
-
-  
 }

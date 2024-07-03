@@ -35,6 +35,7 @@ import { OrdenarDatosPipe } from './pipes/ordenar-datos.pipe';
 import { OrdenarHistoriasPipe } from './pipes/ordenar-historias.pipe';
 import { ModoOscuroDirective } from './Directivas/modo-oscuro.directive';
 import { ChartComponent } from './componentes/chart/chart.component';
+import { FiltrarAdminPipe } from './pipes/filtrar-admin.pipe';
 
  
  
@@ -76,7 +77,8 @@ FiltrarDatosPipe,
 OrdenarDatosPipe,
 OrdenarHistoriasPipe,
 ModoOscuroDirective,
-ChartComponent
+ChartComponent,
+FiltrarAdminPipe
 
   ],
   templateUrl: './app.component.html',

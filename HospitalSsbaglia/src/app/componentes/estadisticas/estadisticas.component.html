@@ -5,7 +5,7 @@
   <div class="estadistica">
     <h3>Cantidad de turnos por especialidad</h3>
     <button class="btn-ver" (click)="obtenerTurnosPorEspecialidad()">Ver Turnos por Especialidad</button>
-    <div *ngIf="turnosPorEspecialidad" class="estadisticas-table-container">
+    <div *ngIf="mostrarTurnosPorEspecialidad" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
           <tr>
@@ -20,20 +20,16 @@
           </tr>
         </tbody>
       </table>
-      
+      <canvas id="chartEspecialidad" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
+
     </div>
-    <div class="estadistica">
-      <h3>Cantidad de turnos por especialidad</h3>
-      <canvas id="chartEspecialidad" width="1" height="1"  style="border: 1px solid #ccc;"></canvas>
-    </div>
-  
   </div>
 
   <!-- Cantidad de turnos por día -->
   <div class="estadistica">
     <h3>Cantidad de turnos por día</h3>
     <button class="btn-ver" (click)="obtenerTurnosPorDia()">Ver Turnos por Día</button>
-    <div *ngIf="turnosPorDia" class="estadisticas-table-container">
+    <div *ngIf="mostrarTurnosPorDia" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
           <tr>
@@ -48,20 +44,16 @@
           </tr>
         </tbody>
       </table>
-      
+      <canvas id="chartDia" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
+
     </div>
-    <div class="estadistica">
-      <h3>Cantidad de turnos por día</h3>
-      <canvas id="chartDia" width="1" height="1"style="border: 1px solid #ccc;"></canvas>
-    </div>
-  
   </div>
 
   <!-- Cantidad de turnos solicitados por médico -->
   <div class="estadistica">
     <h3>Cantidad de turnos solicitados por médico</h3>
     <button class="btn-ver" (click)="obtenerTurnosPorMedico('solicitados')">Ver Turnos Solicitados</button>
-    <div *ngIf="turnosPorMedicoSolicitados" class="estadisticas-table-container">
+    <div *ngIf="mostrarTurnosPorMedicoSolicitados" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
           <tr>
@@ -76,10 +68,8 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="estadistica">
-      <h3>Cantidad de turnos solicitados por médico</h3>
-      <canvas id="chartMedicoSolicitados" width="1" height="1" style="border: 1px solid #ccc;">></canvas>
+      <canvas id="chartMedicoSolicitados" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
+
     </div>
   </div>
 
@@ -87,7 +77,7 @@
   <div class="estadistica">
     <h3>Cantidad de turnos finalizados por médico</h3>
     <button class="btn-ver" (click)="obtenerTurnosFinalizadosPorMedico('finalizados')">Ver Turnos Finalizados</button>
-    <div *ngIf="turnosFinalizadosPorMedico" class="estadisticas-table-container">
+    <div *ngIf="mostrarTurnosFinalizadosPorMedico" class="estadisticas-table-container">
       <table class="estadisticas-table">
         <thead>
           <tr>
@@ -102,22 +92,15 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    
-  <div class="estadistica">
-    <h3>Cantidad de turnos finalizados por médico</h3>
-    <canvas id="chartMedicoFinalizados" width="1" height="1" style="border: 1px solid #ccc;">></canvas>
-  </div>
-  </div>
+      <canvas id="chartMedicoFinalizados" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
 
-  
- 
-  
+    </div>
+   
+  </div>
 
   <!-- Botones de descarga -->
   <div class="estadistica">
-     
     <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar todas las estadísticas en PDF</button>
-    <button class="btn-descargar"  (click)="descargarEstadisticasExcel()">Descargar todas las estadísticas en Excel</button>
+    <button class="btn-descargar" (click)="descargarEstadisticasExcel()">Descargar todas las estadísticas en Excel</button>
   </div>
 </div>

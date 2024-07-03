@@ -5,6 +5,11 @@
   </div>
 
   <div class="table-container">
+    <label>
+      <input type="checkbox" [(ngModel)]="mostrarSoloAdmins" />
+      Mostrar solo administradores
+    </label>
+
     <table class="table">
       <thead>
         <tr>
@@ -16,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let usuario of usuarios$ | async">
+        <tr *ngFor="let usuario of (usuarios$ | async | filtrarAdmin: mostrarSoloAdmins)">
           <td>{{ usuario.nombre }}</td>
           <td>{{ usuario.mail }}</td>
           <td>{{ usuario.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</td>
@@ -27,7 +32,9 @@
             <button class="botonEliminar" (click)="eliminarUsuario(usuario)">Eliminar</button>
           </td>
         </tr>
-        <td colspan="5">Cantidad de usuarios en total: {{ totalUsuarios }}</td>
+        <tr>
+          <td colspan="5">Cantidad de usuarios en total: {{ totalUsuarios }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -35,5 +42,5 @@
   <div class="botonEstadisticas-contenedor">
     <button class="botonEstadisticas" (click)="mostrarOcultarEstadisticas()">Ver Estadísticas</button>
     <app-estadisticas *ngIf="mostrarEstadisticas"></app-estadisticas>
-    </div>
+  </div>
 </div>
