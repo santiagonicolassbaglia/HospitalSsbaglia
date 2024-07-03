@@ -1,8 +1,6 @@
 <div class="estadisticas-container">
   <h2 class="estadisticas-title">Estadísticas Generales</h2>
 
-
-
   <!-- Cantidad de turnos por especialidad -->
   <div class="estadistica">
     <h3>Cantidad de turnos por especialidad</h3>
@@ -22,7 +20,13 @@
           </tr>
         </tbody>
       </table>
+      
     </div>
+    <div class="estadistica">
+      <h3>Cantidad de turnos por especialidad</h3>
+      <canvas id="chartEspecialidad" width="1" height="1"  style="border: 1px solid #ccc;"></canvas>
+    </div>
+  
   </div>
 
   <!-- Cantidad de turnos por día -->
@@ -44,7 +48,13 @@
           </tr>
         </tbody>
       </table>
+      
     </div>
+    <div class="estadistica">
+      <h3>Cantidad de turnos por día</h3>
+      <canvas id="chartDia" width="1" height="1"style="border: 1px solid #ccc;"></canvas>
+    </div>
+  
   </div>
 
   <!-- Cantidad de turnos solicitados por médico -->
@@ -66,6 +76,10 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="estadistica">
+      <h3>Cantidad de turnos solicitados por médico</h3>
+      <canvas id="chartMedicoSolicitados" width="1" height="1" style="border: 1px solid #ccc;">></canvas>
     </div>
   </div>
 
@@ -89,11 +103,21 @@
         </tbody>
       </table>
     </div>
+    
+  <div class="estadistica">
+    <h3>Cantidad de turnos finalizados por médico</h3>
+    <canvas id="chartMedicoFinalizados" width="1" height="1" style="border: 1px solid #ccc;">></canvas>
+  </div>
   </div>
 
+  
+ 
+  
+
   <!-- Botones de descarga -->
-  <div class="download-buttons">
-    <button class="btn-descargar" (click)="descargarEstadisticasExcel()">Descargar en Excel</button>
-    <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar en PDF</button>
+  <div class="estadistica">
+     
+    <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar todas las estadísticas en PDF</button>
+    <button class="btn-descargar"  (click)="descargarEstadisticasExcel()">Descargar todas las estadísticas en Excel</button>
   </div>
 </div>
