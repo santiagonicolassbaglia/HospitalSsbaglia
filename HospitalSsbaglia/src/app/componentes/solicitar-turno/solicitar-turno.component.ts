@@ -22,9 +22,11 @@ import { EspecialistaService } from '../../services/especialista.service';
 export class SolicitarTurnoComponent implements OnInit {
   especialidades: string[] = [];
   especialistas: Usuario[] = [];
-  turnosDisponibles: Date[] = [];
+  turnosDisponibles: { [key: string]: Date[] } = {};
+  diasDisponibles: string[] = [];
   especialidadSeleccionada: string | null = null;
   especialistaSeleccionado: Usuario | null = null;
+  diaSeleccionado: string | null = null;
   turnoSeleccionado: Date | null = null;
   dniUsuario: string = '';
   mensajeConfirmacion: boolean = false;
@@ -67,30 +69,29 @@ export class SolicitarTurnoComponent implements OnInit {
   private cargarTurnosDisponibles(especialista: Usuario): void {
     this.especialistaService.getDisponibilidad(especialista.uid).subscribe(disponibilidad => {
       this.turnosDisponibles = this.generarTurnosDisponibles(disponibilidad);
+      this.diasDisponibles = Object.keys(this.turnosDisponibles);
     });
   }
 
-  private generarTurnosDisponibles(disponibilidad: Disponibilidad[]): Date[] {
-    const turnos: Date[] = [];
+  private generarTurnosDisponibles(disponibilidad: Disponibilidad[]): { [key: string]: Date[] } {
+    const turnos: { [key: string]: Date[] } = {};
     const now = new Date();
 
     disponibilidad.forEach(d => {
+      const dia = d.dia; // Suponiendo que tienes un campo 'dia' en la disponibilidad
+      if (!turnos[dia]) {
+        turnos[dia] = [];
+      }
       d.horarios.forEach(h => {
         const [inicioHora, inicioMinuto] = h.inicio.split(':').map(Number);
         const [finHora, finMinuto] = h.fin.split(':').map(Number);
 
-        // Generar turnos para los próximos 30 días
-        for (let i = 0; i < 30; i++) {
-          const diaInicio = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, inicioHora, inicioMinuto);
-          const diaFin = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, finHora, finMinuto);
+        const diaInicio = new Date(now.getFullYear(), now.getMonth(), now.getDate(), inicioHora, inicioMinuto);
+        const diaFin = new Date(now.getFullYear(), now.getMonth(), now.getDate(), finHora, finMinuto);
 
-          // Verificar si el día actual coincide con el día de la semana de la disponibilidad
-          if (diaInicio.getDay() === this.obtenerNumeroDiaSemana(d.dia)) {
-            while (diaInicio < diaFin) {
-              turnos.push(new Date(diaInicio));
-              diaInicio.setMinutes(diaInicio.getMinutes() + 30); // Incrementar por 30 minutos
-            }
-          }
+        while (diaInicio < diaFin) {
+          turnos[dia].push(new Date(diaInicio));
+          diaInicio.setMinutes(diaInicio.getMinutes() + 30); // Incrementar por 30 minutos
         }
       });
     });
@@ -98,17 +99,9 @@ export class SolicitarTurnoComponent implements OnInit {
     return turnos;
   }
 
-  private obtenerNumeroDiaSemana(dia: string): number {
-    const diasSemana: { [key: string]: number } = {
-      'Lunes': 1,
-      'Martes': 2,
-      'Miércoles': 3,
-      'Jueves': 4,
-      'Viernes': 5,
-      'Sábado': 6,
-      'Domingo': 0
-    };
-    return diasSemana[dia];
+  public seleccionarDia(dia: string): void {
+    this.diaSeleccionado = dia;
+    this.turnoSeleccionado = null; // Resetear el turno seleccionado cuando se cambia el día
   }
 
   public seleccionarTurno(turno: Date): void {
@@ -133,18 +126,17 @@ export class SolicitarTurnoComponent implements OnInit {
         false,
         false
       );
-
-      // Eliminar la propiedad historiaClinica si es undefined
+  
       if (nuevoTurno.historiaClinica === undefined) {
         delete nuevoTurno.historiaClinica;
       }
-
+  
       await this.turnoService.crearTurno(nuevoTurno);
       console.log('Turno creado con éxito');
       this.mensajeConfirmacion = true;
       setTimeout(() => {
         this.router.navigate(['/home']); // Redirige después de 2 segundos (2000 milisegundos)
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error('Error al crear el turno:', error);
     }
@@ -164,4 +156,9 @@ export class SolicitarTurnoComponent implements OnInit {
         return 'assets/imagenes/especialidades/default.png';
     }
   }
+
+  public tieneTurnos(dia: string): boolean {
+    return this.turnosDisponibles[dia] && this.turnosDisponibles[dia].length > 0;
+  }
+  
 }

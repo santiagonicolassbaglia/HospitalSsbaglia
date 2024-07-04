@@ -23,10 +23,19 @@
     </div>
   </div>
 
-  <div class="turnos" *ngIf="especialistaSeleccionado">
+  <div class="dias" *ngIf="especialistaSeleccionado">
+    <h2>Días Disponibles</h2>
+    <div class="botones">
+      <div *ngFor="let dia of diasDisponibles" (click)="seleccionarDia(dia)">
+        <button [class.selected]="dia === diaSeleccionado" [class.disponible]="tieneTurnos(dia)">{{ dia }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="turnos" *ngIf="diaSeleccionado">
     <h2>Turnos Disponibles</h2>
     <div class="botones">
-      <div *ngFor="let turno of turnosDisponibles" (click)="seleccionarTurno(turno)">
+      <div *ngFor="let turno of turnosDisponibles[diaSeleccionado]" (click)="seleccionarTurno(turno)">
         <button [class.selected]="turno === turnoSeleccionado">{{ turno | date: 'dd/MM HH:mm' }}</button>
       </div>
     </div>
