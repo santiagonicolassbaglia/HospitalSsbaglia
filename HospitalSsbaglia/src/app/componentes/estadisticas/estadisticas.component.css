@@ -2,91 +2,109 @@
 
 /* Contenedor principal */
 .estadisticas-container {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f0f0f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Títulos */
-  .estadisticas-title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  
-  /* Estadística individual */
-  .estadistica {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: #fff;
-  }
-  
-  /* Botones para ver estadísticas */
-  .btn-ver {
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-right: 10px;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .btn-ver:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Tabla de estadísticas */
-  .estadisticas-table-container {
-    margin-top: 15px;
-  }
-  
-  .estadisticas-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .estadisticas-table th,
-  .estadisticas-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .estadisticas-table th {
-    background-color: #f2f2f2;
-    color: #555;
-  }
-  
-  /* Botones de descarga */
-  .download-buttons {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .btn-descargar {
-    padding: 12px 24px;
-    border: none;
-    background-color: #28a745;
-    color: white;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-right: 10px;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .btn-descargar:hover {
-    background-color: #218838;
-  }
-  
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+.estadisticas-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Estadística individual */
+.estadistica {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+/* Botones para ver estadísticas */
+.btn-ver {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ver:hover {
+  background-color: #0056b3;
+}
+
+/* Tabla de estadísticas */
+.estadisticas-table-container {
+  margin-top: 15px;
+}
+
+.estadisticas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.estadisticas-table th,
+.estadisticas-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.estadisticas-table th {
+  background-color: #f2f2f2;
+  color: #555;
+}
+
+/* Contenedor del gráfico */
+.chart-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+}
+
+/* Botones de descarga */
+.download-buttons {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-descargar {
+  padding: 12px 24px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-descargar:hover {
+  background-color: #218838;
+}
+
+/* Tamaño del canvas */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}

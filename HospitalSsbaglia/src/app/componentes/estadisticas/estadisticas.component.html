@@ -20,8 +20,9 @@
           </tr>
         </tbody>
       </table>
-      <canvas id="chartEspecialidad" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
-
+      <div class="chart-container">
+        <canvas id="chartEspecialidad"></canvas>
+      </div>
     </div>
   </div>
 
@@ -44,8 +45,9 @@
           </tr>
         </tbody>
       </table>
-      <canvas id="chartDia" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
-
+      <div class="chart-container">
+        <canvas id="chartDia"></canvas>
+      </div>
     </div>
   </div>
 
@@ -68,8 +70,9 @@
           </tr>
         </tbody>
       </table>
-      <canvas id="chartMedicoSolicitados" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
-
+      <div class="chart-container">
+        <canvas id="chartMedicoSolicitados"></canvas>
+      </div>
     </div>
   </div>
 
@@ -92,14 +95,14 @@
           </tr>
         </tbody>
       </table>
-      <canvas id="chartMedicoFinalizados" width="1" height="1" style="border: 1px solid #ccc;"></canvas>
-
+      <div class="chart-container">
+        <canvas id="chartMedicoFinalizados"></canvas>
+      </div>
     </div>
-   
   </div>
 
   <!-- Botones de descarga -->
-  <div class="estadistica">
+  <div class="estadistica download-buttons">
     <button class="btn-descargar" (click)="descargarEstadisticasPDF()">Descargar todas las estadísticas en PDF</button>
     <button class="btn-descargar" (click)="descargarEstadisticasExcel()">Descargar todas las estadísticas en Excel</button>
   </div>

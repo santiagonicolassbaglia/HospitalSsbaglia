@@ -116,7 +116,7 @@ export class EstadisticasComponent implements OnInit {
   generarGrafico(idCanvas: string, titulo: string, labels: string[], data: number[]): void {
     const canvas = document.getElementById(idCanvas) as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
-
+  
     new Chart(ctx, {
       type: 'pie',
       data: {
@@ -129,6 +129,7 @@ export class EstadisticasComponent implements OnInit {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'top',
@@ -151,6 +152,7 @@ export class EstadisticasComponent implements OnInit {
       }
     });
   }
+  
 
   generarColores(cantidad: number): string[] {
     // Genera un arreglo de colores aleatorios en formato hexadecimal
