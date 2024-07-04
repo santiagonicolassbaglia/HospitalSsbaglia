@@ -52,9 +52,22 @@
     margin-top: 20px;
     margin-left: 10px;
     color: burlywood;
-    background-color: #0b7a7a;
+    background-color: #0e1df1;
     border: 1px solid #0b7a0f;
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
+  }
+
+  .botonDeseleccionarTodos{
+ 
+    margin-top: 20px;
+    margin-left: 10px;
+    color: burlywood;
+    background-color: #451432;
+    border: 1px solid #0b7a0f;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+
   }

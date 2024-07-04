@@ -82,4 +82,8 @@ export class HistClinicaAdminComponent implements OnInit {
   seleccionarTodos(): void {
     this.historiasClinicasFiltradas.forEach(historia => historia.seleccionado = true);
   }
+
+  deseleccionarTodos(): void {
+    this.historiasClinicasFiltradas.forEach(historia => historia.seleccionado = false);
+  }
 }

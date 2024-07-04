@@ -11,6 +11,7 @@
       (input)="aplicarFiltro()" 
     />
     <button  class="botonseleccionarTodos" (click)="seleccionarTodos()">Seleccionar Todos</button>
+    <button class="botonDeseleccionarTodos" (click)="deseleccionarTodos()">Deseleccionar Todos</button>
     <button class="botonExportarSeleccionados" (click)="exportarSeleccionados()">Exportar Seleccionados a Excel</button>
   <div *ngFor="let historia of historiasClinicasFiltradas" class="historia-clinica">
     <input class="checkbox" type="checkbox" [(ngModel)]="historia.seleccionado">
