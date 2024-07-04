@@ -12,11 +12,12 @@ import { jsPDF } from 'jspdf';
 import { EspecialidadesPipe } from '../../pipes/especialidades.pipe';
 import { DisponibilidadPipe } from '../../pipes/disponibilidad.pipe';
 import { OrdenarHistoriasPipe } from '../../pipes/ordenar-historias.pipe';
+import { OrdenarDiasPipe } from '../../pipes/ordenar-dias.pipe';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, DatePipe, EspecialidadesPipe, DisponibilidadPipe, OrdenarHistoriasPipe],
+  imports: [NgIf, NgFor, FormsModule, DatePipe, EspecialidadesPipe, DisponibilidadPipe, OrdenarHistoriasPipe,OrdenarDiasPipe],
   templateUrl: './mi-perfil.component.html',
   styleUrls: ['./mi-perfil.component.css']
 })
@@ -75,6 +76,8 @@ export class MiPerfilComponent implements OnInit {
       { dia: 'Domingo', horarios: [] }
     ];
   }
+  
+  
 
   private obtenerURLsImagenes(imagenes: File[] | string[]): string[] {
     return imagenes.map(imagen => {

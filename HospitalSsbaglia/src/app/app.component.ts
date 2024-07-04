@@ -40,6 +40,7 @@ import { MostrarOcultarDirective } from './Directivas/mostrar-ocultar.directive'
 import { FiltrarPorEstadoPipe } from './pipes/filtrar-por-estado.pipe';
 import { UltimosTresTurnosPipe } from './pipes/ultimos-tres-turnos.pipe';
 import { OrdenarTurnosPipe } from './pipes/ordenar-turnos.pipe';
+import { OrdenarDiasPipe } from './pipes/ordenar-dias.pipe';
 
  
  
@@ -87,6 +88,7 @@ MostrarOcultarDirective,
 FiltrarPorEstadoPipe,
 UltimosTresTurnosPipe,
 OrdenarTurnosPipe,
+OrdenarDiasPipe
 
 
   ],
