@@ -1,0 +1,1 @@
+import{ia as s}from"./chunk-75HCPL27.js";var p=(()=>{let r=class r{transform(t,o,n){return!t||!n?t:t.filter(i=>o.some(a=>i[a]&&i[a].toString().toLowerCase().includes(n.toLowerCase())))}};r.\u0275fac=function(o){return new(o||r)},r.\u0275pipe=s({name:"filtrarDatos",type:r,pure:!0,standalone:!0});let e=r;return e})();export{p as a};

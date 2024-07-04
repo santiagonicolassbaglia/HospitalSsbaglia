@@ -1,0 +1,1 @@
+import{Ya as o,Za as a,fa as r,fb as i,nb as p}from"./chunk-75HCPL27.js";var d=(()=>{let e=class e{};e.\u0275fac=function(n){return new(n||e)},e.\u0275cmp=r({type:e,selectors:[["app-pagina-error"]],standalone:!0,features:[p],decls:2,vars:0,template:function(n,c){n&1&&(o(0,"p"),i(1,"pagina-error works ERROR!"),a())}});let t=e;return t})();export{d as a};
