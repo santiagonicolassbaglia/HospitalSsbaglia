@@ -124,6 +124,7 @@ export class MiPerfilComponent implements OnInit {
       }
     }
   }
+
   private convertirTimestampAFecha(historia: HistoriaClinica): HistoriaClinica {
     return {
       ...historia,
@@ -143,7 +144,7 @@ export class MiPerfilComponent implements OnInit {
         const historiaConFechaConvertida = this.convertirTimestampAFecha(historiaClinica);
 
         // Filtrar historias clínicas con datos completos
-        const { fecha, altura, peso, temperatura, presion, nombreEspecialista } = historiaConFechaConvertida;
+        const { fecha, altura, peso, temperatura, presion, especialidad } = historiaConFechaConvertida;
         if (fecha && altura && peso && temperatura && presion) {
           return historiaConFechaConvertida;
         } else {
@@ -152,52 +153,26 @@ export class MiPerfilComponent implements OnInit {
       }).filter(historia => historia !== null);
 
       // Obtener especialidades únicas
-      this.especialidades = [...new Set(this.historiasClinicas.map(historia => historia.nombreEspecialista))]; 
+      this.especialidades = [...new Set(this.historiasClinicas.map(historia => historia!.especialidad))]; 
   
-
-      
-
-      
-
       // Filtrar historias clínicas por especialidad seleccionada
       this.filtrarHistoriasClinicas();
     });
   }
 
-  // filtrarHistoriasClinicas(): void {
-  //   if (this.especialidadSeleccionada) {
-  //     this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia.nombreEspecialista === this.especialidadSeleccionada);
-  //   } else {
-  //     this.historiasClinicasFiltradas = [...this.historiasClinicas];
-  //   }
+  filtrarHistoriasClinicas(): void {
+    if (this.especialidadSeleccionada) {
+      this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia!.especialidad === this.especialidadSeleccionada);
+    } else {
+      this.historiasClinicasFiltradas = [...this.historiasClinicas];
+    }
 
-  //   // Obtener la historia clínica más reciente
-  //   this.historiaClinicaReciente = this.historiasClinicasFiltradas.reduce((acc, curr) => {
-  //     return (!acc || curr.fecha > acc.fecha) ? curr : acc;
-  //   }, undefined);
-
-filtrarHistoriasClinicas(): void {
-  if (this.especialidadSeleccionada) {
-    this.historiasClinicasFiltradas = this.historiasClinicas.filter(historia => historia.nombreEspecialista === this.especialidadSeleccionada);
-  } else {
-    this.historiasClinicasFiltradas = [...this.historiasClinicas];
+    // Obtener la historia clínica más reciente
+    this.historiaClinicaReciente = this.historiasClinicasFiltradas.reduce((acc, curr) => {
+      return (!acc || curr!.fecha > acc.fecha) ? curr : acc;
+    }, undefined);
   }
 
-  // Obtener la historia clínica más reciente
-  this.historiaClinicaReciente = this.historiasClinicasFiltradas.reduce((acc, curr) => {
-    return (!acc || curr.fecha > acc.fecha) ? curr : acc;
-  }, undefined);
-
-  // Update the especialidadSeleccionada with the speciality of the specialist
-  if (this.historiaClinicaReciente) {
-    const especialista = this.historiaClinicaReciente.nombreEspecialista;
-    const especialidad = this.historiaClinicaReciente.especialidad;
-    this.especialidadSeleccionada = `${especialista} ${especialidad}`;
-  }
-}
-  
-
- 
   generatePDF(): void {
     const doc = new jsPDF();
 
@@ -207,17 +182,19 @@ filtrarHistoriasClinicas(): void {
     y += 10;
 
     this.historiasClinicasFiltradas.forEach(historia => {
-      doc.text(`Fecha: ${new Date(historia.fecha).toLocaleString()}`, 10, y);
+      doc.text(`Fecha: ${new Date(historia!.fecha).toLocaleString()}`, 10, y);
       y += 10;
-      doc.text(`Altura: ${historia.altura} cm`, 10, y);
+      doc.text(`Altura: ${historia!.altura} cm`, 10, y);
       y += 10;
-      doc.text(`Peso: ${historia.peso} kg`, 10, y);
+      doc.text(`Peso: ${historia!.peso} kg`, 10, y);
       y += 10;
-      doc.text(`Temperatura: ${historia.temperatura} °C`, 10, y);
+      doc.text(`Temperatura: ${historia!.temperatura} °C`, 10, y);
       y += 10;
-      doc.text(`Presión: ${historia.presion}`, 10, y);
+      doc.text(`Presión: ${historia!.presion}`, 10, y);
       y += 10;
-      historia.datosDinamicos.forEach(dato => {
+      doc.text(`Especialidad: ${historia!.especialidad}`, 10, y);
+      y += 10;
+      historia!.datosDinamicos.forEach(dato => {
         doc.text(`${dato.clave}: ${dato.valor}`, 10, y);
         y += 10;
       });
@@ -226,5 +203,4 @@ filtrarHistoriasClinicas(): void {
 
     doc.save('historia_clinica.pdf');
   }
-  }
- 
+}

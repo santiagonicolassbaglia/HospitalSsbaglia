@@ -7,9 +7,10 @@
     <p><strong>DNI:</strong> {{ usuario.dni }}</p>
     <p><strong>Edad:</strong> {{ usuario.edad }}</p>
     <p><strong>Obra Social:</strong> {{ usuario.obraSocial || 'No especificada' }}</p>
-    <p><strong>Especialidades:</strong> {{ usuario.especialidad.join(', ') }}</p>
     <p><strong>Correo Electrónico:</strong> {{ usuario.mail }}</p>
-
+    
+    <div *ngIf="esEspecialista">
+    <p><strong>Especialidades:</strong> {{ usuario.especialidad.join(', ') }}</p>
     <!-- Horarios -->
     <p><strong>Horarios:</strong></p>
     <ul>
@@ -22,7 +23,7 @@
         </ul>
       </li>
     </ul>
-
+  </div>
     <!-- Imágenes -->
     <div *ngIf="imagenes.length">
       <div *ngFor="let imagen of imagenes">
@@ -30,7 +31,6 @@
       </div>
     </div>
 
-    <!-- Horarios del especialista -->
     <div *ngIf="esEspecialista">
       <h3>Mis Horarios</h3>
       <div *ngFor="let dia of disponibilidadHoraria; let diaIndex = index">
@@ -46,27 +46,34 @@
       <button (click)="guardarDisponibilidad()" style="color: chartreuse;">Guardar Disponibilidad</button>
     </div>
   </div>
-
-  <!-- Historia clínica -->
-<div class="historias-clinicas">
-  <h2>Historia Clínica</h2>
-  <!-- Select para elegir la especialidad -->
-  <label for="especialidad">Selecciona una especialidad:</label>
-  <select id="especialidad" [(ngModel)]="especialidadSeleccionada" (change)="filtrarHistoriasClinicas()">
-    <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
-  </select>
-  
-  <div *ngIf="historiaClinicaReciente">
-    <p><strong>Fecha:</strong> {{ historiaClinicaReciente.fecha | date: 'short' }}</p>
-    <p><strong>Altura:</strong> {{ historiaClinicaReciente.altura }} cm</p>
-    <p><strong>Peso:</strong> {{ historiaClinicaReciente.peso }} kg</p>
-    <p><strong>Temperatura:</strong> {{ historiaClinicaReciente.temperatura }} °C</p>
-    <p><strong>Presión:</strong> {{ historiaClinicaReciente.presion }}</p>
-    <div *ngFor="let dato of historiaClinicaReciente.datosDinamicos">
-      <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
+  <div *ngIf="!esEspecialista">
+    <!-- Selección de especialidad -->
+    <div>
+      <h3>Seleccionar Especialidad</h3>
+      <select [(ngModel)]="especialidadSeleccionada" (change)="filtrarHistoriasClinicas()">
+        <option value="">Todas las especialidades</option>
+        <option *ngFor="let especialidad of especialidades" [value]="especialidad">
+          {{ especialidad }}
+        </option>
+      </select>
     </div>
-  </div>
-</div>
 
-<button (click)="generatePDF()">Descargar Historia Clínica en PDF</button>
+    <div class="historias-clinicas">
+      <h3>Historias Clínicas</h3>
+      <div *ngFor="let historia of historiasClinicasFiltradas" class="historia-clinica">
+        <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
+        <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
+        <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
+        <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
+        <p><strong>Presión:</strong> {{ historia.presion }}</p>
+        <p><strong>Especialidad:</strong> {{ historia.especialidad }}</p>
+        <div *ngFor="let dato of historia.datosDinamicos" class="datos-dinamicos">
+          <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón para generar PDF -->
+    <button (click)="generatePDF()">Descargar Historia Clínica en PDF</button>
+  </div>
 </div>

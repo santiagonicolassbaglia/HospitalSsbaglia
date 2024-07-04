@@ -10,13 +10,13 @@
       [(ngModel)]="filtro" 
       (input)="aplicarFiltro()" 
     />
-    <button (click)="exportarSeleccionados()">Exportar Excel</button>
-  </div>
+    <button (click)="exportarSeleccionados()">Exportar Seleccionados a Excel</button>
   <div *ngFor="let historia of historiasClinicasFiltradas" class="historia-clinica">
-    <input type="checkbox" [(ngModel)]="historia.seleccionado" />
-    <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
+    <input type="checkbox" [(ngModel)]="historia.seleccionado">
+    <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short'  }}</p>
     <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
     <p><strong>Especialista:</strong> {{ historia.nombreEspecialista }}</p>
+    <p><strong>Especialidad:</strong> {{ historia.especialidad }}</p>  
     <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
     <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
     <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>

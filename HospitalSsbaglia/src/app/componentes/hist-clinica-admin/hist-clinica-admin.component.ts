@@ -15,13 +15,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class HistClinicaAdminComponent implements OnInit {
 
+  
   historiasClinicas: HistoriaClinica[] = [];
   historiasClinicasFiltradas: HistoriaClinica[] = [];
   filtro: string = '';
 
   constructor(
     private historiaClinicaService: HistoriaClinicaService,
-    private datePipe: DatePipe // Inyectar DatePipe aquí
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +65,7 @@ export class HistClinicaAdminComponent implements OnInit {
       Fecha: this.dateToString(historia.fecha),
       Paciente: historia.nombrePaciente,
       Especialista: historia.nombreEspecialista,
+      Especialidad: historia.especialidad,  
       Altura: historia.altura + ' cm',
       Peso: historia.peso + ' kg',
       Temperatura: historia.temperatura + ' °C',
