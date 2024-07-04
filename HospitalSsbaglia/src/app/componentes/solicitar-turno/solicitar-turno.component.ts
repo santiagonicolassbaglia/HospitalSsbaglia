@@ -79,17 +79,36 @@ export class SolicitarTurnoComponent implements OnInit {
         const [inicioHora, inicioMinuto] = h.inicio.split(':').map(Number);
         const [finHora, finMinuto] = h.fin.split(':').map(Number);
 
-        const diaInicio = new Date(now.getFullYear(), now.getMonth(), now.getDate(), inicioHora, inicioMinuto);
-        const diaFin = new Date(now.getFullYear(), now.getMonth(), now.getDate(), finHora, finMinuto);
+        // Generar turnos para los próximos 30 días
+        for (let i = 0; i < 30; i++) {
+          const diaInicio = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, inicioHora, inicioMinuto);
+          const diaFin = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i, finHora, finMinuto);
 
-        while (diaInicio < diaFin) {
-          turnos.push(new Date(diaInicio));
-          diaInicio.setMinutes(diaInicio.getMinutes() + 30); // Incrementar por 30 minutos
+          // Verificar si el día actual coincide con el día de la semana de la disponibilidad
+          if (diaInicio.getDay() === this.obtenerNumeroDiaSemana(d.dia)) {
+            while (diaInicio < diaFin) {
+              turnos.push(new Date(diaInicio));
+              diaInicio.setMinutes(diaInicio.getMinutes() + 30); // Incrementar por 30 minutos
+            }
+          }
         }
       });
     });
 
     return turnos;
+  }
+
+  private obtenerNumeroDiaSemana(dia: string): number {
+    const diasSemana: { [key: string]: number } = {
+      'Lunes': 1,
+      'Martes': 2,
+      'Miércoles': 3,
+      'Jueves': 4,
+      'Viernes': 5,
+      'Sábado': 6,
+      'Domingo': 0
+    };
+    return diasSemana[dia];
   }
 
   public seleccionarTurno(turno: Date): void {
@@ -114,12 +133,12 @@ export class SolicitarTurnoComponent implements OnInit {
         false,
         false
       );
-  
+
       // Eliminar la propiedad historiaClinica si es undefined
       if (nuevoTurno.historiaClinica === undefined) {
         delete nuevoTurno.historiaClinica;
       }
-  
+
       await this.turnoService.crearTurno(nuevoTurno);
       console.log('Turno creado con éxito');
       this.mensajeConfirmacion = true;
@@ -130,8 +149,8 @@ export class SolicitarTurnoComponent implements OnInit {
       console.error('Error al crear el turno:', error);
     }
   }
+
   getEspecialidadImagen(especialidad: string): string {
-  
     switch (especialidad) {
       case 'Cardiología':
         return 'assets/imagenes/especialidades/cardiologo.png';
@@ -145,6 +164,4 @@ export class SolicitarTurnoComponent implements OnInit {
         return 'assets/imagenes/especialidades/default.png';
     }
   }
-
-  
 }
