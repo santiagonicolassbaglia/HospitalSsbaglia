@@ -46,5 +46,10 @@
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
-    
+
+  }
+
+  .checkbox {
+    display: inline-block;
+    margin-right: 10px;
   }

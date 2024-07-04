@@ -36,3 +36,25 @@
   .datos-dinamicos p {
     margin-bottom: 0;
   }
+  .botonseleccionarTodos {
+    margin-top: 20px;
+    margin-left: 10px;
+    color: burlywood;
+    background-color: #0b7a7a;
+    border: 1px solid #0b7a7a;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  
+  }
+
+  .botonExportarSeleccionados{
+    margin-top: 20px;
+    margin-left: 10px;
+    color: burlywood;
+    background-color: #0b7a7a;
+    border: 1px solid #0b7a0f;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }

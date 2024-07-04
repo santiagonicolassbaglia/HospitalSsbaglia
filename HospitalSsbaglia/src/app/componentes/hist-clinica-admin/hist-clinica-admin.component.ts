@@ -30,9 +30,9 @@ export class HistClinicaAdminComponent implements OnInit {
       this.historiasClinicas = historial.map(e => {
         const data = e.payload.doc.data() as HistoriaClinica;
         data.id = e.payload.doc.id;
-        data.fecha = this.convertTimestampToDate(data.fecha); // Convertir Timestamp a Date
+        data.fecha = this.convertTimestampToDate(data.fecha);  
         return data;
-      }).sort((a, b) => b.fecha.getTime() - a.fecha.getTime()); // Ordenar por fecha descendente
+      }).sort((a, b) => b.fecha.getTime() - a.fecha.getTime());  
       this.historiasClinicasFiltradas = this.historiasClinicas;
     });
   }
@@ -78,5 +78,8 @@ export class HistClinicaAdminComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Historias Clínicas');
 
     XLSX.writeFile(wb, 'historias_clinicas_seleccionadas.xlsx');
+  }
+  seleccionarTodos(): void {
+    this.historiasClinicasFiltradas.forEach(historia => historia.seleccionado = true);
   }
 }
