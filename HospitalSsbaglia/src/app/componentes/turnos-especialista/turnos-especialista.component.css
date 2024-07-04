@@ -82,3 +82,54 @@ h2 {
       cursor:pointer; 
   }
   
+  formulario-historia-clinica {
+      display: block;
+    border: #3498db;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    width: 100%;
+  overflow-y: auto;
+
+    height: 100%;
+     
+  }
+
+  
+
+  
+ .inputHistoriaClinica{
+
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    height: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+ }
+
+.scroll-down {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+.mensaje-exito {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-left: 1rem;
+}
+
+.bajarPantallaoPagina{
+  margin-top: 20px;
+  margin-left: 10px;
+  color: burlywood;
+  background-color: #0b7a7a;
+  border: 1px solid #0b7a7a;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}

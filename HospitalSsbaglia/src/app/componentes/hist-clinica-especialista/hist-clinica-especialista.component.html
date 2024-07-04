@@ -9,16 +9,22 @@
       placeholder="Buscar..." 
       [(ngModel)]="filtroGeneral" 
     />
+    <button class="botonUltimosAtendidos" (click)="mostrarUltimasTres = !mostrarUltimasTres">
+      {{ mostrarUltimasTres ? 'Mostrar Todas' : 'Mostrar Historia de últimos 3 pacientes atendidos ' }}
+    </button>
   </div>
-  <div *ngFor="let historia of historiasClinicas | filtrarDatos: ['fecha', 'nombrePaciente', 'altura', 'peso', 'temperatura', 'presion']: filtroGeneral" class="historia-clinica">
-    <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
-    <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
-    <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
-    <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
-    <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
-    <p><strong>Presión:</strong> {{ historia.presion }}</p>
-    <div *ngFor="let dato of historia.datosDinamicos">
+  <div *ngFor="let historia of (historiasClinicas | filtrarDatos: ['fecha', 'nombrePaciente', 'altura', 'peso', 'temperatura', 'presion']: filtroGeneral) | ultimosTresTurnos: mostrarUltimasTres"
+  class="historia-clinica">
+  <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
+  <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
+  <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
+  <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
+  <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
+  <p><strong>Presión:</strong> {{ historia.presion }}</p>
+  <div *ngFor="let dato of historia.datosDinamicos">
       <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
-    </div>
   </div>
+</div>
+
+
 </div>

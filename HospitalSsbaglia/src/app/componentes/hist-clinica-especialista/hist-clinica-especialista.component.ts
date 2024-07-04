@@ -6,20 +6,22 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Turno } from '../../clases/turno';
 import { FormsModule } from '@angular/forms';
 import { FiltrarDatosPipe } from '../../pipes/filtrar-datos.pipe';
+ 
+import { UltimosTresTurnosPipe } from '../../pipes/ultimos-tres-turnos.pipe';
 
 @Component({
   selector: 'app-hist-clinica-especialista',
   standalone: true,
-  imports: [DatePipe,NgFor,NgIf,FormsModule, FiltrarDatosPipe],
+  imports: [DatePipe, NgFor, NgIf, FormsModule, FiltrarDatosPipe, UltimosTresTurnosPipe],
   templateUrl: './hist-clinica-especialista.component.html',
-  styleUrl: './hist-clinica-especialista.component.css'
+  styleUrls: ['./hist-clinica-especialista.component.css']
 })
 export class HistClinicaEspecialistaComponent implements OnInit {
   historiasClinicas: HistoriaClinica[] = [];
   especialistaId: string = '';
-  turnosFiltrados: Turno[] = [];
   filtroGeneral: string = '';
-  turnos: Turno[] = [];
+  mostrarUltimasTres: boolean = false;
+
   constructor(
     private authService: AuthService,
     private historiaClinicaService: HistoriaClinicaService
@@ -34,44 +36,6 @@ export class HistClinicaEspecialistaComponent implements OnInit {
     });
   }
 
-  aplicarFiltro(): void {
-    this.turnosFiltrados = this.turnos.filter(turno =>
-      this.buscarEnTurno(turno, this.filtroGeneral)
-    );
-  }
-
-  buscarEnTurno(turno: Turno, filtro: string): boolean {
-    if (!filtro) return true;
-    filtro = filtro.toLowerCase();
-
-    // Buscar en los campos del turno
-    if (
-      turno.especialidad.toLowerCase().includes(filtro) ||
-      turno.pacienteNombre.toLowerCase().includes(filtro) ||
-      turno.estado.toLowerCase().includes(filtro) ||
-      turno.fechaHora.toString().toLowerCase().includes(filtro)
-    ) {
-      return true;
-    }
-
-    // Buscar en la historia clínica asociada
-    if (turno.historiaClinica) {
-      const { altura, peso, temperatura, presion, datosDinamicos } = turno.historiaClinica;
-      if (
-        altura.toString().includes(filtro) ||
-        peso.toString().includes(filtro) ||
-        temperatura.toString().includes(filtro) ||
-        presion.toLowerCase().includes(filtro) ||
-        datosDinamicos.some(d => d.clave.toLowerCase().includes(filtro) || d.valor.toLowerCase().includes(filtro))
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  }
- 
-
   private cargarHistoriasClinicas(especialistaId: string): void {
     this.historiaClinicaService.obtenerHistoriasPorEspecialista(especialistaId).subscribe(historial => {
       this.historiasClinicas = historial.map(e => {
@@ -82,7 +46,7 @@ export class HistClinicaEspecialistaComponent implements OnInit {
       });
     });
   }
-  
+
   private convertTimestampToDate(timestamp: any): Date {
     return timestamp instanceof Date ? timestamp : timestamp.toDate();
   }

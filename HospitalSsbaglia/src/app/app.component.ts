@@ -38,6 +38,8 @@ import { ChartComponent } from './componentes/chart/chart.component';
 import { FiltrarAdminPipe } from './pipes/filtrar-admin.pipe';
 import { MostrarOcultarDirective } from './Directivas/mostrar-ocultar.directive';
 import { FiltrarPorEstadoPipe } from './pipes/filtrar-por-estado.pipe';
+import { UltimosTresTurnosPipe } from './pipes/ultimos-tres-turnos.pipe';
+import { OrdenarTurnosPipe } from './pipes/ordenar-turnos.pipe';
 
  
  
@@ -83,10 +85,13 @@ ChartComponent,
 FiltrarAdminPipe,
 MostrarOcultarDirective,
 FiltrarPorEstadoPipe,
+UltimosTresTurnosPipe,
+OrdenarTurnosPipe,
+
 
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'] // <- Correction here
+  styleUrls: ['./app.component.css'] 
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'HospitalSsbaglia';

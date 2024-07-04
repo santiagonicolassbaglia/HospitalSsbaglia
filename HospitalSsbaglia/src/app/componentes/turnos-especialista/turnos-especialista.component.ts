@@ -9,11 +9,12 @@ import { AuthService } from '../../services/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { HistoriaClinicaService } from '../../services/historia-clinica.service';
 import { HistoriaClinica } from '../../clases/historia-clinica';
+import { OrdenarTurnosPipe } from '../../pipes/ordenar-turnos.pipe';
 
 @Component({
   selector: 'app-turnos-especialista',
   standalone: true,
-  imports: [NgIf,NgFor,FormsModule,RouterLinkActive,DatePipe],
+  imports: [NgIf,NgFor,FormsModule,RouterLinkActive,DatePipe, OrdenarTurnosPipe],
   templateUrl: './turnos-especialista.component.html',
   styleUrl: './turnos-especialista.component.css'
 })

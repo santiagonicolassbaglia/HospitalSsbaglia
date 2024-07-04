@@ -1,22 +1,28 @@
 <div class="contenedor">
-  <!-- <input 
-  type="text" 
-  placeholder="Buscar por paciente, especialista o fecha" 
-  [(ngModel)]="filtro" 
-  (input)="aplicarFiltro()" 
-  class="filtro-input"
-/> -->
-    <div *ngFor="let historia of historiasClinicas" class="historia-clinica">
-      <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short'  }}</p>
-      <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
-      <p><strong>Especialista:</strong> {{ historia.nombreEspecialista }}</p>
-      <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
-      <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
-      <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
-      <p><strong>Presión:</strong> {{ historia.presion }}</p>
-      <div *ngFor="let dato of historia.datosDinamicos">
-        <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
-      </div>
+  <h2>Historias Clínicas (Admin)</h2>
+  <div *ngIf="historiasClinicas.length === 0">
+    <p>No hay historias clínicas para mostrar.</p>
+  </div>
+  <div class="filtros">
+    <input 
+      type="text" 
+      placeholder="Buscar..." 
+      [(ngModel)]="filtro" 
+      (input)="aplicarFiltro()" 
+    />
+    <button (click)="exportarSeleccionados()">Exportar Excel</button>
+  </div>
+  <div *ngFor="let historia of historiasClinicasFiltradas" class="historia-clinica">
+    <input type="checkbox" [(ngModel)]="historia.seleccionado" />
+    <p><strong>Fecha:</strong> {{ historia.fecha | date: 'short' }}</p>
+    <p><strong>Paciente:</strong> {{ historia.nombrePaciente }}</p>
+    <p><strong>Especialista:</strong> {{ historia.nombreEspecialista }}</p>
+    <p><strong>Altura:</strong> {{ historia.altura }} cm</p>
+    <p><strong>Peso:</strong> {{ historia.peso }} kg</p>
+    <p><strong>Temperatura:</strong> {{ historia.temperatura }} °C</p>
+    <p><strong>Presión:</strong> {{ historia.presion }}</p>
+    <div *ngFor="let dato of historia.datosDinamicos">
+      <p><strong>{{ dato.clave }}:</strong> {{ dato.valor }}</p>
     </div>
   </div>
-  
+</div>

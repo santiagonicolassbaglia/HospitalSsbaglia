@@ -13,5 +13,6 @@ export class HistoriaClinica {
         nombreEspecialista: string;
         especialidad: string;
         datosDinamicos: { clave: string; valor: string }[];
+        seleccionado?: boolean;
   
 }
