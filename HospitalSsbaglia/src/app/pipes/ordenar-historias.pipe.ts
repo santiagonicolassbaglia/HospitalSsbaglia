@@ -12,4 +12,3 @@ export class OrdenarHistoriasPipe implements PipeTransform {
   }
 
 }
-//Para asegurarnos de que las historias clínicas se muestren en orden cronológico.
